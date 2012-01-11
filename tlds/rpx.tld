@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE taglib PUBLIC  "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN"  "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+
+<taglib>
+	<tlibversion>1.0</tlibversion>
+	<jspversion>1.2</jspversion>
+	<shortname>rpx</shortname>
+  	<uri>http://weberknecht.highbyte-le.de/tld/rpx</uri>
+  
+	<tag>
+	    <name>signin-popup</name>
+	    <tagclass>de.highbyte_le.weberknecht.rpx.taglibs.SigninPopupTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+	    <attribute>
+	    	<name>responsePath</name>
+	    	<required>true</required>
+	    	<rtexprvalue>true</rtexprvalue>
+	    </attribute>
+	</tag>
+
+	<tag>
+	    <name>signin-embed</name>
+	    <tagclass>de.highbyte_le.weberknecht.rpx.taglibs.SigninEmbedTag</tagclass>
+	    <attribute>
+	    	<name>responsePath</name>
+	    	<required>true</required>
+	    	<rtexprvalue>true</rtexprvalue>
+	    </attribute>
+	</tag>
+
+	<tag>
+	    <name>load-functions</name>
+	    <tagclass>de.highbyte_le.weberknecht.rpx.taglibs.LoadFunctionsTag</tagclass>
+	    <attribute>
+	    	<name>responsePath</name>
+	    	<required>true</required>
+	    	<rtexprvalue>true</rtexprvalue>
+	    </attribute>
+	    <attribute>
+	    	<name>realm</name>
+	    	<required>true</required>
+	    	<rtexprvalue>false</rtexprvalue>
+	    </attribute>
+	    <attribute>
+	    	<name>lang</name>
+	    	<required>false</required>
+	    	<rtexprvalue>true</rtexprvalue>
+	    </attribute>
+	</tag>
+</taglib>

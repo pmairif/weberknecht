@@ -1,0 +1,57 @@
+0.12.0:
+	- ReqUtil replaced by Router and RoutingTarget
+	- Introducing Areas
+	- ActionFactory is now an interface
+	- ModelHelper.getSelf() contains the full path (app context and servlet path)
+
+0.11.1:
+	- Won't get model data, if view is redirect.
+
+0.11.0:
+	- Supporting actions with tasks.
+	- Changed Processor interface.
+
+0.10.5:
+	- removed relict in rpx code
+
+0.10.4:
+	- shipping tag library descriptors inside the jar
+
+0.10.3:
+	- bugfix for data actions
+	
+0.10.2:
+	- minor fix regarding needed db connections
+
+0.10.1:
+	- Code cleanup
+	- minor fixes
+	
+0.10.0:
+	- ActionViewProcessors
+	- ProcessingChain
+
+0.9.14:
+	- sign out with AuthenticationFilter fixed
+
+0.9.13:
+	- AuthenticationFilter checks, if authentication is in progress before accessing parameters.
+
+0.9.12:
+	- Reading of weberknecht.xml fixed.
+
+0.9.11:
+	- pre- and post-processors
+
+0.9.10:
+	- bugfix
+
+0.9.9:
+	- ActionInstantiationException
+
+0.9.8:
+	- ContentProcessingException
+	- DataAction2 replacing DataAction
+	
+0.9.6:
+	- ModelHelper

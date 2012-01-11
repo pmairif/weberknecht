@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     06.08.2009 13:32:47                                                        
+
+     JSON    
+     java support for the JSON data interchange format
+                   
+     ====================================================================== -->
+<project name="json" default="jar">
+    <description>
+        java support for the JSON data interchange format
+    </description>
+
+    <!-- ================================= 
+          target: default              
+         ================================= -->
+    <target name="jar" description="create jar file" depends="compile">
+        <mkdir dir="jar"/>
+    	<jar destfile="jar/json.jar" basedir="bin" />
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: compile                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="compile">
+    	<mkdir dir="bin"/>
+    	<javac srcdir="src" destdir="bin" includeantruntime="false"/>
+    </target>
+
+</project>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- try 'ant -projecthelp' -->
+
+<project name="weberknecht" default="all">
+	<property name="dir.src"		value="src" />
+	<property name="dir.classes"	value="bin" />
+	<property name="dir.lib"		value="lib" />
+
+	<!-- ==============================
+		Default Target
+	=============================== -->
+	<target name="all" depends="compile, jar, dist"
+		description="build all"/>
+
+	<target name="clean" depends="clean.java, clean.apidoc"
+		description="removes all compiled stuff" />
+
+	<target name="mrproper" depends="clean">
+		<delete file="dist" />
+		<delete file="jar" />
+	</target>
+
+	<!-- ==============================
+		Java
+	=============================== -->
+	<path id="cp.webapp">
+		<pathelement location="${dir.classes}"/>
+		<pathelement location="json/bin"/>
+		<fileset dir="${dir.lib}" includes="*.jar" />
+	</path>
+
+	<target name="compile" depends="version, json"
+		description="compiles the java sources">
+		
+		<javac srcdir="${dir.src}" destdir="${dir.classes}" encoding="UTF-8" includeantruntime="false">
+			<classpath refid="cp.webapp" />
+		</javac>
+	</target>
+	
+	<target name="clean.java">
+		<delete>
+			<fileset dir="${dir.classes}" includes="**/*.class" />
+		</delete>
+	</target>
+	
+	<target name="jar" depends="compile, version" description="creates jar file">
+		<mkdir dir="jar"/>
+		
+		<jar destfile="jar/weberknecht.jar" basedir="bin" includes="**/*.class **/*.properties">
+			<metainf dir="." includes="tlds/*.tld" />
+			
+			<manifest>
+    			<attribute name="Built-By" value="${user.name}"/>
+				
+				<section name="de/highbyte_le/weberknecht/">
+					<attribute name="Implementation-Title" value="Weberknecht"/>
+					<attribute name="Implementation-Version" value="${version.weberknecht}"/>
+				</section>
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="version" depends="new-buildnumber">
+		<property file="${dir.src}/de/highbyte_le/weberknecht/version.properties" />
+		<property name="version.weberknecht"		value="${version.weberknecht.major}.${version.weberknecht.minor}.${version.weberknecht.patch}" />
+		<property name="version.weberknecht.short"	value="${version.weberknecht.major}.${version.weberknecht.minor}" />
+		<echo message="${version.weberknecht} build ${version.weberknecht.build}" />
+	</target>
+
+	<target name="new-buildnumber" depends="check-new-buildnumber" unless="buildnumber.notNecessary">
+		<buildnumber file="buildnumber.properties"/>
+		
+		<filter token="BUILDNUMBER" value="${build.number}"/>
+		<filter token="COMMENT" value="generated - do not edit"/>
+		<copy file="version-stub.properties"
+			tofile="${dir.src}/de/highbyte_le/weberknecht/version.properties"
+			filtering="true"
+			overwrite="true"
+		/>
+		
+		<touch file="buildnumber.properties" />
+	</target>
+
+	<target name="check-new-buildnumber">
+		<!-- check, if there is any java file that is more recent than the buildnumber file -->
+		<condition property="buildnumber.notNecessary">
+			<and>
+				<uptodate >
+					<srcfiles dir="." includes="${dir.src}/**/*.java ${dir.src}/**/*.properties version-stub.properties build.xml"/>
+					<mapper type="merge" to="buildnumber.properties" />
+				</uptodate>
+				<available file="${dir.src}/de/highbyte_le/weberknecht/version.properties" />
+			</and>
+		</condition>
+	</target>
+	
+	<!-- ================================= 
+          target: json              
+         ================================= -->
+    <target name="json" description="create JSON Jar">
+        <ant dir="json" antfile="build.xml" target="jar" inheritall="false"/>
+    </target>
+
+	
+	<!-- ==============================
+		dist
+	=============================== -->
+	<target name="dist" depends="version, jar, apidoc, json" description="create weberknecht distribution files">
+		<delete dir="dist" />
+		<mkdir dir="dist"/>
+		<dist-weberknecht dest="dist/weberknecht-${version.weberknecht}" jar-subdir="."/>
+	</target>
+	
+	<!-- ================================= 
+          target: dist.zip              
+         ================================= -->
+    <target name="dist.zip" depends="dist" description="create distribution archive">
+        <zip destfile="dist/weberknecht-${version.weberknecht}.zip">
+        	<fileset dir="dist" includes="weberknecht-${version.weberknecht}/**" />
+        </zip>
+    </target>
+
+	<macrodef name="dist-weberknecht">
+		<attribute name="dest"/>
+		<attribute name="jar-subdir" default="."/>
+		
+		<sequential>
+			<mkdir dir="@{dest}/@{jar-subdir}"/>
+			<copy tofile="@{dest}/@{jar-subdir}/weberknecht-${version.weberknecht}.jar" file="jar/weberknecht.jar" />
+			<copy tofile="@{dest}/@{jar-subdir}/weberknecht-${version.weberknecht}-api.zip" file="doc/api.zip" />
+			
+			<mkdir dir="@{dest}/lib"/>
+			<copy todir="@{dest}/lib">
+				<fileset dir="${dir.lib}" includes="jdom-*.jar commons-logging-*.jar commons-lang-*.jar" />
+				<fileset dir="json/jar" includes="json.jar" />
+			</copy>
+			
+			<mkdir dir="@{dest}/tlds"/>
+			<copy todir="@{dest}/tlds">
+				<fileset dir="tlds" includes="*.tld" />
+			</copy>
+			
+			<mkdir dir="@{dest}/doc"/>
+			<copy todir="@{dest}/doc">
+				<fileset dir="doc" includes="ChangeLog LICENSE NOTICE" />
+			</copy>
+		</sequential>
+	</macrodef>
+	
+	<!-- ================================= 
+          target: apidoc              
+         ================================= -->
+    <target name="apidoc" description="create api documentation (javadoc)">
+    	<mkdir dir="doc/api"/>
+        <javadoc destdir="doc/api" sourcepath="src" protected="true" private="false" >
+        	<classpath refid="cp.webapp"></classpath>
+       	</javadoc>
+    	
+    	<zip destfile="doc/api.zip" basedir="doc/api" compress="true"/>
+    </target>
+
+	<target name="clean.apidoc">
+		<delete includeemptydirs="true">
+			<fileset dir="doc" includes="api/** api.zip" />
+		</delete>
+	</target>
+</project> 

@@ -2,3 +2,6 @@ doc/api.zip
 doc/api/
 json/bin/
 json/jar/
+bin/
+dist/
+jar/

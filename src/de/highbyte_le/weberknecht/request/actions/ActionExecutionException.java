@@ -12,9 +12,8 @@ package de.highbyte_le.weberknecht.request.actions;
  * problem while executing an {@link Action}
  * @author pmairif
  */
+@SuppressWarnings("serial")
 public class ActionExecutionException extends Exception {
-
-	private static final long serialVersionUID = -1039404363447644708L;
 
 	public ActionExecutionException() {
 		//

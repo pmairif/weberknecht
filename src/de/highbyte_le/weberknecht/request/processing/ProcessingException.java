@@ -13,8 +13,8 @@ package de.highbyte_le.weberknecht.request.processing;
  * 
  * @author pmairif
  */
+@SuppressWarnings("serial")
 public class ProcessingException extends Exception {
-	private static final long serialVersionUID = 5387418106046259907L;
 
 	public ProcessingException() {
 		//

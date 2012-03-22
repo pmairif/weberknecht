@@ -14,9 +14,8 @@ package de.highbyte_le.weberknecht.request.actions;
  * 
  * @author pmairif
  */
+@SuppressWarnings("serial")
 public class ActionNotFoundException extends Exception {
-
-	private static final long serialVersionUID = -3305216548335567558L;
 
 	public ActionNotFoundException() {
 		//

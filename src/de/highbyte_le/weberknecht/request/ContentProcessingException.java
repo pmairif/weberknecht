@@ -13,14 +13,13 @@ package de.highbyte_le.weberknecht.request;
  * exception while processing content
  * @author pmairif
  */
+@SuppressWarnings("serial")
 public class ContentProcessingException extends Exception {
 
 	private final int httpStatusCode;
 	
 	private final String errDesc;
 	
-	private static final long serialVersionUID = 608004509191979682L;
-
 	/**
 	 * @param httpStatusCode
 	 * 		HTTP status code to be sent back to the client
@@ -32,7 +31,6 @@ public class ContentProcessingException extends Exception {
 		this.errDesc = errDesc;
 	}
 
-	
 	/**
 	 * @return the errDesc
 	 */

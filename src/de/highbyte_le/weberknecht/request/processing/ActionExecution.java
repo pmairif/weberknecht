@@ -35,7 +35,10 @@ public class ActionExecution implements Processor {
 	 * @see de.highbyte_le.weberknecht.request.processing.Processor#execute(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, de.highbyte_le.weberknecht.request.actions.ExecutableAction)
 	 */
 	@Override
-	public void execute(HttpServletRequest request, HttpServletResponse response, RoutingTarget routingTarget, ExecutableAction action, ProcessingChain chain) throws ProcessingException {
+	public void execute(HttpServletRequest request, HttpServletResponse response, RoutingTarget routingTarget,
+			ExecutableAction action, ProcessingChain chain)
+	throws ProcessingException, ContentProcessingException {
+		
 		try {
 			if (action instanceof TaskedExecutableAction)
 				((TaskedExecutableAction)action).execute(request, response, routingTarget.getTask());
@@ -52,9 +55,6 @@ public class ActionExecution implements Processor {
 		}
 		catch (ActionExecutionException e) {
 			throw new ProcessingException("action execution exception: "+e.getMessage(), e);
-		}
-		catch (ContentProcessingException e) {
-			throw new ProcessingException("content processing exception: "+e.getMessage(), e);
 		}
 	}
 

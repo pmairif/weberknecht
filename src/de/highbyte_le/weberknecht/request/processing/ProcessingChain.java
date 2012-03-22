@@ -15,6 +15,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.highbyte_le.weberknecht.request.ContentProcessingException;
 import de.highbyte_le.weberknecht.request.actions.ExecutableAction;
 import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
 
@@ -37,7 +38,8 @@ public class ProcessingChain {
 	
 	private Iterator<Processor> it;
 	
-	public ProcessingChain(List<Processor> chain, HttpServletRequest request, HttpServletResponse response, RoutingTarget routingTarget, ExecutableAction action) {
+	public ProcessingChain(List<Processor> chain, HttpServletRequest request, HttpServletResponse response,
+			RoutingTarget routingTarget, ExecutableAction action) {
 		this.it = chain.iterator();
 
 		this.request = request;
@@ -50,8 +52,9 @@ public class ProcessingChain {
 	 * Continue processing. Returns after all processors are done. Which allows cleanup operations. 
 	 * 
 	 * @throws ProcessingException
+	 * @throws ContentProcessingException 
 	 */
-	public void doContinue() throws ProcessingException {
+	public void doContinue() throws ProcessingException, ContentProcessingException {
 		if (it.hasNext()) {
 			it.next().execute(request, response, routingTarget, action, this);
 		}

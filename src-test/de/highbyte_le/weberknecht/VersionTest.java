@@ -8,14 +8,17 @@
  */
 package de.highbyte_le.weberknecht;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Properties;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import de.highbyte_le.weberknecht.Version.VersionState;
+import de.highbyte_le.weberknecht.Version.VersionFormat;
 
 /**
  * Testing {@link Version}
@@ -45,11 +48,9 @@ public class VersionTest {
 		
 		assertFalse(actual.hasBuildNumber());
 		assertFalse(actual.hasBranch());
-		assertFalse(actual.hasVersionState());
 		
 		assertEquals(0, actual.getBuildNumber());
 		assertNull(actual.getBranch());
-		assertNull(actual.getVersionState());
 	}
 
 	/**
@@ -72,10 +73,8 @@ public class VersionTest {
 		
 		assertTrue(actual.hasBuildNumber());
 		assertTrue(actual.hasBranch());
-		assertTrue(actual.hasVersionState());
 		
 		assertEquals(99, actual.getBuildNumber());
-		assertEquals(VersionState.BETA, actual.getVersionState());
 		assertEquals("foo", actual.getBranch());
 	}
 	
@@ -84,7 +83,10 @@ public class VersionTest {
 	 */
 	@Test
 	public void testGetVersionString() {
-		fail("Not yet implemented");
+		Version version = new Version(2, 1, 21, new Integer(100), "develop");
+		assertEquals("2.1", version.getVersionString(VersionFormat.SHORT));
+		assertEquals("2.1.21-develop", version.getVersionString(VersionFormat.DEFAULT));
+		assertEquals("2.1.21-develop b100", version.getVersionString(VersionFormat.FULL));
 	}
 
 }

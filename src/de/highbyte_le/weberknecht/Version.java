@@ -42,11 +42,6 @@ public class Version {
 	private final Integer build;
 	
 	/**
-	 * optional version state
-	 */
-	private final VersionState state;
-	
-	/**
 	 * optional branch info
 	 */
 	private final String branch;
@@ -85,14 +80,9 @@ public class Version {
 			if (buildString != null)
 				build = new Integer( buildString );
 			
-			String stateString = properties.getProperty("version.weberknecht.state");
-			Version.VersionState versionState = null;
-			if (stateString != null)
-				versionState = Version.VersionState.parseString(stateString);
-			
 			String branch = properties.getProperty("version.weberknecht.branch");
 			
-			return new Version(major, minor, patch, build, versionState, branch);
+			return new Version(major, minor, patch, build, branch);
 		}
 		catch (NumberFormatException e) {
 			logger.error("parseProperties() - number format exception: "+e.getMessage());
@@ -102,15 +92,14 @@ public class Version {
     }
     
 	public Version(int major, int minor, int patch) {
-		this(major, minor, patch, null, null, null);
+		this(major, minor, patch, null, null);
 	}
 
-	public Version(int major, int minor, int patch, Integer build, VersionState state, String branch) {
+	public Version(int major, int minor, int patch, Integer build, String branch) {
 		this.major = major;
 		this.minor = minor;
 		this.patch = patch;
 		this.build = build;
-		this.state = state;
 		this.branch = branch;
 	}
 	
@@ -136,14 +125,6 @@ public class Version {
 		return 0;
 	}
 	
-	public boolean hasVersionState() {
-		return (state != null);
-	}
-	
-	public VersionState getVersionState() {
-		return state;
-	}
-
 	public boolean hasBranch() {
 		return (branch != null);
 	}
@@ -157,7 +138,7 @@ public class Version {
 	
 	@Override
 	public String toString() {
-		return getVersionString(VersionFormat.FULL_WITH_STATE_ASCII);
+		return getVersionString(VersionFormat.FULL);
 	}
 
 	/**
@@ -171,16 +152,11 @@ public class Version {
 		if (format != VersionFormat.SHORT) {
 			b.append(".").append(patch); //$NON-NLS-1$
 			
-			if (format != VersionFormat.DEFAULT && hasBuildNumber()) {
-				b.append(" b").append(getBuildNumber()); //$NON-NLS-1$
-			}
+			if (hasBranch())
+				b.append("-").append(branch);
 			
-			if (format == VersionFormat.FULL_WITH_STATE_ASCII && hasVersionState()) {
-				b.append(" (").append(state.getAscii()).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			else if (format == VersionFormat.FULL_WITH_STATE_GREEK && hasVersionState()) {
-				b.append(" (").append(state.getGreek()).append(")");  //$NON-NLS-1$//$NON-NLS-2$
-			}
+			if (format != VersionFormat.DEFAULT && hasBuildNumber())
+				b.append(" b").append(getBuildNumber()); //$NON-NLS-1$
 		}
 		
 		return b.toString();
@@ -200,53 +176,6 @@ public class Version {
 		/**
 		 * version string with the full version information including build number but without state
 		 */
-		FULL,
-		
-		/**
-		 * with the full version information with state in ASCII
-		 */
-		FULL_WITH_STATE_ASCII,
-		
-		/**
-		 * with the full version information with state in Greek letters
-		 */
-		FULL_WITH_STATE_GREEK
+		FULL		
 	}
-	
-    public enum VersionState {
-    	ALPHA,
-    	BETA,
-    	GAMMA;
-    	
-    	public String getGreek() {
-    		String greek = null;
-    		switch (this) {
-    			case ALPHA: greek = "α"; break; //$NON-NLS-1$
-    			case BETA:	greek = "β"; break; //$NON-NLS-1$
-    			case GAMMA:	greek = "γ"; break; //$NON-NLS-1$
-    		}
-    		return greek;
-    	}
-
-    	public String getAscii() {
-    		String ascii = null;
-    		switch (this) {
-    			case ALPHA: ascii = "alpha"; break; //$NON-NLS-1$
-    			case BETA:	ascii = "beta"; break; //$NON-NLS-1$
-    			case GAMMA:	ascii = "gamma"; break; //$NON-NLS-1$
-    		}
-    		return ascii;
-    	}
-    	
-    	@SuppressWarnings("nls")
-    	public static VersionState parseString(String stateString) {
-    		if (stateString.equalsIgnoreCase("alpha") || stateString.equals("α"))
-    			return ALPHA;
-    		if (stateString.equalsIgnoreCase("beta") || stateString.equals("β"))
-    			return BETA;
-    		if (stateString.equalsIgnoreCase("gamma") || stateString.equals("γ"))
-    			return GAMMA;
-    		return null;
-    	}
-    }
 }

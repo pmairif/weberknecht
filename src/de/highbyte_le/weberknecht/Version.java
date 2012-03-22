@@ -1,7 +1,7 @@
 /*
  * Version.java
  *
- * Copyright 2007 Patrick Mairif.
+ * Copyright 2007-2012 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
  * created: 2007-09-01
@@ -31,6 +31,25 @@ public class Version {
 	private final static Log logger = LogFactory.getLog(Version.class);
 
     private static Version appVersion = null;
+    
+	private final int major;
+	private final int minor;
+	private final int patch;
+	
+	/**
+	 * optional build number
+	 */
+	private final Integer build;
+	
+	/**
+	 * optional version state
+	 */
+	private final VersionState state;
+	
+	/**
+	 * optional branch info
+	 */
+	private final String branch;
 	
     @SuppressWarnings("nls")
     public static synchronized Version getAppVersion() {
@@ -41,53 +60,60 @@ public class Version {
 	        		Properties p = new Properties();
 					p.load(in);
 
-					try {
-						int major = Integer.parseInt( p.getProperty("version.weberknecht.major") );
-						int minor = Integer.parseInt( p.getProperty("version.weberknecht.minor") );
-						int patch = Integer.parseInt( p.getProperty("version.weberknecht.patch") );
-						int build = Integer.parseInt( p.getProperty("version.weberknecht.build") );
-						Version.VersionState versionState = Version.VersionState.parseString(p.getProperty("version.weberknecht.state"));
-						
-						appVersion = new Version(major, minor, patch, build, versionState);
-					}
-					catch (NumberFormatException e) {
-						logger.error("loadProperties() - number format exception: "+e.getMessage());
-					}
+					appVersion = parseProperties(p);
         		}
         		else {
-        			logger.error("createVersion() - version.properties not found");
+        			logger.error("getAppVersion() - version.properties not found");
         		}
 			}
 			catch (IOException e) {
-				logger.error("createVersion() - I/O Exception while loading version.properties: "+e.getMessage());
+				logger.error("getAppVersion() - I/O Exception while loading version.properties: "+e.getMessage());
 			}
     	}
     	
     	return appVersion;
     }
+
+    protected static Version parseProperties(Properties properties) {
+		try {
+			int major = Integer.parseInt( properties.getProperty("version.weberknecht.major") );
+			int minor = Integer.parseInt( properties.getProperty("version.weberknecht.minor") );
+			int patch = Integer.parseInt( properties.getProperty("version.weberknecht.patch") );
+			
+			String buildString = properties.getProperty("version.weberknecht.build");
+			Integer build = null;
+			if (buildString != null)
+				build = new Integer( buildString );
+			
+			String stateString = properties.getProperty("version.weberknecht.state");
+			Version.VersionState versionState = null;
+			if (stateString != null)
+				versionState = Version.VersionState.parseString(stateString);
+			
+			String branch = properties.getProperty("version.weberknecht.branch");
+			
+			return new Version(major, minor, patch, build, versionState, branch);
+		}
+		catch (NumberFormatException e) {
+			logger.error("parseProperties() - number format exception: "+e.getMessage());
+		}
+		
+		return null;
+    }
     
-	
 	public Version(int major, int minor, int patch) {
+		this(major, minor, patch, null, null, null);
+	}
+
+	public Version(int major, int minor, int patch, Integer build, VersionState state, String branch) {
 		this.major = major;
 		this.minor = minor;
 		this.patch = patch;
-	}
-
-	public Version(int major, int minor, int patch, int build) {
-		this(major, minor, patch);
-		this.build = new Integer(build);
-	}
-
-	public Version(int major, int minor, int patch, VersionState state) {
-		this(major, minor, patch);
+		this.build = build;
 		this.state = state;
+		this.branch = branch;
 	}
-
-	public Version(int major, int minor, int patch, int build, VersionState state) {
-		this(major, minor, patch, build);
-		this.state = state;
-	}
-
+	
 	public int getMajor() {
 		return this.major;
 	}
@@ -116,6 +142,17 @@ public class Version {
 	
 	public VersionState getVersionState() {
 		return state;
+	}
+
+	public boolean hasBranch() {
+		return (branch != null);
+	}
+
+	/**
+	 * @return the branch
+	 */
+	public String getBranch() {
+		return branch;
 	}
 	
 	@Override
@@ -148,20 +185,6 @@ public class Version {
 		
 		return b.toString();
 	}
-	
-	private int major = 0;
-	private int minor = 0;
-	private int patch = 0;
-	
-	/**
-	 * optional build number
-	 */
-	private Integer build = null;
-	
-	/**
-	 * optional version state
-	 */
-	private VersionState state = null;
 	
 	public enum VersionFormat {
 		/**

@@ -63,8 +63,18 @@
 	
 	<target name="version" depends="new-buildnumber">
 		<property file="${dir.src}/de/highbyte_le/weberknecht/version.properties" />
-		<property name="version.weberknecht"		value="${version.weberknecht.major}.${version.weberknecht.minor}.${version.weberknecht.patch}" />
-		<property name="version.weberknecht.short"	value="${version.weberknecht.major}.${version.weberknecht.minor}" />
+		
+		<condition property="branch-suffix" value="-${version.weberknecht.branch}">
+			<isset property="version.weberknecht.branch"/>
+		</condition>
+		<condition property="branch-suffix" value="">
+			<not>
+				<isset property="version.weberknecht.branch"/>
+			</not>	
+		</condition>
+		
+		<property name="version.weberknecht"		value="${version.weberknecht.major}.${version.weberknecht.minor}.${version.weberknecht.patch}${branch-suffix}" />
+		<property name="version.weberknecht.short"	value="${version.weberknecht.major}.${version.weberknecht.minor}${branch-suffix}" />
 		<echo message="${version.weberknecht} build ${version.weberknecht.build}" />
 	</target>
 

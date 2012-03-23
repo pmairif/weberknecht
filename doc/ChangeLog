@@ -1,5 +1,5 @@
-next:
-	- bugfix: HTTP error code of ContentProcessingException is used again. 
+0.12.1:
+	- bugfix: really passing HTTP error code of ContentProcessingException to response 
 
 0.12.0:
 	- ReqUtil replaced by Router and RoutingTarget

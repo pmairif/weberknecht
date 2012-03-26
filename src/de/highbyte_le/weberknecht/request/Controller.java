@@ -285,6 +285,9 @@ public class Controller extends HttpServlet {
 	}
 	
 	private ExecutableAction getAction(RoutingTarget routingTarget) throws ActionNotFoundException, ActionInstantiationException {
+		if (null == routingTarget)
+			throw new ActionNotFoundException();
+		
 		String action1 = routingTarget.getActionName();
 		if (action1 == null)
 			throw new ActionNotFoundException();

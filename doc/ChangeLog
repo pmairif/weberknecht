@@ -1,3 +1,6 @@
+0.12.2:
+	- bugfix: fixed null pointer exception, when routing didn't match.
+
 0.12.1:
 	- bugfix: really passing HTTP error code of ContentProcessingException to response 
 

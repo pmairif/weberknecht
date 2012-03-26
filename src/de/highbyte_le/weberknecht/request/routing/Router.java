@@ -1,10 +1,9 @@
 /*
  * Router.java (weberknecht)
  *
- * Copyright 2011 <Your Name>.
+ * Copyright 2011 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  *
- * created: 09.12.2011
  * tabstop=4, charset=UTF-8
  */
 package de.highbyte_le.weberknecht.request.routing;

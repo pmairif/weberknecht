@@ -18,11 +18,11 @@ import org.apache.commons.logging.LogFactory;
 /**
  * create action processors
  * 
+ * Custom processors can be configured via action-view-processors/action-view-processor in weberknecht.xml.
+ * 
  * @author pmairif
  */
 public class ActionViewProcessorFactory {
-	//TODO use configuration file to register custom processors (eg Calendar)
-	
 	private static final Log log = LogFactory.getLog(ActionViewProcessor.class);
 	
 	private final Map<String, Class<? extends ActionViewProcessor>> suffixProcessorMap = new HashMap<String, Class<? extends ActionViewProcessor>>();

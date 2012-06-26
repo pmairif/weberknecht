@@ -1,3 +1,6 @@
+next:
+	- additional action view processors configurable
+
 0.12.2:
 	- bugfix: fixed null pointer exception, when routing didn't match.
 

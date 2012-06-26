@@ -93,7 +93,10 @@ public class Controller extends HttpServlet {
 			
 			//action processors
 			actionProcessorFactory = new ActionViewProcessorFactory();
-			//TODO register action processors from config
+			//register action processors from config
+			for (Entry<String, String> e: conf.getActionProcessorSuffixMap().entrySet()) {
+				actionProcessorFactory.registerProcessor(e.getKey(), e.getValue());
+			}
 			
 			//TODO read generic processing chain from config
 			//pre processors

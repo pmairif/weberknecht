@@ -37,7 +37,7 @@ public class DataActionProcessor implements ActionViewProcessor {
 			throw new IllegalArgumentException("Action not applicable here.");
 	}
 	
-	public void processView(@SuppressWarnings("unused") HttpServletRequest request, HttpServletResponse response, DataAction2 action)
+	public void processView(HttpServletRequest request, HttpServletResponse response, DataAction2 action)
 			throws IOException {
 		
 		if (log.isDebugEnabled())

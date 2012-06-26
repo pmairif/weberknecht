@@ -50,6 +50,11 @@ public class WeberknechtConf {
 	private String routerClass = null;
 	
 	/**
+	 * Mapping of suffixes to ActionViewProcessor classes.
+	 */
+	private Map<String, String> actionProcessorSuffixMap = new HashMap<String, String>();
+	
+	/**
 	 * Logger for this class
 	 */
 	private final static Log log = LogFactory.getLog(WeberknechtConf.class);
@@ -96,85 +101,20 @@ public class WeberknechtConf {
 	/**
 	 * reads weberknecht.xml from input stream and creates new config instance
 	 */
-	@SuppressWarnings("unchecked")
 	static WeberknechtConf readConfig(InputStream in) {
 		WeberknechtConf conf = new WeberknechtConf();
 		
-		//read available actions from weberknecht.xml
 		Document doc = null;
 		try {
 			doc = new SAXBuilder().build(in);
 			Element rootElement = doc.getRootElement();
 			
-			Element dbsElement = rootElement.getChild("dbs");
-			if (dbsElement != null) {
-				List<Element> dbElements = dbsElement.getChildren("db");
-				if (dbElements != null) {
-					for (Element e: dbElements) {
-						conf.dbs.add(e.getTextNormalize());
-					}
-				}
-				else {
-					log.debug("readConfig() - There is no additional db configured");
-				}
-			}
-
-			Element preProcessorsElement = rootElement.getChild("pre-processors");
-			if (preProcessorsElement != null) {
-				List<Element> preProcessorElements = preProcessorsElement.getChildren("pre-processor");
-				if (preProcessorElements != null) {
-					for (Element e: preProcessorElements) {
-						String className = e.getAttributeValue("class");
-						conf.preProcessorClasses.add(className);
-					}
-				}
-			}
-
-			Element postProcessorsElement = rootElement.getChild("post-processors");
-			if (postProcessorsElement != null) {
-				List<Element> postProcessorElements = postProcessorsElement.getChildren("post-processor");
-				if (postProcessorElements != null) {
-					for (Element e: postProcessorElements) {
-						String className = e.getAttributeValue("class");
-						conf.postProcessorClasses.add(className);
-					}
-				}
-			}
-			
-			Element routerElement = rootElement.getChild("router");
-			if (routerElement != null) {
-				conf.routerClass = routerElement.getAttributeValue("class");
-			}
-			
-			//actions
-			List<Element> actionsElements = rootElement.getChildren("actions");
-			if (actionsElements != null) {
-				for (Element e: actionsElements) {
-					String area = e.getAttributeValue("area");
-					if (area == null)
-						area = "";
-					Map<String, String> actionClassMap = conf.getActionClassMap(area);
-					
-					List<Element> actionElements = e.getChildren("action");
-					if (null == actionElements) {
-						log.error("readConfig() - There are no actions configured for area \""+area+"\"");
-					}
-					else {
-						for (Element e1: actionElements) {
-							String name = e1.getAttributeValue("name");
-							String className = e1.getAttributeValue("class");
-							
-							if (name != null && className != null)
-								actionClassMap.put(name, className);
-							else
-								log.error("readConfig() - invalid action configuration: name="+name+", class="+className);
-						}
-					}
-				}
-			}
-			else {
-				log.error("readConfig() - There are no actions configured!");
-			}
+			readDbs(conf, rootElement);
+			readPreProcessors(conf, rootElement);
+			readPostProcessors(conf, rootElement);
+			readRouter(conf, rootElement);
+			readActionViewProcessors(conf, rootElement);
+			readActions(conf, rootElement);
 		}
 		catch (JDOMException e1) {
 			log.error("readConfig() - JDOMException: "+e1.getMessage(), e1);	//$NON-NLS-1$
@@ -184,6 +124,123 @@ public class WeberknechtConf {
 		}
 
 		return conf;
+	}
+
+	/**
+	 * @param conf
+	 * @param rootElement
+	 */
+	@SuppressWarnings("unchecked")
+	protected static void readActions(WeberknechtConf conf, Element rootElement) {
+		List<Element> actionsElements = rootElement.getChildren("actions");
+		if (actionsElements != null) {
+			for (Element e: actionsElements) {
+				String area = e.getAttributeValue("area");
+				if (area == null)
+					area = "";
+				Map<String, String> actionClassMap = conf.getActionClassMap(area);
+				
+				List<Element> actionElements = e.getChildren("action");
+				if (null == actionElements) {
+					log.error("readConfig() - There are no actions configured for area \""+area+"\"");
+				}
+				else {
+					for (Element e1: actionElements) {
+						String name = e1.getAttributeValue("name");
+						String className = e1.getAttributeValue("class");
+						
+						if (name != null && className != null)
+							actionClassMap.put(name, className);
+						else
+							log.error("readConfig() - invalid action configuration: name="+name+", class="+className);
+					}
+				}
+			}
+		}
+		else {
+			log.error("readConfig() - There are no actions configured!");
+		}
+	}
+
+	/**
+	 * @param conf
+	 * @param rootElement
+	 */
+	protected static void readRouter(WeberknechtConf conf, Element rootElement) {
+		Element routerElement = rootElement.getChild("router");
+		if (routerElement != null) {
+			conf.routerClass = routerElement.getAttributeValue("class");
+		}
+	}
+
+	/**
+	 * @param conf
+	 * @param rootElement
+	 */
+	@SuppressWarnings("unchecked")
+	protected static void readPostProcessors(WeberknechtConf conf, Element rootElement) {
+		Element postProcessorsElement = rootElement.getChild("post-processors");
+		if (postProcessorsElement != null) {
+			List<Element> postProcessorElements = postProcessorsElement.getChildren("post-processor");
+			if (postProcessorElements != null) {
+				for (Element e: postProcessorElements) {
+					String className = e.getAttributeValue("class");
+					conf.postProcessorClasses.add(className);
+				}
+			}
+		}
+	}
+
+	/**
+	 * @param conf
+	 * @param rootElement
+	 */
+	@SuppressWarnings("unchecked")
+	protected static void readPreProcessors(WeberknechtConf conf, Element rootElement) {
+		Element preProcessorsElement = rootElement.getChild("pre-processors");
+		if (preProcessorsElement != null) {
+			List<Element> preProcessorElements = preProcessorsElement.getChildren("pre-processor");
+			if (preProcessorElements != null) {
+				for (Element e: preProcessorElements) {
+					String className = e.getAttributeValue("class");
+					conf.preProcessorClasses.add(className);
+				}
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	protected static void readDbs(WeberknechtConf conf, Element rootElement) {
+		Element dbsElement = rootElement.getChild("dbs");
+		if (dbsElement != null) {
+			List<Element> dbElements = dbsElement.getChildren("db");
+			if (dbElements != null) {
+				for (Element e: dbElements) {
+					conf.dbs.add(e.getTextNormalize());
+				}
+			}
+			else {
+				log.debug("readConfig() - There is no additional db configured");
+			}
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected static void readActionViewProcessors(WeberknechtConf conf, Element rootElement) {
+		Element processorsElement = rootElement.getChild("action-view-processors");
+		if (processorsElement != null) {
+			List<Element> processorElements = processorsElement.getChildren("action-view-processor");
+			if (processorElements != null) {
+				for (Element e: processorElements) {
+					String suffix = e.getAttributeValue("suffix");
+					String className = e.getAttributeValue("class");
+					conf.actionProcessorSuffixMap.put(suffix, className);
+				}
+			}
+			else {
+				log.debug("readConfig() - There is no additional action view processor configured");
+			}
+		}
 	}
 	
 	/**
@@ -286,5 +343,12 @@ public class WeberknechtConf {
 	 */
 	public String getRouterClass() {
 		return routerClass;
+	}
+	
+	/**
+	 * @return the actionProcessorSuffixMap
+	 */
+	public Map<String, String> getActionProcessorSuffixMap() {
+		return actionProcessorSuffixMap;
 	}
 }

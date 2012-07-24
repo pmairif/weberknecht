@@ -30,7 +30,7 @@ public class DataActionProcessor implements ActionViewProcessor {
 	 * @see de.highbyte_le.weberknecht.request.ActionProcessor#processAction(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, de.highbyte_le.weberknecht.request.ExecutableAction)
 	 */
 	@Override
-	public void processView(HttpServletRequest request, HttpServletResponse response, ExecutableAction action) throws IOException {
+	public void processView(HttpServletRequest request, HttpServletResponse response, ExecutableAction action) throws IOException, ActionExecutionException {
 		if (action instanceof DataAction)
 			processView(request, response, (DataAction)action);
 		else
@@ -38,7 +38,7 @@ public class DataActionProcessor implements ActionViewProcessor {
 	}
 	
 	public void processView(HttpServletRequest request, HttpServletResponse response, DataAction action)
-			throws IOException {
+			throws IOException, ActionExecutionException {
 		
 		if (log.isDebugEnabled())
 			log.debug("processView() - processing action "+action.getClass().getSimpleName());

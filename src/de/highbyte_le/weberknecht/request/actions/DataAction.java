@@ -25,5 +25,5 @@ public interface DataAction extends DatabaseCapable, ExecutableAction {
 	 * <p>set the mime type with {@link HttpServletResponse#setContentType(String)}
 	 * and write data to output stream with {@link HttpServletResponse#getOutputStream()}.</p>
 	 */
-	public void writeData(HttpServletResponse response) throws IOException;
+	public void writeData(HttpServletResponse response) throws IOException, ActionExecutionException;
 }

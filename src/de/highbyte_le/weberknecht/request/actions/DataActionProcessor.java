@@ -31,13 +31,13 @@ public class DataActionProcessor implements ActionViewProcessor {
 	 */
 	@Override
 	public void processView(HttpServletRequest request, HttpServletResponse response, ExecutableAction action) throws IOException {
-		if (action instanceof DataAction2)
-			processView(request, response, (DataAction2)action);
+		if (action instanceof DataAction)
+			processView(request, response, (DataAction)action);
 		else
 			throw new IllegalArgumentException("Action not applicable here.");
 	}
 	
-	public void processView(HttpServletRequest request, HttpServletResponse response, DataAction2 action)
+	public void processView(HttpServletRequest request, HttpServletResponse response, DataAction action)
 			throws IOException {
 		
 		if (log.isDebugEnabled())

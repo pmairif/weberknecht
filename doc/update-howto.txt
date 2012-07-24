@@ -1,2 +1,3 @@
 0.x to 1.0:
-	- Controller moved to de.highbyte_le.weberknecht.Controller. web.xml has to be changed. 
+	- Controller moved to de.highbyte_le.weberknecht.Controller. web.xml has to be changed.
+	- DataAction2 renamed to DataAction. Implementing classes have to be modified. 

@@ -59,6 +59,15 @@ public class ModelHelper {
 		return (String) request.getAttribute(SELF_KEY);
 	}
 	
+	public void setSelf(HttpServletRequest request) {	//TODO build test
+		StringBuilder b = new StringBuilder();
+		
+		b.append(request.getContextPath());
+		b.append(request.getServletPath());
+		
+		setSelf(b.toString());
+	}
+	
 	protected void setSelf(String self) {
 		request.setAttribute(SELF_KEY, self);
 	}

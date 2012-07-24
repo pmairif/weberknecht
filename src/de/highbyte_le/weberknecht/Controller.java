@@ -1,13 +1,13 @@
 /*
  * Controller.java
  *
- * Copyright 2008-2011 Patrick Mairif.
+ * Copyright 2008-2012 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
  * created: Jan 22, 2008
  * tabstop=4, charset=UTF-8
  */
-package de.highbyte_le.weberknecht.request;
+package de.highbyte_le.weberknecht;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -32,6 +32,11 @@ import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 import de.highbyte_le.weberknecht.db.DBConnectionException;
 import de.highbyte_le.weberknecht.db.DbConnectionProvider;
 import de.highbyte_le.weberknecht.db.DefaultWebDbConnectionProvider2;
+import de.highbyte_le.weberknecht.request.AdditionalDatabaseCapable;
+import de.highbyte_le.weberknecht.request.Configurable;
+import de.highbyte_le.weberknecht.request.ContentProcessingException;
+import de.highbyte_le.weberknecht.request.DatabaseCapable;
+import de.highbyte_le.weberknecht.request.ModelHelper;
 import de.highbyte_le.weberknecht.request.actions.ActionExecutionException;
 import de.highbyte_le.weberknecht.request.actions.ActionFactory;
 import de.highbyte_le.weberknecht.request.actions.ActionInstantiationException;
@@ -205,7 +210,7 @@ public class Controller extends HttpServlet {
 			RoutingTarget routingTarget = router.routeUri(request.getServletPath());
 
 			ModelHelper modelHelper = new ModelHelper(request, getServletContext());
-			modelHelper.setSelf(constructSelf(request));
+			modelHelper.setSelf(request);
 			
 			ExecutableAction action = getAction(routingTarget);
 			if (log.isDebugEnabled())
@@ -276,15 +281,6 @@ public class Controller extends HttpServlet {
 		if (log.isInfoEnabled()) {
 			log.info("page delivery took "+(finish-start)+" ms");
 		}
-	}
-	
-	private String constructSelf(HttpServletRequest request) {	//FIXME this really needs to be tested!
-		StringBuilder b = new StringBuilder();
-		
-		b.append(request.getContextPath());
-		b.append(request.getServletPath());
-		
-		return b.toString();
 	}
 	
 	private ExecutableAction getAction(RoutingTarget routingTarget) throws ActionNotFoundException, ActionInstantiationException {

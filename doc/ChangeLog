@@ -1,5 +1,6 @@
-next:
+next (1.0):
 	- additional action view processors configurable
+	- Controller moved to de.highbyte_le.weberknecht.Controller
 
 0.12.2:
 	- bugfix: fixed null pointer exception, when routing didn't match.

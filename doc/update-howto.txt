@@ -1,0 +1,2 @@
+0.x to 1.0:
+	- Controller moved to de.highbyte_le.weberknecht.Controller. web.xml has to be changed. 

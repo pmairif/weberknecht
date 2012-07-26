@@ -4,6 +4,7 @@ next (1.0):
 	- DataAction2 renamed to DataAction
 	- DataAction.writeData() throws ActionExecutionException
 	- The method needsDatabase of the interface DatabaseCapable was droped and actions that need a database just have to implement the interface.
+	- generic beans removed
 
 0.12.2:
 	- bugfix: fixed null pointer exception, when routing didn't match.

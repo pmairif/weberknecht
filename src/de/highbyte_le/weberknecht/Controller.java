@@ -49,9 +49,9 @@ import de.highbyte_le.weberknecht.request.processing.ActionExecution;
 import de.highbyte_le.weberknecht.request.processing.ProcessingChain;
 import de.highbyte_le.weberknecht.request.processing.ProcessingException;
 import de.highbyte_le.weberknecht.request.processing.Processor;
+import de.highbyte_le.weberknecht.request.routing.AreaCapableRouter;
 import de.highbyte_le.weberknecht.request.routing.Router;
 import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
-import de.highbyte_le.weberknecht.request.routing.SimpleRouter;
 
 /**
  * webapp controller
@@ -185,7 +185,7 @@ public class Controller extends HttpServlet {
 		}
 		
 		if (ret == null)
-			ret = new SimpleRouter();
+			ret = new AreaCapableRouter();
 		
 		return ret;
 	}

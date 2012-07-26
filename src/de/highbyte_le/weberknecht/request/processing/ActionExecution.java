@@ -11,7 +11,6 @@ package de.highbyte_le.weberknecht.request.processing;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -45,9 +44,6 @@ public class ActionExecution implements Processor {
 				action.execute(request, response);
 			
 			chain.doContinue();
-		}
-		catch (ServletException e) {
-			throw new ProcessingException("servlet exception: "+e.getMessage(), e);
 		}
 		catch (IOException e) {
 			throw new ProcessingException("i/o exception: "+e.getMessage(), e);

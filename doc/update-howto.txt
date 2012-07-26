@@ -3,3 +3,4 @@
 	- DataAction2 renamed to DataAction. Implementing classes have to be modified.
 	- Actions that need a database connection, have to implement DatabaseCapable. The old method needsDatabase was dropped.
 	- The generic beans were removed. If they were used, they have to be replaced or copied from a previous release.
+	- replace any ServletException thrown in actions with ActionException

@@ -44,7 +44,7 @@ public class JsonActionProcessor implements ActionViewProcessor {
 		}
 	}
 
-	public void processView(@SuppressWarnings("unused") HttpServletRequest request, HttpServletResponse response, JsonAction action)
+	public void processView(HttpServletRequest request, HttpServletResponse response, JsonAction action)
 			throws IOException, JSONException {
 		
 		response.setContentType( "application/json" );

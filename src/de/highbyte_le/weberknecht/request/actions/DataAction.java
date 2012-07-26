@@ -12,14 +12,12 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
 
-import de.highbyte_le.weberknecht.request.DatabaseCapable;
-
 /**
  * action creating binary data
  * 
  * @author pmairif
  */
-public interface DataAction extends DatabaseCapable, ExecutableAction {
+public interface DataAction extends ExecutableAction {
 	
 	/**
 	 * <p>set the mime type with {@link HttpServletResponse#setContentType(String)}

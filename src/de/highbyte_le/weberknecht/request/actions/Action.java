@@ -1,7 +1,7 @@
 /*
  * Action.java
  *
- * Copyright 2007 Patrick Mairif.
+ * Copyright 2007-2012 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
  * created: 2007-09-01
@@ -11,7 +11,6 @@ package de.highbyte_le.weberknecht.request.actions;
 
 import java.util.Map;
 
-import de.highbyte_le.weberknecht.request.DatabaseCapable;
 import de.highbyte_le.weberknecht.request.View;
 
 /**
@@ -19,7 +18,7 @@ import de.highbyte_le.weberknecht.request.View;
  * 
  * @author pmairif
  */
-public interface Action extends DatabaseCapable, ExecutableAction {
+public interface Action extends ExecutableAction {
 	/**
 	 * return the view information
 	 */

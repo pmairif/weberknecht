@@ -225,8 +225,8 @@ public class Controller extends HttpServlet {
 
 			//initialization
 			for (Processor p: processors) {
-				if (p.needsDatabase())
-					p.setDatabase(con);
+				if (p instanceof DatabaseCapable)
+					((DatabaseCapable) p).setDatabase(con);
 			}
 			
 			connectionList.addAll( initializeAction(action, con) );
@@ -311,12 +311,12 @@ public class Controller extends HttpServlet {
 	private boolean isDbConnectionNeeded(ExecutableAction action) {
 		boolean need = false;
 		
-		if (action instanceof DatabaseCapable && ((DatabaseCapable)action).needsDatabase())
+		if (action instanceof DatabaseCapable)
 			need = true;
 		
 		if (!need) {
 			for (Processor pp: processors) {
-				if (pp.needsDatabase()) {
+				if (pp instanceof DatabaseCapable) {
 					need = true;
 					break;
 				}

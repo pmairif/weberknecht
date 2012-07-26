@@ -46,7 +46,7 @@ public class FeedActionProcessor implements ActionViewProcessor {
 			throw new IllegalArgumentException("Action not applicable here.");
 	}
 	
-	public void processView(@SuppressWarnings("unused") HttpServletRequest request, HttpServletResponse response, FeedAction action) throws IOException {
+	public void processView(HttpServletRequest request, HttpServletResponse response, FeedAction action) throws IOException {
 		if (log.isDebugEnabled())
 			log.debug("processView() - processing action "+action.getClass().getSimpleName());
 		

@@ -1,3 +1,4 @@
 0.x to 1.0:
 	- Controller moved to de.highbyte_le.weberknecht.Controller. web.xml has to be changed.
-	- DataAction2 renamed to DataAction. Implementing classes have to be modified. 
+	- DataAction2 renamed to DataAction. Implementing classes have to be modified.
+	- Actions that need a database connection, have to implement DatabaseCapable. The old method needsDatabase was dropped. 

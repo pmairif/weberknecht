@@ -12,14 +12,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.highbyte_le.weberknecht.request.ContentProcessingException;
-import de.highbyte_le.weberknecht.request.DatabaseCapable;
 import de.highbyte_le.weberknecht.request.actions.ExecutableAction;
 import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
 
 /**
  * @author pmairif
  */
-public interface Processor extends DatabaseCapable {
+public interface Processor {
 	/**
 	 * execute logic.
 	 * 

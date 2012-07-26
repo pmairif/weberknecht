@@ -1,7 +1,7 @@
 /*
  * ActionExecution.java (weberknecht)
  *
- * Copyright 2010 Patrick Mairif.
+ * Copyright 2010-2012 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
  * created: 15.12.2010
@@ -10,7 +10,6 @@
 package de.highbyte_le.weberknecht.request.processing;
 
 import java.io.IOException;
-import java.sql.Connection;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -56,21 +55,5 @@ public class ActionExecution implements Processor {
 		catch (ActionExecutionException e) {
 			throw new ProcessingException("action execution exception: "+e.getMessage(), e);
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see de.highbyte_le.weberknecht.request.DatabaseCapable#needsDatabase()
-	 */
-	@Override
-	public boolean needsDatabase() {
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see de.highbyte_le.weberknecht.request.DatabaseCapable#setDatabase(java.sql.Connection)
-	 */
-	@Override
-	public void setDatabase(Connection con) {
-		//
 	}
 }

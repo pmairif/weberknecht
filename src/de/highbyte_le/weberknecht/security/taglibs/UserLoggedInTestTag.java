@@ -1,7 +1,7 @@
 /*
  * UserLoggedInTestTag.java
  *
- * Copyright 2008 Patrick Mairif.
+ * Copyright 2008-2012 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
  * created: Jan 31, 2008
@@ -16,6 +16,7 @@ import de.highbyte_le.weberknecht.security.UserAuthentication;
 /**
  * @author pmairif
  */
+@SuppressWarnings("serial")
 public class UserLoggedInTestTag extends TagSupport {
 
 	public UserLoggedInTestTag() {
@@ -33,6 +34,4 @@ public class UserLoggedInTestTag extends TagSupport {
 		}
 		return SKIP_BODY;
 	}
-	
-	private static final long serialVersionUID = 2645876757991522617L;
 }

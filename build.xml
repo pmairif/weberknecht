@@ -6,14 +6,15 @@
 	<property name="dir.src"		value="src" />
 	<property name="dir.classes"	value="bin" />
 	<property name="dir.lib"		value="lib" />
+	<property name="dir.rpx"		value="modules/rpx" />
 
 	<!-- ==============================
 		Default Target
 	=============================== -->
-	<target name="all" depends="compile, jar, dist"
+	<target name="all" depends="compile, jar, module.rpx.jar, dist"
 		description="build all"/>
 
-	<target name="clean" depends="clean.java, clean.apidoc"
+	<target name="clean" depends="clean.java, clean.apidoc, module.rpx.clean"
 		description="removes all compiled stuff" />
 
 	<target name="mrproper" depends="clean">
@@ -38,9 +39,26 @@
 		</javac>
 	</target>
 	
+	<target name="module.rpx.compile" depends="compile"
+		description="compiles the rpx-module java sources">
+		
+		<javac srcdir="${dir.rpx}/src" destdir="${dir.rpx}/bin" encoding="UTF-8" includeantruntime="false">
+			<classpath>
+				<path refid="cp.webapp"/>
+				<pathelement path="bin"/>
+			</classpath>
+		</javac>
+	</target>
+	
 	<target name="clean.java">
 		<delete>
 			<fileset dir="${dir.classes}" includes="**/*.class" />
+		</delete>
+	</target>
+	
+	<target name="module.rpx.clean">
+		<delete>
+			<fileset dir="${dir.rpx}/bin" includes="**/*.class" />
 		</delete>
 	</target>
 	
@@ -57,6 +75,18 @@
 					<attribute name="Implementation-Title" value="Weberknecht"/>
 					<attribute name="Implementation-Version" value="${version.weberknecht}"/>
 				</section>
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="module.rpx.jar" depends="module.rpx.compile, version" description="creates jar for rpx-module">
+		<mkdir dir="jar"/>
+		
+		<jar destfile="jar/weberknecht-rpx.jar" basedir="${dir.rpx}/bin" includes="**/*.class **/*.properties">
+			<metainf dir="${dir.rpx}" includes="tlds/*.tld" />
+			
+			<manifest>
+    			<attribute name="Built-By" value="${user.name}"/>
 			</manifest>
 		</jar>
 	</target>

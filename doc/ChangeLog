@@ -8,6 +8,7 @@ next (1.0):
 	- ReqUtil removed
 	- AreaCapableRouter now default
 	- actions don't throw ServletExceptions any more.
+	- rpx-stuff moved to module 
 
 0.12.2:
 	- bugfix: fixed null pointer exception, when routing didn't match.

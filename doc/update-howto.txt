@@ -4,3 +4,4 @@
 	- Actions that need a database connection, have to implement DatabaseCapable. The old method needsDatabase was dropped.
 	- The generic beans were removed. If they were used, they have to be replaced or copied from a previous release.
 	- replace any ServletException thrown in actions with ActionException
+	- rpx stuff has moved to the rpx-module. Put the module jar into your lib directory, if you need it.

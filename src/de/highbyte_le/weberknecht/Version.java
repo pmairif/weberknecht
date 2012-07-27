@@ -37,11 +37,6 @@ public class Version {
 	private final int patch;
 	
 	/**
-	 * optional build number
-	 */
-	private final Integer build;
-	
-	/**
 	 * optional branch info
 	 */
 	private final String branch;
@@ -74,15 +69,9 @@ public class Version {
 			int major = Integer.parseInt( properties.getProperty("version.weberknecht.major") );
 			int minor = Integer.parseInt( properties.getProperty("version.weberknecht.minor") );
 			int patch = Integer.parseInt( properties.getProperty("version.weberknecht.patch") );
-			
-			String buildString = properties.getProperty("version.weberknecht.build");
-			Integer build = null;
-			if (buildString != null)
-				build = new Integer( buildString );
-			
 			String branch = properties.getProperty("version.weberknecht.branch");
 			
-			return new Version(major, minor, patch, build, branch);
+			return new Version(major, minor, patch, branch);
 		}
 		catch (NumberFormatException e) {
 			logger.error("parseProperties() - number format exception: "+e.getMessage());
@@ -92,14 +81,13 @@ public class Version {
     }
     
 	public Version(int major, int minor, int patch) {
-		this(major, minor, patch, null, null);
+		this(major, minor, patch, null);
 	}
 
-	public Version(int major, int minor, int patch, Integer build, String branch) {
+	public Version(int major, int minor, int patch, String branch) {
 		this.major = major;
 		this.minor = minor;
 		this.patch = patch;
-		this.build = build;
 		this.branch = branch;
 	}
 	
@@ -113,16 +101,6 @@ public class Version {
 	
 	public int getPatch() {
 		return this.patch;
-	}
-	
-	public boolean hasBuildNumber() {
-		return (build != null);
-	}
-	
-	public int getBuildNumber() {
-		if (build != null)
-			return build.intValue();
-		return 0;
 	}
 	
 	public boolean hasBranch() {
@@ -154,9 +132,6 @@ public class Version {
 			
 			if (hasBranch())
 				b.append("-").append(branch);
-			
-			if (format != VersionFormat.DEFAULT && hasBuildNumber())
-				b.append(" b").append(getBuildNumber()); //$NON-NLS-1$
 		}
 		
 		return b.toString();
@@ -169,12 +144,7 @@ public class Version {
 		SHORT,
 
 		/**
-		 * version string with the major, minor and patch number
-		 */
-		DEFAULT,
-
-		/**
-		 * version string with the full version information including build number but without state
+		 * version string with the full version information
 		 */
 		FULL		
 	}

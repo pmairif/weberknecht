@@ -93,7 +93,7 @@
 		</jar>
 	</target>
 	
-	<target name="version" depends="new-buildnumber">
+	<target name="version">
 		<property file="${dir.src}/de/highbyte_le/weberknecht/version.properties" />
 		
 		<condition property="branch-suffix" value="-${version.weberknecht.branch}">
@@ -110,33 +110,6 @@
 		<echo message="${version.weberknecht} build ${version.weberknecht.build}" />
 	</target>
 
-	<target name="new-buildnumber" depends="check-new-buildnumber" unless="buildnumber.notNecessary">
-		<buildnumber file="buildnumber.properties"/>
-		
-		<filter token="BUILDNUMBER" value="${build.number}"/>
-		<filter token="COMMENT" value="generated - do not edit"/>
-		<copy file="version-stub.properties"
-			tofile="${dir.src}/de/highbyte_le/weberknecht/version.properties"
-			filtering="true"
-			overwrite="true"
-		/>
-		
-		<touch file="buildnumber.properties" />
-	</target>
-
-	<target name="check-new-buildnumber">
-		<!-- check, if there is any java file that is more recent than the buildnumber file -->
-		<condition property="buildnumber.notNecessary">
-			<and>
-				<uptodate >
-					<srcfiles dir="." includes="${dir.src}/**/*.java ${dir.src}/**/*.properties version-stub.properties build.xml"/>
-					<mapper type="merge" to="buildnumber.properties" />
-				</uptodate>
-				<available file="${dir.src}/de/highbyte_le/weberknecht/version.properties" />
-			</and>
-		</condition>
-	</target>
-	
 	<!-- ================================= 
           target: json              
          ================================= -->

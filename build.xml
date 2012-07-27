@@ -11,10 +11,10 @@
 	<!-- ==============================
 		Default Target
 	=============================== -->
-	<target name="all" depends="compile, jar, module.rpx.jar, dist"
+	<target name="all" depends="compile, jar, module.rpx, dist"
 		description="build all"/>
 
-	<target name="clean" depends="clean.java, clean.apidoc, module.rpx.clean"
+	<target name="clean" depends="clean.java, clean.apidoc, module.rpx.clean, module.rpx.clean.apidoc"
 		description="removes all compiled stuff" />
 
 	<target name="mrproper" depends="clean">
@@ -79,7 +79,9 @@
 		</jar>
 	</target>
 	
-	<target name="module.rpx.jar" depends="module.rpx.compile, version" description="creates jar for rpx-module">
+	<target name="module.rpx" depends="module.rpx.jar, module.rpx.apidoc" description="creates rpx-module" />
+	
+	<target name="module.rpx.jar" depends="module.rpx.compile" description="creates jar for rpx-module">
 		<mkdir dir="jar"/>
 		
 		<jar destfile="jar/weberknecht-rpx.jar" basedir="${dir.rpx}/bin" includes="**/*.class **/*.properties">
@@ -146,7 +148,7 @@
 	<!-- ==============================
 		dist
 	=============================== -->
-	<target name="dist" depends="version, jar, apidoc, json" description="create weberknecht distribution files">
+	<target name="dist" depends="version, jar, apidoc, json, module.rpx" description="create weberknecht distribution files">
 		<delete dir="dist" />
 		<mkdir dir="dist"/>
 		<dist-weberknecht dest="dist/weberknecht-${version.weberknecht}" jar-subdir="."/>
@@ -170,20 +172,25 @@
 			<copy tofile="@{dest}/@{jar-subdir}/weberknecht-${version.weberknecht}.jar" file="jar/weberknecht.jar" />
 			<copy tofile="@{dest}/@{jar-subdir}/weberknecht-${version.weberknecht}-api.zip" file="doc/api.zip" />
 			
+			<copy tofile="@{dest}/@{jar-subdir}/weberknecht-rpx-${version.weberknecht}.jar" file="jar/weberknecht-rpx.jar" />
+			<copy tofile="@{dest}/@{jar-subdir}/weberknecht-rpx-${version.weberknecht}-api.zip" file="doc/api-rpx.zip" />
+			
 			<mkdir dir="@{dest}/lib"/>
 			<copy todir="@{dest}/lib">
 				<fileset dir="${dir.lib}" includes="jdom-*.jar commons-logging-*.jar commons-lang-*.jar" />
 				<fileset dir="json/jar" includes="json.jar" />
 			</copy>
 			
+			<!--
 			<mkdir dir="@{dest}/tlds"/>
 			<copy todir="@{dest}/tlds">
 				<fileset dir="tlds" includes="*.tld" />
 			</copy>
+			-->
 			
 			<mkdir dir="@{dest}/doc"/>
 			<copy todir="@{dest}/doc">
-				<fileset dir="doc" includes="ChangeLog LICENSE NOTICE" />
+				<fileset dir="doc" includes="ChangeLog LICENSE NOTICE update-howto.txt rpx-howto.txt" />
 			</copy>
 		</sequential>
 	</macrodef>
@@ -203,6 +210,24 @@
 	<target name="clean.apidoc">
 		<delete includeemptydirs="true">
 			<fileset dir="doc" includes="api/** api.zip" />
+		</delete>
+	</target>
+	
+    <target name="module.rpx.apidoc" description="create api documentation (javadoc)">
+    	<mkdir dir="doc/api-rpx"/>
+        <javadoc destdir="doc/api-rpx" sourcepath="${dir.rpx}/src" protected="true" private="false" >
+        	<classpath>
+        		<path refid="cp.webapp" />
+        		<pathelement location="${dir.classes}"/>
+        	</classpath>
+       	</javadoc>
+    	
+    	<zip destfile="doc/api-rpx.zip" basedir="doc/api-rpx" compress="true"/>
+    </target>
+
+	<target name="module.rpx.clean.apidoc">
+		<delete includeemptydirs="true">
+			<fileset dir="doc" includes="api-rpx/** api-rpx.zip" />
 		</delete>
 	</target>
 </project> 

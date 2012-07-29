@@ -7,5 +7,8 @@
 	- HttpServletResponse was removed in executes method signature.
 	  It shoudn't has been used there, but if so, you have to rewrite your code to access the response via
 	  DataActions writeData().
+	- Action was renamed to WebAction. Change the name in your implementing classes.
+	- There is a new ActionBase offering onGet and onPost methods.
+	  You can extend the new ActionBase and replace your execute with the new methods.
 	- The generic beans were removed. If they were used, they have to be replaced or copied from a previous release.
 	- rpx stuff has moved to the rpx-module. Put the module jar into your lib directory, if you need it.

@@ -11,6 +11,7 @@ next (1.0):
 	- rpx-stuff moved to module 
 	- build number and Version.DEFAULT was dropped
 	- execute() in actions without HttpServletResponse
+	- Action renamed to WebAction
 
 0.12.2:
 	- bugfix: fixed null pointer exception, when routing didn't match.

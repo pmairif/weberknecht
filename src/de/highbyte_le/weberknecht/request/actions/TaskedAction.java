@@ -13,5 +13,5 @@ package de.highbyte_le.weberknecht.request.actions;
  * 
  * @author pmairif
  */
-public interface TaskedAction extends Action, TaskedExecutableAction {
+public interface TaskedAction extends WebAction, TaskedExecutableAction {
 }

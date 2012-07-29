@@ -9,7 +9,7 @@
 package de.highbyte_le.weberknecht.request.actions;
 
 /**
- * problem while executing an {@link Action}
+ * problem while executing an {@link WebAction}
  * @author pmairif
  */
 @SuppressWarnings("serial")

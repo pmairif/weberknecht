@@ -51,13 +51,13 @@ public class WebActionProcessor implements ActionViewProcessor {
 	public void processView(HttpServletRequest request, HttpServletResponse response, ExecutableAction action) throws ServletException,
 			IOException {
 		
-		if (action instanceof Action)
-			processView(request, response, (Action)action);
+		if (action instanceof WebAction)
+			processView(request, response, (WebAction)action);
 		else
 			throw new IllegalArgumentException("Action not applicable here.");
 	}
 	
-	public void processView(HttpServletRequest request, HttpServletResponse response, Action action) throws ServletException, IOException {
+	public void processView(HttpServletRequest request, HttpServletResponse response, WebAction action) throws ServletException, IOException {
 		if (log.isDebugEnabled())
 			log.debug("processView() - processing action "+action.getClass().getSimpleName());
 		

@@ -39,9 +39,9 @@ public class ActionExecution implements Processor {
 		
 		try {
 			if (action instanceof TaskedExecutableAction)
-				((TaskedExecutableAction)action).execute(request, response, routingTarget.getTask());
+				((TaskedExecutableAction)action).execute(request, routingTarget.getTask());
 			else
-				action.execute(request, response);
+				action.execute(request);
 			
 			chain.doContinue();
 		}

@@ -12,7 +12,6 @@ package de.highbyte_le.weberknecht.request.actions;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import de.highbyte_le.weberknecht.request.ContentProcessingException;
 
@@ -26,16 +25,16 @@ public abstract class ActionBase implements TaskedAction {
 	 * @see de.highbyte_le.weberknecht.request.actions.ExecutableAction#execute(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
-	public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException,
+	public void execute(HttpServletRequest request) throws IOException,
 			ActionExecutionException, ContentProcessingException {
-		execute(request, response, null);
+		execute(request, null);
 	}
 
 	/* (non-Javadoc)
 	 * @see de.highbyte_le.weberknecht.request.actions.TaskedExecutableAction#execute(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.String)
 	 */
 	@Override
-	public void execute(HttpServletRequest request, HttpServletResponse response, String task) throws IOException,
+	public void execute(HttpServletRequest request, String task) throws IOException,
 			ActionExecutionException, ContentProcessingException {
 
 		String method = request.getMethod();

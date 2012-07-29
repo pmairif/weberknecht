@@ -1,7 +1,11 @@
 0.x to 1.0:
 	- Controller moved to de.highbyte_le.weberknecht.Controller. web.xml has to be changed.
 	- DataAction2 renamed to DataAction. Implementing classes have to be modified.
-	- Actions that need a database connection, have to implement DatabaseCapable. The old method needsDatabase was dropped.
-	- The generic beans were removed. If they were used, they have to be replaced or copied from a previous release.
+	- Actions that need a database connection, have to implement DatabaseCapable. The old method needsDatabase
+	  was dropped.
 	- replace any ServletException thrown in actions with ActionException
+	- HttpServletResponse was removed in executes method signature.
+	  It shoudn't has been used there, but if so, you have to rewrite your code to access the response via
+	  DataActions writeData().
+	- The generic beans were removed. If they were used, they have to be replaced or copied from a previous release.
 	- rpx stuff has moved to the rpx-module. Put the module jar into your lib directory, if you need it.

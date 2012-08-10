@@ -12,6 +12,7 @@ next (1.0):
 	- build number and Version.DEFAULT was dropped
 	- execute() in actions without HttpServletResponse
 	- Action renamed to WebAction
+	- optional ActionBase introduced
 
 0.12.2:
 	- bugfix: fixed null pointer exception, when routing didn't match.

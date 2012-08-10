@@ -37,6 +37,8 @@ public abstract class ActionBase implements TaskedExecutableAction {
 	public void execute(HttpServletRequest request, String task) throws IOException,
 			ActionExecutionException, ContentProcessingException {
 
+		init(request);
+		
 		String method = request.getMethod();
 		if ("get".equalsIgnoreCase(method))
 			onGet(request, task);
@@ -46,12 +48,17 @@ public abstract class ActionBase implements TaskedExecutableAction {
 		//TODO other methods, too
 	}
 	
+	public void init(HttpServletRequest request) throws ActionExecutionException {
+		//
+	}
+	
 	/**
 	 * This method does nothing.
 	 * Override it to implement logic.
 	 */
 	public void onGet(HttpServletRequest request, String task) throws IOException,
 			ActionExecutionException, ContentProcessingException {
+		//
 	}
 
 	/**
@@ -60,5 +67,6 @@ public abstract class ActionBase implements TaskedExecutableAction {
 	 */
 	public void onPost(HttpServletRequest request, String task) throws IOException,
 			ActionExecutionException, ContentProcessingException {
+		//
 	}
 }

@@ -44,29 +44,86 @@ public abstract class ActionBase implements TaskedExecutableAction {
 			onGet(request, task);
 		else if ("post".equalsIgnoreCase(method))
 			onPost(request, task);
+		else if ("put".equalsIgnoreCase(method))
+			onPut(request, task);
+		else if ("delete".equalsIgnoreCase(method))
+			onDelete(request, task);
+		else if ("head".equalsIgnoreCase(method))
+			onHead(request, task);
+		else if ("trace".equalsIgnoreCase(method))
+			onTrace(request, task);
+		else if ("options".equalsIgnoreCase(method))
+			onOptions(request, task);
 		
-		//TODO other methods, too
 	}
 	
-	public void init(HttpServletRequest request) throws ActionExecutionException {
+	/**
+	 * called before the onXXX methods
+	 */
+	protected void init(HttpServletRequest request) throws ActionExecutionException {
 		//
 	}
 	
 	/**
-	 * This method does nothing.
+	 * called on HTTP GET requests.
 	 * Override it to implement logic.
 	 */
-	public void onGet(HttpServletRequest request, String task) throws IOException,
+	protected void onGet(HttpServletRequest request, String task) throws IOException,
 			ActionExecutionException, ContentProcessingException {
 		//
 	}
 
 	/**
-	 * This method does nothing.
+	 * called on HTTP POST requests.
 	 * Override it to implement logic.
 	 */
-	public void onPost(HttpServletRequest request, String task) throws IOException,
+	protected void onPost(HttpServletRequest request, String task) throws IOException,
 			ActionExecutionException, ContentProcessingException {
+		//
+	}
+	
+	/**
+	 * called on HTTP PUT requests.
+	 * Override it to implement logic.
+	 */
+	protected void onPut(HttpServletRequest request, String task) throws IOException,
+	ActionExecutionException, ContentProcessingException {
+		//
+	}
+	
+	/**
+	 * called on HTTP DELETE requests.
+	 * Override it to implement logic.
+	 */
+	protected void onDelete(HttpServletRequest request, String task) throws IOException,
+	ActionExecutionException, ContentProcessingException {
+		//
+	}
+	
+	/**
+	 * called on HTTP HEAD requests.
+	 * Override it to implement logic.
+	 */
+	protected void onHead(HttpServletRequest request, String task) throws IOException,
+	ActionExecutionException, ContentProcessingException {
+		//
+	}
+	
+	/**
+	 * called on HTTP TRACE requests.
+	 * Override it to implement logic.
+	 */
+	protected void onTrace(HttpServletRequest request, String task) throws IOException,
+	ActionExecutionException, ContentProcessingException {
+		//
+	}
+	
+	/**
+	 * called on HTTP OPTIONS requests.
+	 * Override it to implement logic.
+	 */
+	protected void onOptions(HttpServletRequest request, String task) throws IOException,
+	ActionExecutionException, ContentProcessingException {
 		//
 	}
 }

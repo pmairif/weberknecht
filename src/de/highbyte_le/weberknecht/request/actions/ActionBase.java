@@ -70,7 +70,7 @@ public abstract class ActionBase implements TaskedExecutableAction {
 	 */
 	protected void onGet(HttpServletRequest request, String task) throws IOException,
 			ActionExecutionException, ContentProcessingException {
-		//
+		throw new MethodNotSupportedException("GET");
 	}
 
 	/**
@@ -79,7 +79,7 @@ public abstract class ActionBase implements TaskedExecutableAction {
 	 */
 	protected void onPost(HttpServletRequest request, String task) throws IOException,
 			ActionExecutionException, ContentProcessingException {
-		//
+		throw new MethodNotSupportedException("POST");
 	}
 	
 	/**
@@ -87,8 +87,8 @@ public abstract class ActionBase implements TaskedExecutableAction {
 	 * Override it to implement logic.
 	 */
 	protected void onPut(HttpServletRequest request, String task) throws IOException,
-	ActionExecutionException, ContentProcessingException {
-		//
+			ActionExecutionException, ContentProcessingException {
+		throw new MethodNotSupportedException("PUT");
 	}
 	
 	/**
@@ -96,8 +96,8 @@ public abstract class ActionBase implements TaskedExecutableAction {
 	 * Override it to implement logic.
 	 */
 	protected void onDelete(HttpServletRequest request, String task) throws IOException,
-	ActionExecutionException, ContentProcessingException {
-		//
+			ActionExecutionException, ContentProcessingException {
+		throw new MethodNotSupportedException("DELETE");
 	}
 	
 	/**
@@ -105,8 +105,8 @@ public abstract class ActionBase implements TaskedExecutableAction {
 	 * Override it to implement logic.
 	 */
 	protected void onHead(HttpServletRequest request, String task) throws IOException,
-	ActionExecutionException, ContentProcessingException {
-		//
+			ActionExecutionException, ContentProcessingException {
+		throw new MethodNotSupportedException("HEAD");
 	}
 	
 	/**
@@ -114,8 +114,8 @@ public abstract class ActionBase implements TaskedExecutableAction {
 	 * Override it to implement logic.
 	 */
 	protected void onTrace(HttpServletRequest request, String task) throws IOException,
-	ActionExecutionException, ContentProcessingException {
-		//
+			ActionExecutionException, ContentProcessingException {
+		throw new MethodNotSupportedException("TRACE");
 	}
 	
 	/**
@@ -123,7 +123,7 @@ public abstract class ActionBase implements TaskedExecutableAction {
 	 * Override it to implement logic.
 	 */
 	protected void onOptions(HttpServletRequest request, String task) throws IOException,
-	ActionExecutionException, ContentProcessingException {
-		//
+			ActionExecutionException, ContentProcessingException {
+		throw new MethodNotSupportedException("OPTIONS");
 	}
 }

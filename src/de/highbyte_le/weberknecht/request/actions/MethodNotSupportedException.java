@@ -9,18 +9,21 @@
  */
 package de.highbyte_le.weberknecht.request.actions;
 
+import de.highbyte_le.weberknecht.request.ContentProcessingException;
+
 /**
- * HTTP Method ist not supported.
+ * HTTP Method is not supported.
+ * Causes HTTP '405 Method Not Allowed'
  *
  * @author pmairif
  */
 @SuppressWarnings("serial")
-public class MethodNotSupportedException extends ActionExecutionException {
+public class MethodNotSupportedException extends ContentProcessingException {
 
 	private String method;
 	
 	public MethodNotSupportedException(String method) {
-		super("cannot handle HTTP "+method+"");
+		super(405, "cannot handle HTTP "+method+"");
 		this.method = method;
 	}
 

@@ -11,6 +11,7 @@ package de.highbyte_le.weberknecht.request.actions;
 
 import java.util.Map;
 
+import de.highbyte_le.weberknecht.request.ContentProcessingException;
 import de.highbyte_le.weberknecht.request.View;
 
 /**
@@ -31,5 +32,5 @@ public interface WebAction extends ExecutableAction {
 	 * 
 	 * @return mapping of names to models
 	 */
-	public Map<String, Object> getModels();
+	public Map<String, Object> getModels() throws ContentProcessingException;
 }

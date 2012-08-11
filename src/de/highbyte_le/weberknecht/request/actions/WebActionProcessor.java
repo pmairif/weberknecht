@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import de.highbyte_le.weberknecht.request.ContentProcessingException;
 import de.highbyte_le.weberknecht.request.ModelHelper;
 import de.highbyte_le.weberknecht.request.View;
 
@@ -49,7 +50,7 @@ public class WebActionProcessor implements ActionViewProcessor {
 	 */
 	@Override
 	public void processView(HttpServletRequest request, HttpServletResponse response, ExecutableAction action) throws ServletException,
-			IOException {
+			IOException, ContentProcessingException {
 		
 		if (action instanceof WebAction)
 			processView(request, response, (WebAction)action);
@@ -57,7 +58,7 @@ public class WebActionProcessor implements ActionViewProcessor {
 			throw new IllegalArgumentException("Action not applicable here.");
 	}
 	
-	public void processView(HttpServletRequest request, HttpServletResponse response, WebAction action) throws ServletException, IOException {
+	public void processView(HttpServletRequest request, HttpServletResponse response, WebAction action) throws ServletException, IOException, ContentProcessingException {
 		if (log.isDebugEnabled())
 			log.debug("processView() - processing action "+action.getClass().getSimpleName());
 		

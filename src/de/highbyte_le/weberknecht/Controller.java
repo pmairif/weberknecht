@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import de.highbyte_le.weberknecht.conf.ActionDeclaration;
+import de.highbyte_le.weberknecht.conf.ProcessorList;
 import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 import de.highbyte_le.weberknecht.db.DBConnectionException;
 import de.highbyte_le.weberknecht.db.DbConnectionProvider;
@@ -71,8 +73,8 @@ public class Controller extends HttpServlet {
 	private Map<String, ActionFactory> actionFactoryMap = null;
 	
 	private ActionViewProcessorFactory actionProcessorFactory = null;
-
-	private List<Processor> processors = new Vector<Processor>();
+	
+	private WeberknechtConf conf;
 	
 	private Router router = null;
 	
@@ -87,8 +89,7 @@ public class Controller extends HttpServlet {
 	@Override
 	public void init() throws ServletException {
 		try {
-
-			WeberknechtConf conf = WeberknechtConf.readConfig(getServletContext());
+			conf = WeberknechtConf.readConfig(getServletContext());
 			
 			// choose router depending on config
 			this.router = createRouter(conf);
@@ -103,30 +104,6 @@ public class Controller extends HttpServlet {
 				actionProcessorFactory.registerProcessor(e.getKey(), e.getValue());
 			}
 			
-			//TODO read generic processing chain from config
-			//pre processors
-			for (String pp: conf.getPreProcessorClasses()) {
-				Object o = Class.forName(pp).newInstance();
-				if (o instanceof Processor)
-					processors.add((Processor)o);
-				else
-					log.error(pp+" is not an instance of Processor");
-			}
-			
-			processors.add(new ActionExecution());
-			
-			//post processors
-			for (String pp: conf.getPostProcessorClasses()) {
-				Object o = Class.forName(pp).newInstance();
-				if (o instanceof Processor)
-					processors.add((Processor)o);
-				else
-					log.error(pp+" is not an instance of Processor");
-			}
-			
-			//TODO add view processor
-			
-
 			//main DB
 			try {
 				mainDbConnectionProvider = new DefaultWebDbConnectionProvider2("jdbc/mydb");
@@ -162,8 +139,8 @@ public class Controller extends HttpServlet {
 			ActionFactory factory = new DynamicActionFactory();
 			map.put(area, factory);
 			
-			for (Entry<String, String> e: conf.getActionClassMap(area).entrySet()) {
-				factory.registerAction(e.getKey(), e.getValue());
+			for (Entry<String, ActionDeclaration> e: conf.getActionClassMap(area).entrySet()) {
+				factory.registerAction(e.getKey(), e.getValue().getClazz());
 			}
 		}
 		
@@ -188,6 +165,49 @@ public class Controller extends HttpServlet {
 			ret = new AreaCapableRouter();
 		
 		return ret;
+	}
+	
+	/**
+	 * create instances of processor list
+	 * 
+	 * @param processorList
+	 * @return list of instantiated processors
+	 */
+	private List<Processor> instantiateProcessorList(ProcessorList processorList)
+			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		
+		List<String> processorClasses = processorList.getProcessorClasses();
+		List<Processor> processors = new Vector<Processor>(processorClasses.size());
+		
+		for (String pp: processorClasses) {
+			Object o = Class.forName(pp).newInstance();
+			if (o instanceof Processor)
+				processors.add((Processor)o);
+			else
+				log.error(pp+" is not an instance of Processor");
+		}
+		
+		return processors;
+	}
+	
+	protected List<Processor> setupProcessors(ActionDeclaration actionDeclaration) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		List<Processor> processors = new Vector<Processor>();
+		
+		//pre processors
+		if (actionDeclaration != null) {
+			ProcessorList processorList = conf.getPreProcessorListMap().get(actionDeclaration.getPreProcessorSet());
+			processors.addAll(instantiateProcessorList(processorList));
+		}
+		
+		processors.add(new ActionExecution());
+		
+		//post processors
+		if (actionDeclaration != null) {
+			ProcessorList processorList = conf.getPostProcessorListMap().get(actionDeclaration.getPostProcessorSet());
+			processors.addAll(instantiateProcessorList(processorList));
+		}
+
+		return processors;
 	}
 	
 	/* (non-Javadoc)
@@ -216,9 +236,12 @@ public class Controller extends HttpServlet {
 			if (log.isDebugEnabled())
 				log.debug("doGet() - processing action "+action.getClass().getSimpleName());
 
+			ActionDeclaration actionDeclaration = conf.findActionDeclaration(routingTarget.getArea(), routingTarget.getActionName());
+			List<Processor> processors = setupProcessors(actionDeclaration);
+			
 			//main db connection
 			Connection con = null;
-			if (isDbConnectionNeeded(action)) {
+			if (isDbConnectionNeeded(action, processors)) {
 				con = getConnection();
 				connectionList.add(con);
 			}
@@ -266,6 +289,10 @@ public class Controller extends HttpServlet {
 			log.error("doGet() - ActionExecutionException: "+e.getMessage(), e);	//$NON-NLS-1$
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//throw 500
 		}
+		catch (Exception e) {
+			log.error("doGet() - "+e.getClass().getSimpleName()+": "+e.getMessage(), e);	//$NON-NLS-1$
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//throw 500
+		}
 		finally {
 			for (Connection con: connectionList) {
 				try {
@@ -308,18 +335,15 @@ public class Controller extends HttpServlet {
 	/**
 	 * checks, if we need a DB connection
 	 */
-	private boolean isDbConnectionNeeded(ExecutableAction action) {
-		boolean need = false;
-		
+	private boolean isDbConnectionNeeded(ExecutableAction action, List<Processor> processors) {
 		if (action instanceof DatabaseCapable)
-			need = true;
+			return true;
 		
-		if (!need) {
-			for (Processor pp: processors) {
-				if (pp instanceof DatabaseCapable) {
-					need = true;
-					break;
-				}
+		boolean need = false;
+		for (Processor pp: processors) {
+			if (pp instanceof DatabaseCapable) {
+				need = true;
+				break;
 			}
 		}
 		
@@ -333,6 +357,8 @@ public class Controller extends HttpServlet {
 	 * @param con		the main database connection
 	 */
 	protected List<Connection> initializeAction(ExecutableAction action, Connection con) {
+		
+		//TODO find a generic way to initialize processors and actions and make processors as well Configurable and AdditionalDatabaseCapable
 		log.debug("initializeAction()");
 		
 		List<Connection> connectionList = new Vector<Connection>();
@@ -392,5 +418,12 @@ public class Controller extends HttpServlet {
 		if (prov != null)
 			return prov.getConnection();
 		return null;
+	}
+	
+	/**
+	 * for testing purposes only
+	 */
+	public void setConf(WeberknechtConf conf) {
+		this.conf = conf;
 	}
 }

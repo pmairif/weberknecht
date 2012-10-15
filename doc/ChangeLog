@@ -14,6 +14,7 @@ next (1.0):
 	- Action renamed to WebAction
 	- optional ActionBase introduced
 	- WebAction.getModels() throws ContentProcessingException
+	- pre-/post-processor sets must be reffered explicitly by ids and can be assigned to areas or single classes
 
 0.12.2:
 	- bugfix: fixed null pointer exception, when routing didn't match.

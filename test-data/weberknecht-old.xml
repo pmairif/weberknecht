@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <weberknecht>
-	<actions pre="pre1" post="post1">
+	<actions>
 		<action name="foo" class="de.highbyte_le.weberknecht.FooAction" />
 		<action name="bar" class="de.highbyte_le.weberknecht.BarAction" />
 	</actions>
 
-	<pre-processors id="pre1">
+	<pre-processors>
 		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor1"/>
 		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor2"/>
 	</pre-processors>
 	
-	<post-processors id="post1">
+	<post-processors>
 		<post-processor class="de.highbyte_le.weberknecht.PostProcessor1"/>
 		<post-processor class="de.highbyte_le.weberknecht.PostProcessor2"/>
 	</post-processors>

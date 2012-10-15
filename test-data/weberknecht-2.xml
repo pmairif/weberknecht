@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<weberknecht>
-	<actions pre="pre1" post="post1">
-		<action name="foo" class="de.highbyte_le.weberknecht.FooAction" />
+<weberknecht post="post1">
+	<actions>
+		<action name="foo" class="de.highbyte_le.weberknecht.FooAction" pre="pre1"/>
 		<action name="bar" class="de.highbyte_le.weberknecht.BarAction" />
 	</actions>
 
+	<actions area="a1" pre="pre2">
+		<action name="foo1" class="de.highbyte_le.weberknecht.FooAction" />
+		<action name="bar1" class="de.highbyte_le.weberknecht.BarAction" pre="pre1" /><!-- overrides pre-processor defined for area -->
+	</actions>
+
 	<pre-processors id="pre1">
+		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor2"/>
+	</pre-processors>
+	
+	<pre-processors id="pre2">
 		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor1"/>
 		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor2"/>
 	</pre-processors>

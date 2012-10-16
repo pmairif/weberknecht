@@ -190,8 +190,10 @@ public class Controller extends HttpServlet {
 		return processors;
 	}
 	
-	protected List<Processor> setupProcessors(ActionDeclaration actionDeclaration) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	protected List<Processor> setupProcessors(String area, String action) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		List<Processor> processors = new Vector<Processor>();
+
+		ActionDeclaration actionDeclaration = conf.findActionDeclaration(area, action);
 		
 		//pre processors
 		if (actionDeclaration != null) {
@@ -236,8 +238,7 @@ public class Controller extends HttpServlet {
 			if (log.isDebugEnabled())
 				log.debug("doGet() - processing action "+action.getClass().getSimpleName());
 
-			ActionDeclaration actionDeclaration = conf.findActionDeclaration(routingTarget.getArea(), routingTarget.getActionName());
-			List<Processor> processors = setupProcessors(actionDeclaration);
+			List<Processor> processors = setupProcessors(routingTarget.getArea(), routingTarget.getActionName());
 			
 			//main db connection
 			Connection con = null;

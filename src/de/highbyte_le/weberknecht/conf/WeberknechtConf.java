@@ -99,7 +99,7 @@ public class WeberknechtConf {
 	/**
 	 * reads weberknecht.xml from input stream and creates new config instance
 	 */
-	static WeberknechtConf readConfig(InputStream in) throws ConfigurationException {
+	public static WeberknechtConf readConfig(InputStream in) throws ConfigurationException {
 		WeberknechtConf conf = new WeberknechtConf();
 		
 		Document doc = null;

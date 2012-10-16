@@ -198,7 +198,8 @@ public class Controller extends HttpServlet {
 		//pre processors
 		if (actionDeclaration != null) {
 			ProcessorList processorList = conf.getPreProcessorListMap().get(actionDeclaration.getPreProcessorSet());
-			processors.addAll(instantiateProcessorList(processorList));
+			if (processorList != null)
+				processors.addAll(instantiateProcessorList(processorList));
 		}
 		
 		processors.add(new ActionExecution());
@@ -206,7 +207,8 @@ public class Controller extends HttpServlet {
 		//post processors
 		if (actionDeclaration != null) {
 			ProcessorList processorList = conf.getPostProcessorListMap().get(actionDeclaration.getPostProcessorSet());
-			processors.addAll(instantiateProcessorList(processorList));
+			if (processorList != null)
+				processors.addAll(instantiateProcessorList(processorList));
 		}
 
 		return processors;

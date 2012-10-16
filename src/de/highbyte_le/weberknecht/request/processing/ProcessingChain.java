@@ -25,9 +25,6 @@ import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
  * @author pmairif
  */
 public class ProcessingChain {
-	//TODO Wir brauchen eine Möglichkeit zu filtern auf welche Actions einzelne prozessoren angewendet werden.
-	// -> ProcessingChains werden Actions zugeordnet (Musterbasiert oder per Zuweisung [default-chain und Möglichkeit individuell zuzuordnen])
-
 	private final HttpServletRequest request;
 	
 	private final HttpServletResponse response;
@@ -50,9 +47,6 @@ public class ProcessingChain {
 
 	/**
 	 * Continue processing. Returns after all processors are done. Which allows cleanup operations. 
-	 * 
-	 * @throws ProcessingException
-	 * @throws ContentProcessingException 
 	 */
 	public void doContinue() throws ProcessingException, ContentProcessingException {
 		if (it.hasNext()) {

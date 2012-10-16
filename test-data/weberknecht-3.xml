@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weberknecht>
+	<actions>
+		<action name="foo" class="de.highbyte_le.weberknecht.FooAction" pre="p1" post="p1"/>
+		<action name="bar" class="de.highbyte_le.weberknecht.BarAction" />
+	</actions>
+
+	<actions area="a1" pre="p2" post="p2">
+		<action name="foo1" class="de.highbyte_le.weberknecht.FooAction" pre="p1"/>
+		<action name="bar1" class="de.highbyte_le.weberknecht.BarAction" post="p3" />
+		<action name="bar2" class="de.highbyte_le.weberknecht.BarAction" />
+	</actions>
+
+	<pre-processors id="p1">
+		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor1"/>
+	</pre-processors>
+	
+	<pre-processors id="p2">
+		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor2a"/>
+		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor2b"/>
+	</pre-processors>
+	
+	<post-processors id="p1">
+		<post-processor class="de.highbyte_le.weberknecht.PostProcessor1a"/>
+		<post-processor class="de.highbyte_le.weberknecht.PostProcessor1b"/>
+	</post-processors>
+
+	<post-processors id="p2">
+		<post-processor class="de.highbyte_le.weberknecht.PostProcessor2"/>
+	</post-processors>
+
+	<post-processors id="p3">
+		<post-processor class="de.highbyte_le.weberknecht.PostProcessor3"/>
+	</post-processors>
+</weberknecht>

@@ -90,17 +90,19 @@ public class WeberknechtConfTest {
 		
 		Map<String, ProcessorList> expectedPre = new HashMap<String, ProcessorList>();
 
-		//pre1
-		List<String> expectedPreProcessorClasses = new Vector<String>();
-		expectedPreProcessorClasses.add("de.highbyte_le.weberknecht.PreProcessor2");
-		expectedPre.put("pre1", new ProcessorList("pre1", expectedPreProcessorClasses));
+		{	//pre1
+			List<String> expectedPreProcessorClasses = new Vector<String>();
+			expectedPreProcessorClasses.add("de.highbyte_le.weberknecht.PreProcessor2");
+			expectedPre.put("pre1", new ProcessorList("pre1", expectedPreProcessorClasses));
+		}
 		
-		//pre2
-		expectedPreProcessorClasses = new Vector<String>();
-		expectedPreProcessorClasses.add("de.highbyte_le.weberknecht.PreProcessor1");
-		expectedPreProcessorClasses.add("de.highbyte_le.weberknecht.PreProcessor2");
-		expectedPre.put("pre2", new ProcessorList("pre2", expectedPreProcessorClasses));
-
+		{	//pre2
+			List<String> expectedPreProcessorClasses = new Vector<String>();
+			expectedPreProcessorClasses.add("de.highbyte_le.weberknecht.PreProcessor1");
+			expectedPreProcessorClasses.add("de.highbyte_le.weberknecht.PreProcessor2");
+			expectedPre.put("pre2", new ProcessorList("pre2", expectedPreProcessorClasses));
+		}
+		
 		assertEquals(expectedPre, conf.getPreProcessorListMap());
 	}
 	
@@ -144,6 +146,86 @@ public class WeberknechtConfTest {
 		assertNull(conf.findActionDeclaration("a2", "foo"));
 	}
 	
+	@Test
+	public void testGetPreProcessorListMap3() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-3.xml");
+		
+		Map<String, ProcessorList> expectedPre = new HashMap<String, ProcessorList>();
+
+		{	//p1
+			List<String> expectedPreProcessorClasses = new Vector<String>();
+			expectedPreProcessorClasses.add("de.highbyte_le.weberknecht.PreProcessor1");
+			expectedPre.put("p1", new ProcessorList("p1", expectedPreProcessorClasses));
+		}
+		
+		{	//p2
+			List<String> expectedPreProcessorClasses = new Vector<String>();
+			expectedPreProcessorClasses.add("de.highbyte_le.weberknecht.PreProcessor2a");
+			expectedPreProcessorClasses.add("de.highbyte_le.weberknecht.PreProcessor2b");
+			expectedPre.put("p2", new ProcessorList("p2", expectedPreProcessorClasses));
+		}
+		
+		assertEquals(expectedPre, conf.getPreProcessorListMap());
+	}
+	
+	@Test
+	public void testGetPostProcessorListMap3() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-3.xml");
+
+		Map<String, ProcessorList> expectedPost = new HashMap<String, ProcessorList>();
+
+		{	//p1
+			List<String> expectedPostProcessorClasses = new Vector<String>();
+			expectedPostProcessorClasses.add("de.highbyte_le.weberknecht.PostProcessor1a");
+			expectedPostProcessorClasses.add("de.highbyte_le.weberknecht.PostProcessor1b");
+			expectedPost.put("p1", new ProcessorList("p1", expectedPostProcessorClasses));
+		}
+
+		{	//p2
+			List<String> expectedPostProcessorClasses = new Vector<String>();
+			expectedPostProcessorClasses.add("de.highbyte_le.weberknecht.PostProcessor2");
+			expectedPost.put("p2", new ProcessorList("p2", expectedPostProcessorClasses));
+		}
+		
+		{	//p3
+			List<String> expectedPostProcessorClasses = new Vector<String>();
+			expectedPostProcessorClasses.add("de.highbyte_le.weberknecht.PostProcessor3");
+			expectedPost.put("p3", new ProcessorList("p3", expectedPostProcessorClasses));
+		}
+		
+		assertEquals(expectedPost, conf.getPostProcessorListMap());
+	}
+	
+	@Test
+	public void testFindActionDeclaration3() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-3.xml");
+
+		//referred processors
+		ActionDeclaration declaration = conf.findActionDeclaration("", "foo");
+		assertEquals("p1", declaration.getPreProcessorSet());
+		assertEquals("p1", declaration.getPostProcessorSet());
+
+		declaration = conf.findActionDeclaration("", "bar");
+		assertEquals("", declaration.getPreProcessorSet());
+		assertEquals("", declaration.getPostProcessorSet());
+
+		declaration = conf.findActionDeclaration("a1", "foo1");
+		assertEquals("p1", declaration.getPreProcessorSet());
+		assertEquals("p2", declaration.getPostProcessorSet());
+		
+		declaration = conf.findActionDeclaration("a1", "bar1");
+		assertEquals("p2", declaration.getPreProcessorSet());
+		assertEquals("p3", declaration.getPostProcessorSet());
+		
+		declaration = conf.findActionDeclaration("a1", "bar2");
+		assertEquals("p2", declaration.getPreProcessorSet());
+		assertEquals("p2", declaration.getPostProcessorSet());
+		
+		assertNull(conf.findActionDeclaration("a1", "foo"));
+		assertNull(conf.findActionDeclaration("a2", "foo"));
+	}
+	
+
 	/**
 	 * Exception on old configuration
 	 */

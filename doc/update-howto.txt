@@ -1,14 +1,67 @@
 0.x to 1.0:
-	- Controller moved to de.highbyte_le.weberknecht.Controller. web.xml has to be changed.
-	- DataAction2 renamed to DataAction. Implementing classes have to be modified.
-	- Actions that need a database connection, have to implement DatabaseCapable. The old method needsDatabase
-	  was dropped.
+	- Controller moved to de.highbyte_le.weberknecht.Controller. web.xml has to
+	  be changed.
+	
+	- DataAction2 renamed to DataAction. Implementing classes have to be
+	  modified.
+	
+	- Actions that need a database connection, have to implement
+	  DatabaseCapable. The old method needsDatabase was dropped.
+	
 	- replace any ServletException thrown in actions with ActionException
+	
 	- HttpServletResponse was removed in executes method signature.
-	  It shoudn't has been used there, but if so, you have to rewrite your code to access the response via
-	  DataActions writeData().
-	- Action was renamed to WebAction. Change the name in your implementing classes.
+	  It shoudn't has been used there, but if so, you have to rewrite your code
+	  to access the response via DataActions writeData().
+	
+	- Action was renamed to WebAction. Change the name in your implementing
+	  classes.
+	
 	- There is a new ActionBase offering onGet and onPost methods.
-	  You can extend the new ActionBase and replace your execute with the new methods.
-	- The generic beans were removed. If they were used, they have to be replaced or copied from a previous release.
-	- rpx stuff has moved to the rpx-module. Put the module jar into your lib directory, if you need it.
+	  You can extend the new ActionBase and replace your execute with the new
+	  methods.
+	
+	- The generic beans were removed. If they were used, they have to be
+	  replaced or copied from a previous release.
+	
+	- rpx stuff has moved to the rpx-module. Put the module jar into your lib
+	  directory, if you need it.
+	
+	- weberknecht.xml syntax has changed. If you use pre or post processors,
+	  the sets do have IDs now. Multiple sets are possible. Now it is possible
+	  to assign different sets to certain areas or even actions.
+	  
+	  If your old config looked like this:
+	  	<?xml version="1.0" encoding="UTF-8"?>
+		<weberknecht>
+			<actions>
+				<action name="foo" class="de.highbyte_le.weberknecht.FooAction" />
+			</actions>
+		
+			<pre-processors>
+				<pre-processor class="de.highbyte_le.weberknecht.PreProcessor1"/>
+			</pre-processors>
+			
+			<post-processors>
+				<post-processor class="de.highbyte_le.weberknecht.PostProcessor1"/>
+			</post-processors>
+		</weberknecht>
+	  
+	  You would have to rewrite it like this:
+	  	<?xml version="1.0" encoding="UTF-8"?>
+		<weberknecht pre="pre1" post="post1">
+			<actions>
+				<action name="foo" class="de.highbyte_le.weberknecht.FooAction" />
+			</actions>
+		
+			<pre-processors id="pre1">
+				<pre-processor class="de.highbyte_le.weberknecht.PreProcessor1"/>
+			</pre-processors>
+			
+			<post-processors id="post1">
+				<post-processor class="de.highbyte_le.weberknecht.PostProcessor1"/>
+			</post-processors>
+		</weberknecht>
+  	  
+  	  If you have one actions section only it does not matter, if you put the
+  	  pre and post attribute on the weberknecht or on the actions element.

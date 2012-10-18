@@ -112,6 +112,7 @@ public class WeberknechtConf {
 			readRouter(conf, rootElement);
 			readActionViewProcessors(conf, rootElement);
 			readActions(conf, rootElement);
+			conf.checkActions();
 		}
 		catch (JDOMException e1) {
 			log.error("readConfig() - JDOMException: "+e1.getMessage(), e1);	//$NON-NLS-1$
@@ -133,7 +134,21 @@ public class WeberknechtConf {
 
 		return val;
 	}
-	
+
+	protected void checkActions() throws ConfigurationException {
+		for (Map<String, ActionDeclaration> map: areaActionClassMap.values()) {
+			for (ActionDeclaration ad: map.values()) {
+				String preProcessorSet = ad.getPreProcessorSet();
+				if (preProcessorSet != "" && !preProcessors.containsKey(preProcessorSet))
+					throw new ConfigurationException("Pre processor '"+preProcessorSet+"' not found!");
+
+				String postProcessorSet = ad.getPostProcessorSet();
+				if (postProcessorSet != "" && !postProcessors.containsKey(postProcessorSet))
+					throw new ConfigurationException("Post processor '"+postProcessorSet+"' not found!");
+			}
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	protected static void readActions(WeberknechtConf conf, Element rootElement) {
 		String rootPreId = getProcessorSetId(rootElement, "pre", "");

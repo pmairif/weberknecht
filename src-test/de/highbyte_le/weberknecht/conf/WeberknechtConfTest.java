@@ -225,7 +225,6 @@ public class WeberknechtConfTest {
 		assertNull(conf.findActionDeclaration("a2", "foo"));
 	}
 	
-
 	/**
 	 * Exception on old configuration
 	 */
@@ -234,6 +233,22 @@ public class WeberknechtConfTest {
 		readConfig("test-data/weberknecht-old.xml");
 	}
 
+	/**
+	 * Exception on corrupt configuration
+	 */
+	@Test(expected=ConfigurationException.class)
+	public void testReadConfigCorrupt1() throws IOException, ConfigurationException {
+		readConfig("test-data/weberknecht-corrupt-1.xml");
+	}
+	
+	/**
+	 * Exception on corrupt configuration
+	 */
+	@Test(expected=ConfigurationException.class)
+	public void testReadConfigCorrupt2() throws IOException, ConfigurationException {
+		readConfig("test-data/weberknecht-corrupt-2.xml");
+	}
+	
 	private WeberknechtConf readConfig(String filename) throws IOException, ConfigurationException {
 		FileInputStream in = null;
 		try {

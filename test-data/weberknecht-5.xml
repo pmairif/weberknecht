@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <weberknecht>
-	<actions>
+	<area>
 		<action name="foo" class="de.highbyte_le.weberknecht.FooAction" />
 		<action name="bar" class="de.highbyte_le.weberknecht.BarAction" />
-	</actions>
+	</area>
 
-	<actions area="a1" pre="pre2">
+	<area name="a1">
 		<action name="foo1" class="de.highbyte_le.weberknecht.FooAction" />
 		<action name="bar1" class="de.highbyte_le.weberknecht.BarAction" />
 	
 		<error-handler class="de.highbyte_le.weberknecht.ErrHandler2" />
-	</actions>
+	</area>
 
 	<error-handler class="de.highbyte_le.weberknecht.ErrHandler1" />
 </weberknecht>

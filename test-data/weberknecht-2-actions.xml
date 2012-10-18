@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<weberknecht post="post1">
+<weberknecht>
+	<post-processors ref="post1" />
+
 	<actions>
 		<action name="foo" class="de.highbyte_le.weberknecht.FooAction">
 			<pre-processors ref="pre1"/>

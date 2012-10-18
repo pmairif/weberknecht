@@ -125,13 +125,20 @@ public class WeberknechtConf {
 	}
 
 	/**
-	 * get the referred processor set id from the element. If the attribute is not set, the parent value is used.
+	 * get the referred processor set id from the element. If no processor element is present, the parent value is used.
 	 */
-	private static String getProcessorSetId(Element element, String attributeName, String parentValue) {
-		String val = element.getAttributeValue(attributeName);
-		if (null == val)
-			val = parentValue;
-
+	private static String getProcessorSetId(Element element, String attributeName, String parentValue) throws ConfigurationException {
+		String val = parentValue;
+		
+		Element processorsElement = element.getChild(attributeName+"-processors");
+		if (processorsElement != null) {
+			String ref = processorsElement.getAttributeValue("ref");
+			if (null == ref)
+				throw new ConfigurationException("Found old config! Define processor sets with IDs and ref to them with pre-/post-processor element and ref attribute!");
+			
+			val = ref;
+		}
+		
 		return val;
 	}
 
@@ -150,45 +157,63 @@ public class WeberknechtConf {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected static void readActions(WeberknechtConf conf, Element rootElement) {
+	protected static void readActions(WeberknechtConf conf, Element rootElement) throws ConfigurationException {
 		String rootPreId = getProcessorSetId(rootElement, "pre", "");
 		String rootPostId = getProcessorSetId(rootElement, "post", "");
 		
 		List<Element> actionsElements = rootElement.getChildren("actions");
 		if (actionsElements != null) {
 			for (Element actionsElement: actionsElements) {
-				String areaPreId = getProcessorSetId(actionsElement, "pre", rootPreId);
-				String areaPostId = getProcessorSetId(actionsElement, "post", rootPostId);
-
 				String area = actionsElement.getAttributeValue("area");
-				if (area == null)
-					area = "";
-				Map<String, ActionDeclaration> actionClassMap = conf.getActionClassMap(area);
-				
-				List<Element> actionElements = actionsElement.getChildren("action");
-				if (null == actionElements) {
-					log.error("readActions() - There are no actions configured for area \""+area+"\"");
-				}
-				else {
-					for (Element e1: actionElements) {
-						String name = e1.getAttributeValue("name");
-						String className = e1.getAttributeValue("class");
-						String preId = getProcessorSetId(e1, "pre", areaPreId);
-						String postId = getProcessorSetId(e1, "post", areaPostId);
-
-						if (name != null && className != null) {
-							ActionDeclaration declaration = new ActionDeclaration(className, preId, postId);
-							actionClassMap.put(name, declaration);
-						}
-						else {
-							log.error("readConfig() - invalid action configuration: name="+name+", class="+className);
-						}
-					}
-				}
+				if (area == null) area = "";
+				readArea(conf, rootPreId, rootPostId, actionsElement, area);
 			}
 		}
+		
+		List<Element> areaElements = rootElement.getChildren("area");
+		if (areaElements != null) {
+			for (Element areaElement: areaElements) {
+				String area = areaElement.getAttributeValue("name");
+				if (area == null) area = "";
+				readArea(conf, rootPreId, rootPostId, areaElement, area);
+			}
+		}
+		
+		if (null == actionsElements && null == areaElements) {
+			log.error("readActions() - There are no actions configured!");
+		}
+	}
+
+	/**
+	 * read area section
+	 */
+	protected static void readArea(WeberknechtConf conf, String rootPreId, String rootPostId, Element actionsElement, String areaName)
+			throws ConfigurationException {
+		String areaPreId = getProcessorSetId(actionsElement, "pre", rootPreId);
+		String areaPostId = getProcessorSetId(actionsElement, "post", rootPostId);
+
+		Map<String, ActionDeclaration> actionClassMap = conf.getActionClassMap(areaName);
+		
+		@SuppressWarnings("unchecked")
+		List<Element> actionElements = actionsElement.getChildren("action");
+		if (null == actionElements) {
+			log.error("readArea() - There are no actions configured for area \""+areaName+"\"");
+		}
 		else {
-			log.error("readConfig() - There are no actions configured!");
+			for (Element e1: actionElements) {
+				String name = e1.getAttributeValue("name");
+				String className = e1.getAttributeValue("class");
+				String preId = getProcessorSetId(e1, "pre", areaPreId);
+				String postId = getProcessorSetId(e1, "post", areaPostId);
+
+				if (name != null && className != null) {
+					ActionDeclaration declaration = new ActionDeclaration(className, preId, postId);
+					actionClassMap.put(name, declaration);
+				}
+				else {
+					log.error("readArea() - invalid action configuration: name="+name+", class="+className);
+				}
+			}
 		}
 	}
 
@@ -204,15 +229,18 @@ public class WeberknechtConf {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected static Map<String, ProcessorList> readProcessorMap(WeberknechtConf conf, Element rootElement, String setTag, String processorTag) throws ConfigurationException {
+	protected static Map<String, ProcessorList> readProcessorMap(
+			WeberknechtConf conf, Element rootElement, String defTag, String processorTag
+	) throws ConfigurationException {
+		
 		Map<String, ProcessorList> map = new HashMap<String, ProcessorList>();
 		
-		List<Element> postProcessorsElements = rootElement.getChildren(setTag);
+		List<Element> postProcessorsElements = rootElement.getChildren(defTag);
 		if (postProcessorsElements != null) {
 			for (Element processorsElement: postProcessorsElements) {
 				String id = processorsElement.getAttributeValue("id");
 				if (null == id)
-					throw new ConfigurationException("Found old config! Add IDs to your processor sets and refer to them!");
+					throw new ConfigurationException("Found processor definition without id.");
 				
 				ProcessorList processors = new ProcessorList(id);
 				
@@ -232,8 +260,8 @@ public class WeberknechtConf {
 	}
 	
 	protected static void readProcessors(WeberknechtConf conf, Element rootElement) throws ConfigurationException {
-		conf.preProcessors = readProcessorMap(conf, rootElement, "pre-processors", "pre-processor");
-		conf.postProcessors = readProcessorMap(conf, rootElement, "post-processors", "post-processor");
+		conf.preProcessors = readProcessorMap(conf, rootElement, "pre-processors-def", "pre-processor");
+		conf.postProcessors = readProcessorMap(conf, rootElement, "post-processors-def", "post-processor");
 	}
 
 	@SuppressWarnings("unchecked")

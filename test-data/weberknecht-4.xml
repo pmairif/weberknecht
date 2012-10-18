@@ -9,7 +9,7 @@
 		<action name="bar" class="de.highbyte_le.weberknecht.BarAction" />
 	</area>
 
-	<area area="a1">
+	<area name="a1">
 		<pre-processors ref="pre2" />
 		
 		<action name="foo1" class="de.highbyte_le.weberknecht.FooAction" />

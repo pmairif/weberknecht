@@ -1,35 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <weberknecht>
-	<actions>
-		<action name="foo" class="de.highbyte_le.weberknecht.FooAction" pre="p1" post="p1"/>
+	<area>
+		<action name="foo" class="de.highbyte_le.weberknecht.FooAction">
+			<pre-processors ref="p1" />
+			<post-processors ref="p1" />
+		</action>
 		<action name="bar" class="de.highbyte_le.weberknecht.BarAction" />
-	</actions>
+	</area>
 
-	<actions area="a1" pre="p2" post="p2">
-		<action name="foo1" class="de.highbyte_le.weberknecht.FooAction" pre="p1"/>
-		<action name="bar1" class="de.highbyte_le.weberknecht.BarAction" post="p3" />
+	<area name="a1" pre="p2" post="p2">
+		<pre-processors ref="p2" />
+		<post-processors ref="p2" />
+
+		<action name="foo1" class="de.highbyte_le.weberknecht.FooAction" pre="p1">
+			<pre-processors ref="p1" />
+		</action>
+		<action name="bar1" class="de.highbyte_le.weberknecht.BarAction" post="p3">
+			<post-processors ref="p3" />
+		</action>
 		<action name="bar2" class="de.highbyte_le.weberknecht.BarAction" />
-	</actions>
+	</area>
 
-	<pre-processors id="p1">
+	<pre-processors-def id="p1">
 		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor1"/>
-	</pre-processors>
+	</pre-processors-def>
 	
-	<pre-processors id="p2">
+	<pre-processors-def id="p2">
 		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor2a"/>
 		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor2b"/>
-	</pre-processors>
+	</pre-processors-def>
 	
-	<post-processors id="p1">
+	<post-processors-def id="p1">
 		<post-processor class="de.highbyte_le.weberknecht.PostProcessor1a"/>
 		<post-processor class="de.highbyte_le.weberknecht.PostProcessor1b"/>
-	</post-processors>
+	</post-processors-def>
 
-	<post-processors id="p2">
+	<post-processors-def id="p2">
 		<post-processor class="de.highbyte_le.weberknecht.PostProcessor2"/>
-	</post-processors>
+	</post-processors-def>
 
-	<post-processors id="p3">
+	<post-processors-def id="p3">
 		<post-processor class="de.highbyte_le.weberknecht.PostProcessor3"/>
-	</post-processors>
+	</post-processors-def>
 </weberknecht>

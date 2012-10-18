@@ -28,8 +28,12 @@
 	  directory, if you need it.
 	
 	- weberknecht.xml syntax has changed. If you use pre or post processors,
-	  the sets do have IDs now. Multiple sets are possible. Now it is possible
-	  to assign different sets to certain areas or even actions.
+	  the definition and usage was separated.
+	  Sets are defined with <pre-processors-def id="..."> and
+	  <post-processors-def id="..."> and applied with <pre-processors ref="" />
+	  and <post-processors ref="..." />. Multiple sets are possible and it's
+	  possible to assign different sets to certain areas or even actions.
+	  Additionally and optionally <actions area="FOO"> changed to <area name="FOO">.
 	  
 	  If your old config looked like this:
 	  	<?xml version="1.0" encoding="UTF-8"?>
@@ -49,18 +53,21 @@
 	  
 	  You would have to rewrite it like this:
 	  	<?xml version="1.0" encoding="UTF-8"?>
-		<weberknecht pre="pre1" post="post1">
-			<actions>
-				<action name="foo" class="de.highbyte_le.weberknecht.FooAction" />
-			</actions>
-		
-			<pre-processors id="pre1">
-				<pre-processor class="de.highbyte_le.weberknecht.PreProcessor1"/>
-			</pre-processors>
+		<weberknecht>
+			<pre-processors ref="pre1" />
+			<post-processors ref="post1" />
 			
-			<post-processors id="post1">
+			<area>
+				<action name="foo" class="de.highbyte_le.weberknecht.FooAction" />
+			</area>
+		
+			<pre-processors-def id="pre1">
+				<pre-processor class="de.highbyte_le.weberknecht.PreProcessor1"/>
+			</pre-processors-def>
+			
+			<post-processors-def id="post1">
 				<post-processor class="de.highbyte_le.weberknecht.PostProcessor1"/>
-			</post-processors>
+			</post-processors-def>
 		</weberknecht>
   	  
   	  If you have one actions section only it does not matter, if you put the

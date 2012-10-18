@@ -1,26 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <weberknecht post="post1">
-	<actions>
-		<action name="foo" class="de.highbyte_le.weberknecht.FooAction" pre="pre1"/>
+	<area>
+		<action name="foo" class="de.highbyte_le.weberknecht.FooAction">
+			<pre-processors ref="pre1"/>
+		</action>
 		<action name="bar" class="de.highbyte_le.weberknecht.BarAction" />
-	</actions>
+	</area>
 
-	<actions area="a1" pre="pre2">
+	<area name="a1">
+		<pre-processors ref="pre2"/>
 		<action name="foo1" class="de.highbyte_le.weberknecht.FooAction" />
-		<action name="bar1" class="de.highbyte_le.weberknecht.BarAction" pre="pre1" /><!-- overrides pre-processor defined for area -->
-	</actions>
+		<action name="bar1" class="de.highbyte_le.weberknecht.BarAction">
+			<!-- overrides pre-processor defined for area -->
+			<pre-processors ref="pre1"/>
+		</action>
+	</area>
 
-	<pre-processors id="pre1">
+	<pre-processors-def id="pre1">
 		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor2"/>
-	</pre-processors>
+	</pre-processors-def>
 	
-	<pre-processors id="pre2">
+	<pre-processors-def id="pre2">
 		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor1"/>
 		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor2"/>
-	</pre-processors>
+	</pre-processors-def>
 	
-	<post-processors id="post1">
+	<post-processors-def id="post1">
 		<post-processor class="de.highbyte_le.weberknecht.PostProcessor1"/>
 		<post-processor class="de.highbyte_le.weberknecht.PostProcessor2"/>
-	</post-processors>
+	</post-processors-def>
 </weberknecht>

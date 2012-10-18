@@ -84,6 +84,28 @@ public class WeberknechtConfTest {
 		}			
 	}
 	
+	/**
+	 * syntax with (older) actions elements
+	 */
+	@Test
+	public void testGetActionClassMap2Actions() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-2-actions.xml");
+		
+		{	//default area
+			Map<String, ActionDeclaration> expectedActionClassMap = new HashMap<String, ActionDeclaration>();
+			expectedActionClassMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "pre1", "post1"));
+			expectedActionClassMap.put("bar", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "post1"));
+			assertEquals(expectedActionClassMap, conf.getActionClassMap());
+		}
+		
+		{	//area a1
+			Map<String, ActionDeclaration> expectedActionClassMap = new HashMap<String, ActionDeclaration>();
+			expectedActionClassMap.put("foo1", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "pre2", "post1"));
+			expectedActionClassMap.put("bar1", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "pre1", "post1"));
+			assertEquals(expectedActionClassMap, conf.getActionClassMap("a1"));
+		}			
+	}
+	
 	@Test
 	public void testGetPreProcessorListMap2() throws IOException, ConfigurationException {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-2.xml");

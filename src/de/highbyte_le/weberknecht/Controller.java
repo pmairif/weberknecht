@@ -277,7 +277,7 @@ public class Controller extends HttpServlet {
 			//TODO write the error message to output 
 		}
 		catch (ActionInstantiationException e) {
-			log.warn("action could not instantiated: "+e.getMessage(), e);
+			log.warn("action could not be instantiated: "+e.getMessage(), e);
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//throw 500, if action could not instantiated
 		}
 		catch (ProcessingException e) {

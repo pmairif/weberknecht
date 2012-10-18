@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <weberknecht>
-	<actions>
-		<action name="foo" class="de.highbyte_le.weberknecht.FooAction" pre="pre3"/> <!-- does not exist -->
+	<area>
+		<action name="foo" class="de.highbyte_le.weberknecht.FooAction">
+			<!-- does not exist -->
+			<pre-processors ref="pre3" />
+		</action>
 		<action name="bar" class="de.highbyte_le.weberknecht.BarAction" />
-	</actions>
+	</area>
 
-	<pre-processors id="pre1">
+	<pre-processors-def id="pre1">
 		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor2"/>
-	</pre-processors>
+	</pre-processors-def>
 </weberknecht>

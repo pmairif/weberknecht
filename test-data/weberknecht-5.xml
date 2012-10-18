@@ -2,7 +2,9 @@
 <weberknecht>
 	<area>
 		<action name="foo" class="de.highbyte_le.weberknecht.FooAction" />
-		<action name="bar" class="de.highbyte_le.weberknecht.BarAction" />
+		<action name="bar" class="de.highbyte_le.weberknecht.BarAction">
+			<error-handler class="de.highbyte_le.weberknecht.ErrHandler3" />
+		</action>
 	</area>
 
 	<area name="a1">

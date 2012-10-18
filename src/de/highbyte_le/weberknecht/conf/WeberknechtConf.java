@@ -127,10 +127,10 @@ public class WeberknechtConf {
 	/**
 	 * get the referred processor set id from the element. If no processor element is present, the parent value is used.
 	 */
-	private static String getProcessorSetId(Element element, String attributeName, String parentValue) throws ConfigurationException {
+	private static String getProcessorSetId(Element element, String prefix, String parentValue) throws ConfigurationException {
 		String val = parentValue;
 		
-		Element processorsElement = element.getChild(attributeName+"-processors");
+		Element processorsElement = element.getChild(prefix+"-processors");
 		if (processorsElement != null) {
 			String ref = processorsElement.getAttributeValue("ref");
 			if (null == ref)
@@ -142,6 +142,24 @@ public class WeberknechtConf {
 		return val;
 	}
 
+	/**
+	 * get the defined error handler. If no such element is present, the parent value is used.
+	 */
+	private static String getErrorHandler(Element element, String parentValue) throws ConfigurationException {
+		String val = parentValue;
+		
+		Element errHandlerElement = element.getChild("error-handler");
+		if (errHandlerElement != null) {
+			String clazz = errHandlerElement.getAttributeValue("class");
+			if (null == clazz)
+				throw new ConfigurationException("Got error handler without class!");
+			
+			val = clazz;
+		}
+		
+		return val;
+	}
+	
 	protected void checkActions() throws ConfigurationException {
 		for (Map<String, ActionDeclaration> map: areaActionClassMap.values()) {
 			for (ActionDeclaration ad: map.values()) {
@@ -160,13 +178,14 @@ public class WeberknechtConf {
 	protected static void readActions(WeberknechtConf conf, Element rootElement) throws ConfigurationException {
 		String rootPreId = getProcessorSetId(rootElement, "pre", "");
 		String rootPostId = getProcessorSetId(rootElement, "post", "");
+		String rootErrHandler = getErrorHandler(rootElement, null);
 		
 		List<Element> actionsElements = rootElement.getChildren("actions");
 		if (actionsElements != null) {
 			for (Element actionsElement: actionsElements) {
 				String area = actionsElement.getAttributeValue("area");
 				if (area == null) area = "";
-				readArea(conf, rootPreId, rootPostId, actionsElement, area);
+				readArea(conf, rootPreId, rootPostId, rootErrHandler, actionsElement, area);
 			}
 		}
 		
@@ -175,7 +194,7 @@ public class WeberknechtConf {
 			for (Element areaElement: areaElements) {
 				String area = areaElement.getAttributeValue("name");
 				if (area == null) area = "";
-				readArea(conf, rootPreId, rootPostId, areaElement, area);
+				readArea(conf, rootPreId, rootPostId, rootErrHandler, areaElement, area);
 			}
 		}
 		
@@ -187,15 +206,16 @@ public class WeberknechtConf {
 	/**
 	 * read area section
 	 */
-	protected static void readArea(WeberknechtConf conf, String rootPreId, String rootPostId, Element actionsElement, String areaName)
+	protected static void readArea(WeberknechtConf conf, String rootPreId, String rootPostId, String rootErrHandler, Element areaElement, String areaName)
 			throws ConfigurationException {
-		String areaPreId = getProcessorSetId(actionsElement, "pre", rootPreId);
-		String areaPostId = getProcessorSetId(actionsElement, "post", rootPostId);
+		String areaPreId = getProcessorSetId(areaElement, "pre", rootPreId);
+		String areaPostId = getProcessorSetId(areaElement, "post", rootPostId);
+		String areaErrHandler = getErrorHandler(areaElement, rootErrHandler);
 
 		Map<String, ActionDeclaration> actionClassMap = conf.getActionClassMap(areaName);
 		
 		@SuppressWarnings("unchecked")
-		List<Element> actionElements = actionsElement.getChildren("action");
+		List<Element> actionElements = areaElement.getChildren("action");
 		if (null == actionElements) {
 			log.error("readArea() - There are no actions configured for area \""+areaName+"\"");
 		}
@@ -205,9 +225,10 @@ public class WeberknechtConf {
 				String className = e1.getAttributeValue("class");
 				String preId = getProcessorSetId(e1, "pre", areaPreId);
 				String postId = getProcessorSetId(e1, "post", areaPostId);
+				String errHandler = getErrorHandler(e1, areaErrHandler);
 
 				if (name != null && className != null) {
-					ActionDeclaration declaration = new ActionDeclaration(className, preId, postId);
+					ActionDeclaration declaration = new ActionDeclaration(className, preId, postId, errHandler);
 					actionClassMap.put(name, declaration);
 				}
 				else {

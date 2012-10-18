@@ -21,15 +21,18 @@ public class ActionDeclaration {
 	private final String preProcessorSet;
 
 	private final String postProcessorSet;
+	
+	private final String errorHandlerClass;
 
-	public ActionDeclaration(String clazz, String preProcessorSet, String postProcessorSet) {
+	public ActionDeclaration(String clazz, String preProcessorSet, String postProcessorSet, String errorHandlerClass) {
 		this.clazz = clazz;
 		this.preProcessorSet = preProcessorSet;
 		this.postProcessorSet = postProcessorSet;
+		this.errorHandlerClass = errorHandlerClass;
 	}
 
 	public ActionDeclaration(String clazz) {
-		this(clazz, null, null);
+		this(clazz, null, null, null);
 	}
 	
 	public String getClazz() {
@@ -42,6 +45,13 @@ public class ActionDeclaration {
 
 	public String getPostProcessorSet() {
 		return postProcessorSet;
+	}
+	
+	/**
+	 * @return the errorHandlerClass
+	 */
+	public String getErrorHandlerClass() {
+		return errorHandlerClass;
 	}
 
 	@Override
@@ -57,6 +67,7 @@ public class ActionDeclaration {
 		result = prime * result + ((clazz == null) ? 0 : clazz.hashCode());
 		result = prime * result + ((postProcessorSet == null) ? 0 : postProcessorSet.hashCode());
 		result = prime * result + ((preProcessorSet == null) ? 0 : preProcessorSet.hashCode());
+		result = prime * result + ((errorHandlerClass == null) ? 0 : errorHandlerClass.hashCode());
 		return result;
 	}
 
@@ -86,6 +97,12 @@ public class ActionDeclaration {
 				return false;
 		}
 		else if (!preProcessorSet.equals(other.preProcessorSet))
+			return false;
+		if (errorHandlerClass == null) {
+			if (other.errorHandlerClass != null)
+				return false;
+		}
+		else if (!errorHandlerClass.equals(other.errorHandlerClass))
 			return false;
 		return true;
 	}

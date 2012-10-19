@@ -36,10 +36,10 @@ import de.highbyte_le.weberknecht.db.DbConnectionProvider;
 import de.highbyte_le.weberknecht.db.DefaultWebDbConnectionProvider2;
 import de.highbyte_le.weberknecht.request.AdditionalDatabaseCapable;
 import de.highbyte_le.weberknecht.request.Configurable;
-import de.highbyte_le.weberknecht.request.ContentProcessingException;
 import de.highbyte_le.weberknecht.request.DatabaseCapable;
+import de.highbyte_le.weberknecht.request.DefaultErrorHandler;
+import de.highbyte_le.weberknecht.request.ErrorHandler;
 import de.highbyte_le.weberknecht.request.ModelHelper;
-import de.highbyte_le.weberknecht.request.actions.ActionExecutionException;
 import de.highbyte_le.weberknecht.request.actions.ActionFactory;
 import de.highbyte_le.weberknecht.request.actions.ActionInstantiationException;
 import de.highbyte_le.weberknecht.request.actions.ActionNotFoundException;
@@ -49,7 +49,6 @@ import de.highbyte_le.weberknecht.request.actions.DynamicActionFactory;
 import de.highbyte_le.weberknecht.request.actions.ExecutableAction;
 import de.highbyte_le.weberknecht.request.processing.ActionExecution;
 import de.highbyte_le.weberknecht.request.processing.ProcessingChain;
-import de.highbyte_le.weberknecht.request.processing.ProcessingException;
 import de.highbyte_le.weberknecht.request.processing.Processor;
 import de.highbyte_le.weberknecht.request.routing.AreaCapableRouter;
 import de.highbyte_le.weberknecht.request.routing.Router;
@@ -174,7 +173,7 @@ public class Controller extends HttpServlet {
 	 * @return list of instantiated processors
 	 */
 	private List<Processor> instantiateProcessorList(ProcessorList processorList)
-			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+			throws InstantiationException, IllegalAccessException {
 		
 		List<Class<? extends Processor>> processorClasses = processorList.getProcessorClasses();
 		List<Processor> processors = new Vector<Processor>(processorClasses.size());
@@ -186,7 +185,7 @@ public class Controller extends HttpServlet {
 		return processors;
 	}
 	
-	protected List<Processor> setupProcessors(String area, String action) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	protected List<Processor> setupProcessors(String area, String action) throws InstantiationException, IllegalAccessException {
 		List<Processor> processors = new Vector<Processor>();
 
 		ActionDeclaration actionDeclaration = conf.findActionDeclaration(area, action);
@@ -226,8 +225,8 @@ public class Controller extends HttpServlet {
 		long start = System.currentTimeMillis();
 		
 		List<Connection> connectionList = new Vector<Connection>();
+		RoutingTarget routingTarget = router.routeUri(request.getServletPath());
 		try {
-			RoutingTarget routingTarget = router.routeUri(request.getServletPath());
 
 			ModelHelper modelHelper = new ModelHelper(request, getServletContext());
 			modelHelper.setSelf(request);
@@ -263,34 +262,8 @@ public class Controller extends HttpServlet {
 			processor.processView(request, response, action);
 			
 		}
-		catch (ActionNotFoundException e) {
-			log.warn("action not found: "+e.getMessage()+"; request URI was "+request.getRequestURI());
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);	//throw 404, if action doesn't exist
-		}
-		catch (ContentProcessingException e) {
-			log.error("doGet() - ContentProcessingException: "+e.getMessage());	//$NON-NLS-1$
-			response.setStatus(e.getHttpStatusCode());
-			//TODO write the error message to output 
-		}
-		catch (ActionInstantiationException e) {
-			log.warn("action could not be instantiated: "+e.getMessage(), e);
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//throw 500, if action could not instantiated
-		}
-		catch (ProcessingException e) {
-			log.error("doGet() - PreProcessingException: "+e.getMessage(), e);	//$NON-NLS-1$
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//throw 500
-		}
-		catch (DBConnectionException e) {
-			log.error("doGet() - DBConnectionException: "+e.getMessage(), e);	//$NON-NLS-1$
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//throw 500
-		}
-		catch (ActionExecutionException e) {
-			log.error("doGet() - ActionExecutionException: "+e.getMessage(), e);	//$NON-NLS-1$
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//throw 500
-		}
 		catch (Exception e) {
-			log.error("doGet() - "+e.getClass().getSimpleName()+": "+e.getMessage(), e);	//$NON-NLS-1$
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//throw 500
+			handleException(request, response, routingTarget, e);
 		}
 		finally {
 			for (Connection con: connectionList) {
@@ -306,6 +279,48 @@ public class Controller extends HttpServlet {
 		long finish = System.currentTimeMillis();
 		if (log.isInfoEnabled()) {
 			log.info("page delivery took "+(finish-start)+" ms");
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	protected void handleException(HttpServletRequest request, HttpServletResponse response,
+			RoutingTarget routingTarget, Exception exception) {
+		Connection con = null;
+		try {
+			Class<? extends ErrorHandler> errHandlerClass = DefaultErrorHandler.class;
+			ActionDeclaration actionDeclaration = conf.findActionDeclaration(routingTarget.getArea(), routingTarget.getActionName());
+			if (actionDeclaration.hasErrorHandlerClass())
+				errHandlerClass = (Class<? extends ErrorHandler>) Class.forName(actionDeclaration.getErrorHandlerClass());
+			
+			ErrorHandler handler = errHandlerClass.newInstance();
+			
+			if (handler instanceof DatabaseCapable) {
+				con = getConnection();
+				((DatabaseCapable) handler).setDatabase(con);
+			}
+			
+			handler.handleException(exception, request);
+			int status = handler.getStatus();
+			if (status > 0)	//Don't set status, eg. on redirects
+				response.setStatus(status);
+			
+			//process view, respecting requested content type 
+			ActionViewProcessor processor = actionProcessorFactory.createActionProcessor(routingTarget.getViewProcessorName());
+			processor.setServletContext(getServletContext());
+			processor.processView(request, response, handler);
+		}
+		catch (Exception e1) {
+			log.error("doGet() - exception while error handler instantiation: "+e1.getMessage(), e1);	//$NON-NLS-1$
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//throw 500
+		}
+		finally {
+			try {
+				if (con != null)
+					con.close();
+			}
+			catch (SQLException e) {
+				log.error("SQLException while closing db connection: "+e.getMessage());	//$NON-NLS-1$
+			}
 		}
 	}
 	

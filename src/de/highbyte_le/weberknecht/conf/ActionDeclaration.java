@@ -53,6 +53,10 @@ public class ActionDeclaration {
 	public String getErrorHandlerClass() {
 		return errorHandlerClass;
 	}
+	
+	public boolean hasErrorHandlerClass() {
+		return errorHandlerClass != null && errorHandlerClass.length() > 0;
+	}
 
 	@Override
 	public String toString() {

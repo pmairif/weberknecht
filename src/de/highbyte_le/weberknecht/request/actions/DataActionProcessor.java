@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import de.highbyte_le.weberknecht.request.ErrorHandler;
+
 /**
  * Process data actions
  * @author pmairif
@@ -53,5 +55,14 @@ public class DataActionProcessor implements ActionViewProcessor {
 	@Override
 	public void setServletContext(ServletContext servletContext) {
 		//
+	}
+
+	/* (non-Javadoc)
+	 * @see de.highbyte_le.weberknecht.request.actions.ActionViewProcessor#processView(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, de.highbyte_le.weberknecht.request.ErrorHandler)
+	 */
+	@Override
+	public void processView(HttpServletRequest request, HttpServletResponse response, ErrorHandler errorHandler) {
+		// TODO Auto-generated method stub
+		
 	}
 }

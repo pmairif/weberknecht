@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
+import de.highbyte_le.weberknecht.request.ErrorHandler;
+
 /**
  * process json actions
  * 
@@ -64,5 +66,14 @@ public class JsonActionProcessor implements ActionViewProcessor {
 	@Override
 	public void setServletContext(ServletContext servletContext) {
 		//
+	}
+
+	/* (non-Javadoc)
+	 * @see de.highbyte_le.weberknecht.request.actions.ActionViewProcessor#processView(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, de.highbyte_le.weberknecht.request.ErrorHandler)
+	 */
+	@Override
+	public void processView(HttpServletRequest request, HttpServletResponse response, ErrorHandler errorHandler) {
+		// TODO Auto-generated method stub
+		
 	}
 }

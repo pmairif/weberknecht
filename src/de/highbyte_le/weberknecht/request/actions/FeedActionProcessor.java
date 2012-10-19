@@ -25,6 +25,7 @@ import org.jdom.output.XMLOutputter;
 import de.highbyte_le.weberknecht.feeds.FeedCreator;
 import de.highbyte_le.weberknecht.feeds.FeedData;
 import de.highbyte_le.weberknecht.feeds.RssCreator;
+import de.highbyte_le.weberknecht.request.ErrorHandler;
 
 /**
  * Process feed actions
@@ -72,5 +73,14 @@ public class FeedActionProcessor implements ActionViewProcessor {
 	@Override
 	public void setServletContext(ServletContext servletContext) {
 		//
+	}
+
+	/* (non-Javadoc)
+	 * @see de.highbyte_le.weberknecht.request.actions.ActionViewProcessor#processView(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, de.highbyte_le.weberknecht.request.ErrorHandler)
+	 */
+	@Override
+	public void processView(HttpServletRequest request, HttpServletResponse response, ErrorHandler errorHandler) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -16,6 +16,14 @@ package de.highbyte_le.weberknecht.conf;
 @SuppressWarnings("serial")
 public class ConfigurationException extends Exception {
 
+	public ConfigurationException(String msg, Throwable e) {
+		super(msg, e);
+	}
+
+	public ConfigurationException(Throwable e) {
+		super(e);
+	}
+
 	public ConfigurationException() {
 		//
 	}

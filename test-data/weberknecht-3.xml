@@ -22,24 +22,24 @@
 	</area>
 
 	<pre-processors-def id="p1">
-		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor1"/>
+		<pre-processor class="de.highbyte_le.weberknecht.test.DummyProcessor1"/>
 	</pre-processors-def>
 	
 	<pre-processors-def id="p2">
-		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor2a"/>
-		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor2b"/>
+		<pre-processor class="de.highbyte_le.weberknecht.test.DummyProcessor2"/>
+		<pre-processor class="de.highbyte_le.weberknecht.test.DummyProcessor3"/>
 	</pre-processors-def>
 	
 	<post-processors-def id="p1">
-		<post-processor class="de.highbyte_le.weberknecht.PostProcessor1a"/>
-		<post-processor class="de.highbyte_le.weberknecht.PostProcessor1b"/>
+		<post-processor class="de.highbyte_le.weberknecht.test.DummyProcessor1"/>
+		<post-processor class="de.highbyte_le.weberknecht.test.DummyProcessor2"/>
 	</post-processors-def>
 
 	<post-processors-def id="p2">
-		<post-processor class="de.highbyte_le.weberknecht.PostProcessor2"/>
+		<post-processor class="de.highbyte_le.weberknecht.test.DummyProcessor3"/>
 	</post-processors-def>
 
 	<post-processors-def id="p3">
-		<post-processor class="de.highbyte_le.weberknecht.PostProcessor3"/>
+		<post-processor class="de.highbyte_le.weberknecht.test.DummyProcessor4"/>
 	</post-processors-def>
 </weberknecht>

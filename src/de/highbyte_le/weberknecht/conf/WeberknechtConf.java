@@ -254,30 +254,35 @@ public class WeberknechtConf {
 			WeberknechtConf conf, Element rootElement, String defTag, String processorTag
 	) throws ConfigurationException {
 		
-		Map<String, ProcessorList> map = new HashMap<String, ProcessorList>();
-		
-		List<Element> postProcessorsElements = rootElement.getChildren(defTag);
-		if (postProcessorsElements != null) {
-			for (Element processorsElement: postProcessorsElements) {
-				String id = processorsElement.getAttributeValue("id");
-				if (null == id)
-					throw new ConfigurationException("Found processor definition without id.");
-				
-				ProcessorList processors = new ProcessorList(id);
-				
-				List<Element> postProcessorElements = processorsElement.getChildren(processorTag);
-				if (postProcessorElements != null) {
-					for (Element e: postProcessorElements) {
-						String className = e.getAttributeValue("class");
-						processors.addProcessorClass(className);
+		try {
+			Map<String, ProcessorList> map = new HashMap<String, ProcessorList>();
+			
+			List<Element> postProcessorsElements = rootElement.getChildren(defTag);
+			if (postProcessorsElements != null) {
+				for (Element processorsElement: postProcessorsElements) {
+					String id = processorsElement.getAttributeValue("id");
+					if (null == id)
+						throw new ConfigurationException("Found processor definition without id.");
+					
+					ProcessorList processors = new ProcessorList(id);
+					
+					List<Element> postProcessorElements = processorsElement.getChildren(processorTag);
+					if (postProcessorElements != null) {
+						for (Element e: postProcessorElements) {
+							String className = e.getAttributeValue("class");
+							processors.addProcessorClass(className);
+						}
 					}
+					
+					map.put(id, processors);
 				}
-				
-				map.put(id, processors);
 			}
+			
+			return map;
 		}
-		
-		return map;
+		catch (ClassNotFoundException e) {
+			throw new ConfigurationException("Problem instantiating processor", e);
+		}
 	}
 	
 	protected static void readProcessors(WeberknechtConf conf, Element rootElement) throws ConfigurationException {

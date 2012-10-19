@@ -176,15 +176,11 @@ public class Controller extends HttpServlet {
 	private List<Processor> instantiateProcessorList(ProcessorList processorList)
 			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		
-		List<String> processorClasses = processorList.getProcessorClasses();
+		List<Class<? extends Processor>> processorClasses = processorList.getProcessorClasses();
 		List<Processor> processors = new Vector<Processor>(processorClasses.size());
 		
-		for (String pp: processorClasses) {
-			Object o = Class.forName(pp).newInstance();
-			if (o instanceof Processor)
-				processors.add((Processor)o);
-			else
-				log.error(pp+" is not an instance of Processor");
+		for (Class<? extends Processor> pp: processorClasses) {
+			processors.add(pp.newInstance());
 		}
 		
 		return processors;

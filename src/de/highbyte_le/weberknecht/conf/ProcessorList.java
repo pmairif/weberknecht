@@ -12,6 +12,8 @@ package de.highbyte_le.weberknecht.conf;
 import java.util.List;
 import java.util.Vector;
 
+import de.highbyte_le.weberknecht.request.processing.Processor;
+
 /**
  * list of processor classes
  *
@@ -21,27 +23,43 @@ public class ProcessorList {
 
 	private final String id;
 	
-	private final List<String> processorClasses;
+	private final List<Class<? extends Processor>> processorClasses;
 	
 	public ProcessorList(String id) {
 		this.id = id;
-		this.processorClasses = new Vector<String>();
+		this.processorClasses = new Vector<Class<? extends Processor>>();
 	}
 
-	public ProcessorList(String id, List<String> processorClasses) {
+	public ProcessorList(String id, List<Class<? extends Processor>> processorClasses) {
 		this.id = id;
 		this.processorClasses = processorClasses;
 	}
 
-	public void addProcessorClass(String clazz) {
-		processorClasses.add(clazz);
+	@SuppressWarnings("unchecked")
+	public void addProcessorClass(String clazzName) throws ClassNotFoundException, ConfigurationException {
+		try {
+			Class<?> clazz = Class.forName(clazzName);
+			if (!(clazz.newInstance() instanceof Processor))
+				throw new ConfigurationException(clazzName + " is not a processor");
+			processorClasses.add((Class<? extends Processor>)Class.forName(clazzName));
+		}
+		catch (InstantiationException e) {
+			throw new ConfigurationException("problem instantiating processor", e);
+		}
+		catch (IllegalAccessException e) {
+			throw new ConfigurationException("problem instantiating processor", e);
+		}
 	}
 
+	public void addProcessorClass(Class<? extends Processor> clazz) {
+		processorClasses.add(clazz);
+	}
+	
 	public String getId() {
 		return id;
 	}
 
-	public List<String> getProcessorClasses() {
+	public List<Class<? extends Processor>> getProcessorClasses() {
 		return processorClasses;
 	}
 

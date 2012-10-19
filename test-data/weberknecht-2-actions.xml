@@ -19,16 +19,16 @@
 	</actions>
 
 	<pre-processors-def id="pre1">
-		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor2"/>
+		<pre-processor class="de.highbyte_le.weberknecht.test.DummyProcessor2"/>
 	</pre-processors-def>
 	
 	<pre-processors-def id="pre2">
-		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor1"/>
-		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor2"/>
+		<pre-processor class="de.highbyte_le.weberknecht.test.DummyProcessor1"/>
+		<pre-processor class="de.highbyte_le.weberknecht.test.DummyProcessor2"/>
 	</pre-processors-def>
 	
 	<post-processors-def id="post1">
-		<post-processor class="de.highbyte_le.weberknecht.PostProcessor1"/>
-		<post-processor class="de.highbyte_le.weberknecht.PostProcessor2"/>
+		<post-processor class="de.highbyte_le.weberknecht.test.DummyProcessor3"/>
+		<post-processor class="de.highbyte_le.weberknecht.test.DummyProcessor4"/>
 	</post-processors-def>
 </weberknecht>

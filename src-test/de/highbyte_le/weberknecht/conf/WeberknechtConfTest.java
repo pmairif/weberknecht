@@ -22,6 +22,8 @@ import java.util.Vector;
 
 import org.junit.Test;
 
+import de.highbyte_le.weberknecht.request.processing.Processor;
+
 /**
  * Testing {@link WeberknechtConf}
  * 
@@ -39,27 +41,29 @@ public class WeberknechtConfTest {
 		assertEquals(expectedActionClassMap, conf.getActionClassMap());
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
-	public void testGetPreProcessorListMap1() throws IOException, ConfigurationException {
+	public void testGetPreProcessorListMap1() throws IOException, ConfigurationException, ClassNotFoundException {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-1.xml");
 		
 		Map<String, ProcessorList> expectedPre = new HashMap<String, ProcessorList>();
-		List<String> expectedPreProcessorClasses = new Vector<String>();
-		expectedPreProcessorClasses.add("de.highbyte_le.weberknecht.PreProcessor1");
-		expectedPreProcessorClasses.add("de.highbyte_le.weberknecht.PreProcessor2");
+		List<Class<? extends Processor>> expectedPreProcessorClasses = new Vector<Class<? extends Processor>>();
+		expectedPreProcessorClasses.add((Class<? extends Processor>)Class.forName("de.highbyte_le.weberknecht.test.DummyProcessor1"));
+		expectedPreProcessorClasses.add((Class<? extends Processor>)Class.forName("de.highbyte_le.weberknecht.test.DummyProcessor2"));
 		expectedPre.put("pre1", new ProcessorList("pre1", expectedPreProcessorClasses));
 		
 		assertEquals(expectedPre, conf.getPreProcessorListMap());
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
-	public void testGetPostProcessorListMap1() throws IOException, ConfigurationException {
+	public void testGetPostProcessorListMap1() throws IOException, ConfigurationException, ClassNotFoundException {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-1.xml");
 
 		Map<String, ProcessorList> expectedPost = new HashMap<String, ProcessorList>();
-		List<String> expectedPostProcessorClasses = new Vector<String>();
-		expectedPostProcessorClasses.add("de.highbyte_le.weberknecht.PostProcessor1");
-		expectedPostProcessorClasses.add("de.highbyte_le.weberknecht.PostProcessor2");
+		List<Class<? extends Processor>> expectedPostProcessorClasses = new Vector<Class<? extends Processor>>();
+		expectedPostProcessorClasses.add((Class<? extends Processor>)Class.forName("de.highbyte_le.weberknecht.test.DummyProcessor3"));
+		expectedPostProcessorClasses.add((Class<? extends Processor>)Class.forName("de.highbyte_le.weberknecht.test.DummyProcessor4"));
 		expectedPost.put("post1", new ProcessorList("post1", expectedPostProcessorClasses));
 		
 		assertEquals(expectedPost, conf.getPostProcessorListMap());
@@ -106,38 +110,40 @@ public class WeberknechtConfTest {
 		}			
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
-	public void testGetPreProcessorListMap2() throws IOException, ConfigurationException {
+	public void testGetPreProcessorListMap2() throws IOException, ConfigurationException, ClassNotFoundException {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-2.xml");
 		
 		Map<String, ProcessorList> expectedPre = new HashMap<String, ProcessorList>();
 
 		{	//pre1
-			List<String> expectedPreProcessorClasses = new Vector<String>();
-			expectedPreProcessorClasses.add("de.highbyte_le.weberknecht.PreProcessor2");
+			List<Class<? extends Processor>> expectedPreProcessorClasses = new Vector<Class<? extends Processor>>();
+			expectedPreProcessorClasses.add((Class<? extends Processor>)Class.forName("de.highbyte_le.weberknecht.test.DummyProcessor2"));
 			expectedPre.put("pre1", new ProcessorList("pre1", expectedPreProcessorClasses));
 		}
 		
 		{	//pre2
-			List<String> expectedPreProcessorClasses = new Vector<String>();
-			expectedPreProcessorClasses.add("de.highbyte_le.weberknecht.PreProcessor1");
-			expectedPreProcessorClasses.add("de.highbyte_le.weberknecht.PreProcessor2");
+			List<Class<? extends Processor>> expectedPreProcessorClasses = new Vector<Class<? extends Processor>>();
+			expectedPreProcessorClasses.add((Class<? extends Processor>)Class.forName("de.highbyte_le.weberknecht.test.DummyProcessor1"));
+			expectedPreProcessorClasses.add((Class<? extends Processor>)Class.forName("de.highbyte_le.weberknecht.test.DummyProcessor2"));
 			expectedPre.put("pre2", new ProcessorList("pre2", expectedPreProcessorClasses));
 		}
 		
 		assertEquals(expectedPre, conf.getPreProcessorListMap());
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
-	public void testGetPostProcessorListMap2() throws IOException, ConfigurationException {
+	public void testGetPostProcessorListMap2() throws IOException, ConfigurationException, ClassNotFoundException {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-2.xml");
 
 		Map<String, ProcessorList> expectedPost = new HashMap<String, ProcessorList>();
 
 		//post1
-		List<String> expectedPostProcessorClasses = new Vector<String>();
-		expectedPostProcessorClasses.add("de.highbyte_le.weberknecht.PostProcessor1");
-		expectedPostProcessorClasses.add("de.highbyte_le.weberknecht.PostProcessor2");
+		List<Class<? extends Processor>> expectedPostProcessorClasses = new Vector<Class<? extends Processor>>();
+		expectedPostProcessorClasses.add((Class<? extends Processor>)Class.forName("de.highbyte_le.weberknecht.test.DummyProcessor3"));
+		expectedPostProcessorClasses.add((Class<? extends Processor>)Class.forName("de.highbyte_le.weberknecht.test.DummyProcessor4"));
 		expectedPost.put("post1", new ProcessorList("post1", expectedPostProcessorClasses));
 		
 		assertEquals(expectedPost, conf.getPostProcessorListMap());
@@ -168,50 +174,52 @@ public class WeberknechtConfTest {
 		assertNull(conf.findActionDeclaration("a2", "foo"));
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
-	public void testGetPreProcessorListMap3() throws IOException, ConfigurationException {
+	public void testGetPreProcessorListMap3() throws IOException, ConfigurationException, ClassNotFoundException {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-3.xml");
 		
 		Map<String, ProcessorList> expectedPre = new HashMap<String, ProcessorList>();
 
 		{	//p1
-			List<String> expectedPreProcessorClasses = new Vector<String>();
-			expectedPreProcessorClasses.add("de.highbyte_le.weberknecht.PreProcessor1");
+			List<Class<? extends Processor>> expectedPreProcessorClasses = new Vector<Class<? extends Processor>>();
+			expectedPreProcessorClasses.add((Class<? extends Processor>)Class.forName("de.highbyte_le.weberknecht.test.DummyProcessor1"));
 			expectedPre.put("p1", new ProcessorList("p1", expectedPreProcessorClasses));
 		}
 		
 		{	//p2
-			List<String> expectedPreProcessorClasses = new Vector<String>();
-			expectedPreProcessorClasses.add("de.highbyte_le.weberknecht.PreProcessor2a");
-			expectedPreProcessorClasses.add("de.highbyte_le.weberknecht.PreProcessor2b");
+			List<Class<? extends Processor>> expectedPreProcessorClasses = new Vector<Class<? extends Processor>>();
+			expectedPreProcessorClasses.add((Class<? extends Processor>)Class.forName("de.highbyte_le.weberknecht.test.DummyProcessor2"));
+			expectedPreProcessorClasses.add((Class<? extends Processor>)Class.forName("de.highbyte_le.weberknecht.test.DummyProcessor3"));
 			expectedPre.put("p2", new ProcessorList("p2", expectedPreProcessorClasses));
 		}
 		
 		assertEquals(expectedPre, conf.getPreProcessorListMap());
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
-	public void testGetPostProcessorListMap3() throws IOException, ConfigurationException {
+	public void testGetPostProcessorListMap3() throws IOException, ConfigurationException, ClassNotFoundException {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-3.xml");
 
 		Map<String, ProcessorList> expectedPost = new HashMap<String, ProcessorList>();
 
 		{	//p1
-			List<String> expectedPostProcessorClasses = new Vector<String>();
-			expectedPostProcessorClasses.add("de.highbyte_le.weberknecht.PostProcessor1a");
-			expectedPostProcessorClasses.add("de.highbyte_le.weberknecht.PostProcessor1b");
+			List<Class<? extends Processor>> expectedPostProcessorClasses = new Vector<Class<? extends Processor>>();
+			expectedPostProcessorClasses.add((Class<? extends Processor>)Class.forName("de.highbyte_le.weberknecht.test.DummyProcessor1"));
+			expectedPostProcessorClasses.add((Class<? extends Processor>)Class.forName("de.highbyte_le.weberknecht.test.DummyProcessor2"));
 			expectedPost.put("p1", new ProcessorList("p1", expectedPostProcessorClasses));
 		}
 
 		{	//p2
-			List<String> expectedPostProcessorClasses = new Vector<String>();
-			expectedPostProcessorClasses.add("de.highbyte_le.weberknecht.PostProcessor2");
+			List<Class<? extends Processor>> expectedPostProcessorClasses = new Vector<Class<? extends Processor>>();
+			expectedPostProcessorClasses.add((Class<? extends Processor>)Class.forName("de.highbyte_le.weberknecht.test.DummyProcessor3"));
 			expectedPost.put("p2", new ProcessorList("p2", expectedPostProcessorClasses));
 		}
 		
 		{	//p3
-			List<String> expectedPostProcessorClasses = new Vector<String>();
-			expectedPostProcessorClasses.add("de.highbyte_le.weberknecht.PostProcessor3");
+			List<Class<? extends Processor>> expectedPostProcessorClasses = new Vector<Class<? extends Processor>>();
+			expectedPostProcessorClasses.add((Class<? extends Processor>)Class.forName("de.highbyte_le.weberknecht.test.DummyProcessor4"));
 			expectedPost.put("p3", new ProcessorList("p3", expectedPostProcessorClasses));
 		}
 		
@@ -286,6 +294,22 @@ public class WeberknechtConfTest {
 	@Test(expected=ConfigurationException.class)
 	public void testReadConfigCorrupt2() throws IOException, ConfigurationException {
 		readConfig("test-data/weberknecht-corrupt-2.xml");
+	}
+	
+	/**
+	 * pre processor does not implement the processor interface
+	 */
+	@Test(expected=ConfigurationException.class)
+	public void testReadConfigCorrupt3() throws IOException, ConfigurationException {
+		readConfig("test-data/weberknecht-corrupt-3.xml");
+	}
+	
+	/**
+	 * pre processor class does not exist
+	 */
+	@Test(expected=ConfigurationException.class)
+	public void testReadConfigCorrupt4() throws IOException, ConfigurationException {
+		readConfig("test-data/weberknecht-corrupt-4.xml");
 	}
 	
 	private WeberknechtConf readConfig(String filename) throws IOException, ConfigurationException {

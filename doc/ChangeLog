@@ -17,7 +17,8 @@ next (1.0):
 	- pre-/post-processor sets must be reffered explicitly by ids and can be assigned to areas or single classes
 	- syntax of weberknecht.xml changed
 	- error handlers
-	- ActionViewProcessors also process error handler views.
+	- introduced interfaces: DataView, FeedView, WebView, JsonView and AutoView
+	- ActionViewProcessorFactory, ActionViewProcessor and other view processors moved to ...request.view
 
 0.12.2:
 	- bugfix: fixed null pointer exception, when routing didn't match.

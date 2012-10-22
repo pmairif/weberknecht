@@ -13,13 +13,14 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 
 import de.highbyte_le.weberknecht.request.ContentProcessingException;
+import de.highbyte_le.weberknecht.request.Executable;
 
 /**
  * executable webapp action
  * 
  * @author pmairif
  */
-public interface ExecutableAction {
+public interface ExecutableAction extends Executable {
 	/**
 	 * execute business logic
 	 * 

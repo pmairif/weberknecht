@@ -9,28 +9,12 @@
  */
 package de.highbyte_le.weberknecht.request.actions;
 
-import java.util.Map;
-
-import de.highbyte_le.weberknecht.request.ContentProcessingException;
-import de.highbyte_le.weberknecht.request.View;
+import de.highbyte_le.weberknecht.request.view.WebView;
 
 /**
  * webapp actions
  * 
  * @author pmairif
  */
-public interface WebAction extends ExecutableAction {
-	/**
-	 * return the view information
-	 */
-	public View getView();
-	
-	/**
-	 * return a mapping of names to models.
-	 * 
-	 * <p>The names are appended to de.highbyte_le.weberknecht.model and used as attribute names.</p>
-	 * 
-	 * @return mapping of names to models
-	 */
-	public Map<String, Object> getModels() throws ContentProcessingException;
+public interface WebAction extends ExecutableAction, WebView {
 }

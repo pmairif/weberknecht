@@ -8,20 +8,12 @@
  */
 package de.highbyte_le.weberknecht.request.actions;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
+import de.highbyte_le.weberknecht.request.view.DataView;
 
 /**
  * action creating binary data
  * 
  * @author pmairif
  */
-public interface DataAction extends ExecutableAction {
-	
-	/**
-	 * <p>set the mime type with {@link HttpServletResponse#setContentType(String)}
-	 * and write data to output stream with {@link HttpServletResponse#getOutputStream()}.</p>
-	 */
-	public void writeData(HttpServletResponse response) throws IOException, ActionExecutionException;
+public interface DataAction extends ExecutableAction, DataView {
 }

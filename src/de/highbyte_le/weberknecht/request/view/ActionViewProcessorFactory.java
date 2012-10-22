@@ -1,16 +1,17 @@
 /*
  * ActionProcessorFactory.java (weberknecht)
  *
- * Copyright 2010 Patrick Mairif.
+ * Copyright 2010-2012 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
- * created: 21.11.2010
  * tabstop=4, charset=UTF-8
  */
-package de.highbyte_le.weberknecht.request.actions;
+package de.highbyte_le.weberknecht.request.view;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.ServletContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,13 +40,15 @@ public class ActionViewProcessorFactory {
 	 * @param viewProcessorName
 	 * 		unique name identifying the view processor (formerly called suffix)
 	 */
-	public ActionViewProcessor createActionProcessor(String viewProcessorName) {
+	public ActionViewProcessor createActionProcessor(String viewProcessorName, ServletContext servletContext) {
 		ActionViewProcessor processor = null;
 		
 		Class<? extends ActionViewProcessor> clazz = suffixProcessorMap.get(viewProcessorName);
 		if (clazz != null) {
 			try {
 				processor = clazz.newInstance();
+				processor.setServletContext(servletContext);
+				processor.setActionViewProcessorFactory(this);
 			}
 			catch (InstantiationException e) {
 				log.error("createActionProcessor() - InstantiationException: "+e.getMessage(), e);	//$NON-NLS-1$

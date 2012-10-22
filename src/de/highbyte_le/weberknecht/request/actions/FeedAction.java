@@ -8,17 +8,12 @@
  */
 package de.highbyte_le.weberknecht.request.actions;
 
-import de.highbyte_le.weberknecht.feeds.FeedData;
+import de.highbyte_le.weberknecht.request.view.FeedView;
 
 /**
  * webapp actions producing feeds (RSS/Atom)
  * 
  * @author pmairif
  */
-public interface FeedAction extends ExecutableAction {
-	/**
-	 * necessary data to produce feeds
-	 * @return feed model
-	 */
-	public FeedData getFeedModel();
+public interface FeedAction extends ExecutableAction, FeedView {
 }

@@ -1,13 +1,12 @@
 /*
  * FeedActionProcessor.java (weberknecht)
  *
- * Copyright 2010 Patrick Mairif.
+ * Copyright 2010-2012 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
- * created: 21.11.2010
  * tabstop=4, charset=UTF-8
  */
-package de.highbyte_le.weberknecht.request.actions;
+package de.highbyte_le.weberknecht.request.view;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -25,10 +24,10 @@ import org.jdom.output.XMLOutputter;
 import de.highbyte_le.weberknecht.feeds.FeedCreator;
 import de.highbyte_le.weberknecht.feeds.FeedData;
 import de.highbyte_le.weberknecht.feeds.RssCreator;
-import de.highbyte_le.weberknecht.request.error.ErrorHandler;
+import de.highbyte_le.weberknecht.request.Executable;
 
 /**
- * Process feed actions
+ * Process feed views
  * 
  * @author pmairif
  */
@@ -40,14 +39,14 @@ public class FeedActionProcessor implements ActionViewProcessor {
 	 * @see de.highbyte_le.weberknecht.request.ActionProcessor#processAction(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, de.highbyte_le.weberknecht.request.ExecutableAction)
 	 */
 	@Override
-	public void processView(HttpServletRequest request, HttpServletResponse response, ExecutableAction action) throws IOException {
-		if (action instanceof FeedAction)
-			processView(request, response, (FeedAction)action);
+	public void processView(HttpServletRequest request, HttpServletResponse response, Executable action) throws IOException {
+		if (action instanceof FeedView)
+			processView(request, response, (FeedView)action);
 		else
 			throw new IllegalArgumentException("Action not applicable here.");
 	}
 	
-	public void processView(HttpServletRequest request, HttpServletResponse response, FeedAction action) throws IOException {
+	public void processView(HttpServletRequest request, HttpServletResponse response, FeedView action) throws IOException {
 		if (log.isDebugEnabled())
 			log.debug("processView() - processing action "+action.getClass().getSimpleName());
 		
@@ -76,11 +75,10 @@ public class FeedActionProcessor implements ActionViewProcessor {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.highbyte_le.weberknecht.request.actions.ActionViewProcessor#processView(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, de.highbyte_le.weberknecht.request.ErrorHandler)
+	 * @see de.highbyte_le.weberknecht.request.view.ActionViewProcessor#setActionViewProcessorFactory(de.highbyte_le.weberknecht.request.view.ActionViewProcessorFactory)
 	 */
 	@Override
-	public void processView(HttpServletRequest request, HttpServletResponse response, ErrorHandler errorHandler) {
-		// TODO Auto-generated method stub
-		
+	public void setActionViewProcessorFactory(ActionViewProcessorFactory factory) {
+		//
 	}
 }

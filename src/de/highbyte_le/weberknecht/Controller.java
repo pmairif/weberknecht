@@ -41,8 +41,6 @@ import de.highbyte_le.weberknecht.request.ModelHelper;
 import de.highbyte_le.weberknecht.request.actions.ActionFactory;
 import de.highbyte_le.weberknecht.request.actions.ActionInstantiationException;
 import de.highbyte_le.weberknecht.request.actions.ActionNotFoundException;
-import de.highbyte_le.weberknecht.request.actions.ActionViewProcessor;
-import de.highbyte_le.weberknecht.request.actions.ActionViewProcessorFactory;
 import de.highbyte_le.weberknecht.request.actions.DynamicActionFactory;
 import de.highbyte_le.weberknecht.request.actions.ExecutableAction;
 import de.highbyte_le.weberknecht.request.error.DefaultErrorHandler;
@@ -53,6 +51,9 @@ import de.highbyte_le.weberknecht.request.processing.Processor;
 import de.highbyte_le.weberknecht.request.routing.AreaCapableRouter;
 import de.highbyte_le.weberknecht.request.routing.Router;
 import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
+import de.highbyte_le.weberknecht.request.view.ActionViewProcessor;
+import de.highbyte_le.weberknecht.request.view.ActionViewProcessorFactory;
+import de.highbyte_le.weberknecht.request.view.AutoViewProcessor;
 
 /**
  * webapp controller
@@ -257,8 +258,8 @@ public class Controller extends HttpServlet {
 			chain.doContinue();
 			
 			//process view
-			ActionViewProcessor processor = actionProcessorFactory.createActionProcessor(routingTarget.getViewProcessorName());	//TODO implement as processor
-			processor.setServletContext(getServletContext());
+			//TODO implement as processor
+			ActionViewProcessor processor = actionProcessorFactory.createActionProcessor(routingTarget.getViewProcessorName(), getServletContext()); 
 			processor.processView(request, response, action);
 			
 		}
@@ -287,6 +288,7 @@ public class Controller extends HttpServlet {
 			RoutingTarget routingTarget, Exception exception) {
 		Connection con = null;
 		try {
+			//get error handler
 			Class<? extends ErrorHandler> errHandlerClass = DefaultErrorHandler.class;
 			ActionDeclaration actionDeclaration = conf.findActionDeclaration(routingTarget.getArea(), routingTarget.getActionName());
 			if (actionDeclaration.hasErrorHandlerClass())
@@ -294,19 +296,22 @@ public class Controller extends HttpServlet {
 			
 			ErrorHandler handler = errHandlerClass.newInstance();
 			
+			//initialize error handler
 			if (handler instanceof DatabaseCapable) {
 				con = getConnection();
 				((DatabaseCapable) handler).setDatabase(con);
 			}
 			
-			handler.handleException(exception, request);
+			//handle exception
+			handler.handleException(exception, request, routingTarget);
 			int status = handler.getStatus();
 			if (status > 0)	//Don't set status, eg. on redirects
 				response.setStatus(status);
 			
-			//process view, respecting requested content type 
-			ActionViewProcessor processor = actionProcessorFactory.createActionProcessor(routingTarget.getViewProcessorName());
+			//process view, respecting requested content type
+			AutoViewProcessor processor = new AutoViewProcessor();
 			processor.setServletContext(getServletContext());
+			processor.setActionViewProcessorFactory(actionProcessorFactory);
 			processor.processView(request, response, handler);
 		}
 		catch (Exception e1) {

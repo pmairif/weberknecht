@@ -9,7 +9,7 @@
  */
 package de.highbyte_le.weberknecht.request.error;
 
-import java.util.Map;
+import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,18 +20,19 @@ import org.apache.commons.logging.LogFactory;
 import de.highbyte_le.weberknecht.Controller;
 import de.highbyte_le.weberknecht.db.DBConnectionException;
 import de.highbyte_le.weberknecht.request.ContentProcessingException;
-import de.highbyte_le.weberknecht.request.View;
 import de.highbyte_le.weberknecht.request.actions.ActionExecutionException;
 import de.highbyte_le.weberknecht.request.actions.ActionInstantiationException;
 import de.highbyte_le.weberknecht.request.actions.ActionNotFoundException;
 import de.highbyte_le.weberknecht.request.processing.ProcessingException;
+import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
+import de.highbyte_le.weberknecht.request.view.DataView;
 
 /**
  * error handler used by default
  *
  * @author pmairif
  */
-public class DefaultErrorHandler implements ErrorHandler {
+public class DefaultErrorHandler implements ErrorHandler, DataView {
 
 	private int statusCode;
 
@@ -44,7 +45,7 @@ public class DefaultErrorHandler implements ErrorHandler {
 	 * @see de.highbyte_le.weberknecht.request.ErrorHandler#handleException(java.lang.Exception, javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
-	public void handleException(Exception exception, HttpServletRequest request) {
+	public void handleException(Exception exception, HttpServletRequest request, RoutingTarget routingTarget) {
 		if (exception instanceof ActionNotFoundException) {
 			log.warn("action not found: "+exception.getMessage()+"; request URI was "+request.getRequestURI());
 			this.statusCode = HttpServletResponse.SC_NOT_FOUND;	//throw 404, if action doesn't exist
@@ -74,7 +75,6 @@ public class DefaultErrorHandler implements ErrorHandler {
 			log.error("doGet() - "+exception.getClass().getSimpleName()+": "+exception.getMessage(), exception);	//$NON-NLS-1$
 			this.statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;	//throw 500
 		}
-
 	}
 
 	/* (non-Javadoc)
@@ -91,20 +91,20 @@ public class DefaultErrorHandler implements ErrorHandler {
 	protected void setStatusCode(int statusCode) {
 		this.statusCode = statusCode;
 	}
-	
+
 	/* (non-Javadoc)
-	 * @see de.highbyte_le.weberknecht.request.ErrorHandler#getView()
+	 * @see de.highbyte_le.weberknecht.request.view.AutoView#getViewProcessorName()
 	 */
 	@Override
-	public View getView() {
-		return null;
+	public String getViewProcessorName() {
+		return "data";
 	}
 
 	/* (non-Javadoc)
-	 * @see de.highbyte_le.weberknecht.request.ErrorHandler#getModels()
+	 * @see de.highbyte_le.weberknecht.request.view.DataView#writeData(javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
-	public Map<String, Object> getModels() throws ContentProcessingException {
-		return null;
+	public void writeData(HttpServletResponse response) throws IOException, ActionExecutionException {
+		// nothing to write.
 	}
 }

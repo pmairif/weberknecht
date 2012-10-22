@@ -45,7 +45,7 @@ public class AutoViewProcessor implements ActionViewProcessor {
 		if (log.isDebugEnabled())
 			log.debug("processView() - processing action "+executable.getClass().getSimpleName());
 
-		if (executable instanceof AutoView)
+		if (!(executable instanceof AutoView))
 			throw new IllegalArgumentException("Executable not applicable here.");
 
 		String viewProcessorName = ((AutoView) executable).getViewProcessorName();

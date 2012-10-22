@@ -17,14 +17,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.highbyte_le.weberknecht.request.ContentProcessingException;
-import de.highbyte_le.weberknecht.request.ErrorHandler;
+import de.highbyte_le.weberknecht.request.error.ErrorHandler;
 
 /**
  * process action views
  * 
  * @author pmairif
  */
-public interface ActionViewProcessor {
+public interface ActionViewProcessor {	//TODO split ErrorViewProcessor off?
 	/**
 	 * process action view
 	 */

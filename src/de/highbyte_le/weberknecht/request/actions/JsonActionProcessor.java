@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONWriter;
 
-import de.highbyte_le.weberknecht.request.ErrorHandler;
+import de.highbyte_le.weberknecht.request.error.ErrorHandler;
 
 /**
  * process json actions

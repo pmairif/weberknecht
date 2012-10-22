@@ -7,11 +7,14 @@
  * created: 19.10.2012
  * tabstop=4, charset=UTF-8
  */
-package de.highbyte_le.weberknecht.request;
+package de.highbyte_le.weberknecht.request.error;
 
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+
+import de.highbyte_le.weberknecht.request.ContentProcessingException;
+import de.highbyte_le.weberknecht.request.View;
 
 /**
  * handles errors
@@ -21,8 +24,11 @@ import javax.servlet.http.HttpServletRequest;
 public interface ErrorHandler {
 	/**
 	 * handles exception
+	 * 
+	 * @param exception
+	 * 		The exception to process.
 	 */
-	public void handleException(Exception exception, HttpServletRequest request);
+	public void handleException(Exception exception, HttpServletRequest request) throws ErrorHandlingException;
 	
 	/**
 	 * get the HTTP Status code to return

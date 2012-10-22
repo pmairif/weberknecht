@@ -25,7 +25,7 @@ import org.jdom.output.XMLOutputter;
 import de.highbyte_le.weberknecht.feeds.FeedCreator;
 import de.highbyte_le.weberknecht.feeds.FeedData;
 import de.highbyte_le.weberknecht.feeds.RssCreator;
-import de.highbyte_le.weberknecht.request.ErrorHandler;
+import de.highbyte_le.weberknecht.request.error.ErrorHandler;
 
 /**
  * Process feed actions

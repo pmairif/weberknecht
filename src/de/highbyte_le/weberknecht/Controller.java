@@ -37,8 +37,6 @@ import de.highbyte_le.weberknecht.db.DefaultWebDbConnectionProvider2;
 import de.highbyte_le.weberknecht.request.AdditionalDatabaseCapable;
 import de.highbyte_le.weberknecht.request.Configurable;
 import de.highbyte_le.weberknecht.request.DatabaseCapable;
-import de.highbyte_le.weberknecht.request.DefaultErrorHandler;
-import de.highbyte_le.weberknecht.request.ErrorHandler;
 import de.highbyte_le.weberknecht.request.ModelHelper;
 import de.highbyte_le.weberknecht.request.actions.ActionFactory;
 import de.highbyte_le.weberknecht.request.actions.ActionInstantiationException;
@@ -47,6 +45,8 @@ import de.highbyte_le.weberknecht.request.actions.ActionViewProcessor;
 import de.highbyte_le.weberknecht.request.actions.ActionViewProcessorFactory;
 import de.highbyte_le.weberknecht.request.actions.DynamicActionFactory;
 import de.highbyte_le.weberknecht.request.actions.ExecutableAction;
+import de.highbyte_le.weberknecht.request.error.DefaultErrorHandler;
+import de.highbyte_le.weberknecht.request.error.ErrorHandler;
 import de.highbyte_le.weberknecht.request.processing.ActionExecution;
 import de.highbyte_le.weberknecht.request.processing.ProcessingChain;
 import de.highbyte_le.weberknecht.request.processing.Processor;
@@ -310,7 +310,7 @@ public class Controller extends HttpServlet {
 			processor.processView(request, response, handler);
 		}
 		catch (Exception e1) {
-			log.error("doGet() - exception while error handler instantiation: "+e1.getMessage(), e1);	//$NON-NLS-1$
+			log.error("handleException() - exception while error handler instantiation: "+e1.getMessage(), e1);	//$NON-NLS-1$
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//throw 500
 		}
 		finally {

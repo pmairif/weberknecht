@@ -1,13 +1,13 @@
 /*
  * DefaultErrorHandler.java (weberknecht)
  *
- * Copyright 2012 <Your Name>.
+ * Copyright 2012 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  *
  * created: 19.10.2012
  * tabstop=4, charset=UTF-8
  */
-package de.highbyte_le.weberknecht.request;
+package de.highbyte_le.weberknecht.request.error;
 
 import java.util.Map;
 
@@ -19,15 +19,17 @@ import org.apache.commons.logging.LogFactory;
 
 import de.highbyte_le.weberknecht.Controller;
 import de.highbyte_le.weberknecht.db.DBConnectionException;
+import de.highbyte_le.weberknecht.request.ContentProcessingException;
+import de.highbyte_le.weberknecht.request.View;
 import de.highbyte_le.weberknecht.request.actions.ActionExecutionException;
 import de.highbyte_le.weberknecht.request.actions.ActionInstantiationException;
 import de.highbyte_le.weberknecht.request.actions.ActionNotFoundException;
 import de.highbyte_le.weberknecht.request.processing.ProcessingException;
 
 /**
- * NOTE describe that class
+ * error handler used by default
  *
- * @author rick
+ * @author pmairif
  */
 public class DefaultErrorHandler implements ErrorHandler {
 
@@ -83,12 +85,18 @@ public class DefaultErrorHandler implements ErrorHandler {
 		return statusCode;
 	}
 
+	/**
+	 * @param statusCode the statusCode to set
+	 */
+	protected void setStatusCode(int statusCode) {
+		this.statusCode = statusCode;
+	}
+	
 	/* (non-Javadoc)
 	 * @see de.highbyte_le.weberknecht.request.ErrorHandler#getView()
 	 */
 	@Override
 	public View getView() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -97,8 +105,6 @@ public class DefaultErrorHandler implements ErrorHandler {
 	 */
 	@Override
 	public Map<String, Object> getModels() throws ContentProcessingException {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

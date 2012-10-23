@@ -291,7 +291,7 @@ public class Controller extends HttpServlet {
 			//get error handler
 			Class<? extends ErrorHandler> errHandlerClass = DefaultErrorHandler.class;
 			ActionDeclaration actionDeclaration = conf.findActionDeclaration(routingTarget.getArea(), routingTarget.getActionName());
-			if (actionDeclaration.hasErrorHandlerClass())
+			if (actionDeclaration != null && actionDeclaration.hasErrorHandlerClass())
 				errHandlerClass = (Class<? extends ErrorHandler>) Class.forName(actionDeclaration.getErrorHandlerClass());
 			
 			ErrorHandler handler = errHandlerClass.newInstance();

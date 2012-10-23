@@ -301,7 +301,9 @@ public class Controller extends HttpServlet {
 				con = getConnection();
 				((DatabaseCapable) handler).setDatabase(con);
 			}
-			
+			if (handler instanceof Configurable)
+				((Configurable)handler).setContext(getServletConfig(), getServletContext());
+
 			//handle exception
 			handler.handleException(exception, request, routingTarget);
 			int status = handler.getStatus();

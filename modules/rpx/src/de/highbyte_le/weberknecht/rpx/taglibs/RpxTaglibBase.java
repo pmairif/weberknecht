@@ -1,10 +1,9 @@
 /*
  * RpxTaglibBase.java
  *
- * Copyright 2009 Patrick Mairif.
+ * Copyright 2009-2012 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
- * created: 31.01.2009
  * tabstop=4, charset=UTF-8
  */
 package de.highbyte_le.weberknecht.rpx.taglibs;
@@ -24,6 +23,7 @@ import de.highbyte_le.weberknecht.conf.ContextConfig;
  * 
  * @author pmairif
  */
+@SuppressWarnings("serial")
 public abstract class RpxTaglibBase extends TagSupport {
 	
 	private String responsePath = null;
@@ -32,8 +32,6 @@ public abstract class RpxTaglibBase extends TagSupport {
 	 * Logger for this class
 	 */
 	private final Log logger = LogFactory.getLog(RpxTaglibBase.class);
-
-	private static final long serialVersionUID = 5366599250142507542L;
 
 	/**
 	 * @return the responsePath
@@ -51,43 +49,58 @@ public abstract class RpxTaglibBase extends TagSupport {
 
 	protected String getTokenUrl() throws JspException {
 
-        if (!(pageContext.getRequest() instanceof HttpServletRequest))
-        	throw new JspException("unable to get a HttpServletRequest");
-
-        StringBuilder tokenUrl = new StringBuilder();
-        
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-
+        //base url
+		String webappBaseUrl = null;
         try {
         	ContextConfig conf = new ContextConfig();
-            tokenUrl.append(conf.getValue("webapp_base_url"));
-            
-            if (tokenUrl.charAt(tokenUrl.length()-1) != '/')
-            	tokenUrl.append("/");
+            webappBaseUrl = conf.getValue("webapp_base_url");
 		}
         catch (NamingException e) {
-            logger.warn("getTokenUrl() - naming exception while fetching webapp_base_url: "+e.getMessage()); //$NON-NLS-1$
-            
+        	if (logger.isWarnEnabled())
+        		logger.warn("getTokenUrl() - naming exception while fetching webapp_base_url: "+e.getMessage()); //$NON-NLS-1$
+        	
+            if (!(pageContext.getRequest() instanceof HttpServletRequest))
+            	throw new JspException("unable to get a HttpServletRequest");
+
+            HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+
         	String contextPath = request.getContextPath();
         	String localHost = request.getLocalName();
         	int localPort = request.getLocalPort();
         	
-        	if (tokenUrl.length() > 0)	//just to be sure
-        		tokenUrl = new StringBuilder();
-        	
-        	tokenUrl.append("http://").append(localHost).append(":").append(localPort+contextPath).append("/");
+        	StringBuilder b = new StringBuilder();
+        	b.append("http://").append(localHost).append(":").append(localPort+contextPath).append("/");
+        	webappBaseUrl = b.toString();
 
-            logger.info("getTokenUrl() - automatically generating base URL '"+tokenUrl.toString()+"'");
+        	if (logger.isInfoEnabled())
+        		logger.info("getTokenUrl() - automatically generating base URL '"+webappBaseUrl+"'");
         }
-
-    	tokenUrl.append(responsePath);
         
-        if (tokenUrl.toString().contains("?"))
-        	tokenUrl.append("&");
-        else
-        	tokenUrl.append("?");
-        tokenUrl.append("do=rpx");
-        
-        return tokenUrl.toString();
+        return getTokenUrl(webappBaseUrl);
+	}
+	
+	protected String getTokenUrl(String webappBaseUrl) throws JspException {
+		StringBuilder tokenUrl = new StringBuilder();
+		
+		//base url
+		tokenUrl.append(webappBaseUrl);
+		
+		if (tokenUrl.charAt(tokenUrl.length()-1) != '/')
+			tokenUrl.append("/");
+		
+		//response path
+		if (responsePath.charAt(0) == '/')
+			tokenUrl.append(responsePath.substring(1));
+		else
+			tokenUrl.append(responsePath);
+		
+		//parameter
+		if (tokenUrl.toString().contains("?"))
+			tokenUrl.append("&");
+		else
+			tokenUrl.append("?");
+		tokenUrl.append("do=rpx");
+		
+		return tokenUrl.toString();
 	}
 }

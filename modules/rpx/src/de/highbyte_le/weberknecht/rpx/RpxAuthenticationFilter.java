@@ -1,7 +1,7 @@
 /*
  * RpxAuthenticationFilter.java
  *
- * Copyright 2009 Patrick Mairif.
+ * Copyright 2009-2012 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
  * tabstop=4, charset=UTF-8
@@ -48,7 +48,7 @@ import de.highbyte_le.weberknecht.security.UserAuthentication;
  */
 public class RpxAuthenticationFilter implements Filter {
 
-	private VisitorPersistenceManager persistenceManager = null;
+	private Class<?> persistenceManagerClass = null;
 	
 	private Rpx rpx = null;
 
@@ -64,20 +64,12 @@ public class RpxAuthenticationFilter implements Filter {
 	public void init(FilterConfig config) {
 		try {
 			//persistence manager class from config
-			String persistenceManagerClass = config.getInitParameter("persistence_manager");
-			if (persistenceManagerClass == null)
+			String clazz = config.getInitParameter("persistence_manager");
+			if (clazz == null)
 				logger.error("init() - persistence_manager is not set!");
 			else {
 				try {
-					//TODO Better instantiate and get the DB connection in the doFilter function
-					//Der Persistenzmanager sollte sich im Default-Contrsuctor die Datenbankvebindung selbst beschaffen (zB JNDI)
-					Object o = Class.forName(persistenceManagerClass).newInstance();
-					if (o instanceof VisitorPersistenceManager) {
-						persistenceManager = (VisitorPersistenceManager) o;
-					}
-					else {
-						logger.error("init() - persistence manager class is not an instance of VisitorPersistenceManager");
-					}
+					persistenceManagerClass = Class.forName(clazz);
 				}
 				catch (Exception e) {
 					logger.error("init() - persistence manager class couldn't be initialized");
@@ -124,7 +116,16 @@ public class RpxAuthenticationFilter implements Filter {
 			}
 			else {
 				HttpServletRequest httpRequest = (HttpServletRequest) request;
+
+				if (null == persistenceManagerClass)
+					throw new ServletException("persistence manager class couldn't be initialized");
 				
+				Object o = persistenceManagerClass.newInstance();
+				if (!(o instanceof VisitorPersistenceManager))
+					throw new ServletException("persistence manager class is not an instance of VisitorPersistenceManager");
+				
+				VisitorPersistenceManager persistenceManager = (VisitorPersistenceManager) o;
+
 				//process only RPX-Requests. we want the parameters untouched on usual post requests to be able to access the request content,
 				String query = httpRequest.getQueryString();
 				if (query != null && (query.contains("do=rpx") || query.contains("do=signoff"))) {
@@ -132,7 +133,7 @@ public class RpxAuthenticationFilter implements Filter {
 					String paramToken = request.getParameter("token");
 					if (paramDo != null && paramDo.equalsIgnoreCase("rpx") && paramToken != null)  {
 						logger.debug("handle authentication request");
-						handleAuthentication(httpRequest.getSession(), paramToken);
+						handleAuthentication(persistenceManager, httpRequest.getSession(), paramToken);
 					}
 					else if (paramDo != null && paramDo.equalsIgnoreCase("signoff")) {
 						logger.debug("sign off");
@@ -152,6 +153,14 @@ public class RpxAuthenticationFilter implements Filter {
 			logger.error("doFilter() - DataAccessException: "+e.getMessage(), e);	//$NON-NLS-1$
 			throw new ServletException("data access Exception: "+e.getMessage(), e);
 		}
+		catch (InstantiationException e) {
+			logger.error("doFilter() - InstantiationException: "+e.getMessage(), e);	//$NON-NLS-1$
+			throw new ServletException("Instantiation Exception: "+e.getMessage(), e);
+		}
+		catch (IllegalAccessException e) {
+			logger.error("doFilter() - IllegalAccessException: "+e.getMessage(), e);	//$NON-NLS-1$
+			throw new ServletException("illegal access exception: "+e.getMessage(), e);
+		}
 	}
 	
 	protected void signOff(HttpSession session) {
@@ -162,7 +171,7 @@ public class RpxAuthenticationFilter implements Filter {
 	/**
 	 * do authentication, if parameters are present and check session for valid login
 	 */
-	protected void handleAuthentication(HttpSession session, String token) throws RpxException, DataAccessException {
+	protected void handleAuthentication(VisitorPersistenceManager persistenceManager, HttpSession session, String token) throws RpxException, DataAccessException {
 		//if right parameters are present, process the response
 		session.removeAttribute("user_auth");	//first remove the previous login from session
 		GeneralUserBean.clearSession(session);

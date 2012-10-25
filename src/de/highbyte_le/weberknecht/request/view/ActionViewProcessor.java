@@ -27,8 +27,9 @@ import de.highbyte_le.weberknecht.request.actions.ActionExecutionException;
 public interface ActionViewProcessor {
 	/**
 	 * process action view
+	 * @return true, if there was a view to process. false, if not.
 	 */
-	public void processView(HttpServletRequest request, HttpServletResponse response, Executable action)
+	public boolean processView(HttpServletRequest request, HttpServletResponse response, Executable action)
 			throws ServletException, IOException, ContentProcessingException, ActionExecutionException;
 
 	public void setServletContext(ServletContext servletContext);

@@ -1,6 +1,9 @@
 next (1.0):
-	- additional action view processors configurable
 	- Controller moved to de.highbyte_le.weberknecht.Controller
+	- additional action view processors configurable
+	- ActionViewProcessorFactory, ActionViewProcessor and other view processors moved to ...request.view
+	- ActionViewProcessor.processView() returns, if sth. was processed
+	- introduced interfaces: DataView, FeedView, WebView, JsonView and AutoView
 	- DataAction2 renamed to DataAction
 	- DataAction.writeData() throws ActionExecutionException
 	- The method needsDatabase of the interface DatabaseCapable was dropped and actions that need a database just have to implement the interface.
@@ -8,17 +11,16 @@ next (1.0):
 	- ReqUtil removed
 	- AreaCapableRouter now default
 	- actions don't throw ServletExceptions any more.
-	- rpx-stuff moved to module 
-	- build number and Version.DEFAULT was dropped
+	- WebAction.getModels() throws ContentProcessingException
 	- execute() in actions without HttpServletResponse
 	- Action renamed to WebAction
 	- optional ActionBase introduced
-	- WebAction.getModels() throws ContentProcessingException
+	- rpx-stuff moved to module 
+	- build number and Version.DEFAULT was dropped
 	- pre-/post-processor sets must be reffered explicitly by ids and can be assigned to areas or single classes
 	- syntax of weberknecht.xml changed
 	- error handlers
-	- introduced interfaces: DataView, FeedView, WebView, JsonView and AutoView
-	- ActionViewProcessorFactory, ActionViewProcessor and other view processors moved to ...request.view
+	- error pages, configured via web.xml are used
 
 0.12.2:
 	- bugfix: fixed null pointer exception, when routing didn't match.

@@ -8,8 +8,6 @@
  */
 package de.highbyte_le.weberknecht.request.error;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,14 +22,13 @@ import de.highbyte_le.weberknecht.request.actions.ActionInstantiationException;
 import de.highbyte_le.weberknecht.request.actions.ActionNotFoundException;
 import de.highbyte_le.weberknecht.request.processing.ProcessingException;
 import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
-import de.highbyte_le.weberknecht.request.view.DataView;
 
 /**
  * error handler used by default
  *
  * @author pmairif
  */
-public class DefaultErrorHandler implements ErrorHandler, DataView {
+public class DefaultErrorHandler implements ErrorHandler {
 
 	private int statusCode;
 
@@ -52,7 +49,7 @@ public class DefaultErrorHandler implements ErrorHandler, DataView {
 		else if (exception instanceof ContentProcessingException) {
 			log.error("doGet() - ContentProcessingException: "+exception.getMessage());	//$NON-NLS-1$
 			this.statusCode =  ((ContentProcessingException) exception).getHttpStatusCode();
-			//TODO write the error message to output 
+			//TODO error page with error message or set request attribute to be able to write it on standard error pages 
 		}
 		else if (exception instanceof ActionInstantiationException) {
 			log.warn("action could not be instantiated: "+exception.getMessage(), exception);
@@ -96,14 +93,6 @@ public class DefaultErrorHandler implements ErrorHandler, DataView {
 	 */
 	@Override
 	public String getViewProcessorName() {
-		return "data";
-	}
-
-	/* (non-Javadoc)
-	 * @see de.highbyte_le.weberknecht.request.view.DataView#writeData(javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	public void writeData(HttpServletResponse response) throws IOException, ActionExecutionException {
-		// nothing to write.
+		return null;	//no view, let the controller use sendError()
 	}
 }

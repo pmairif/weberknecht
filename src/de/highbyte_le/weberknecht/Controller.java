@@ -306,19 +306,32 @@ public class Controller extends HttpServlet {
 
 			//handle exception
 			handler.handleException(exception, request, routingTarget);
-			int status = handler.getStatus();
-			if (status > 0)	//Don't set status, eg. on redirects
-				response.setStatus(status);
 			
 			//process view, respecting requested content type
 			AutoViewProcessor processor = new AutoViewProcessor();
 			processor.setServletContext(getServletContext());
 			processor.setActionViewProcessorFactory(actionProcessorFactory);
-			processor.processView(request, response, handler);
+			boolean view = processor.processView(request, response, handler);
+
+			//status
+			int status = handler.getStatus();
+			if (status > 0)	{//Don't set status, eg. on redirects
+				if (view)
+					response.setStatus(status);
+				else
+					response.sendError(status);
+			}
+
 		}
 		catch (Exception e1) {
-			log.error("handleException() - exception while error handler instantiation: "+e1.getMessage(), e1);	//$NON-NLS-1$
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//throw 500
+			try {
+				log.error("handleException() - exception while error handler instantiation: "+e1.getMessage(), e1);	//$NON-NLS-1$
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//call error page 500
+			}
+			catch (IOException e) {
+				log.error("handleException() - IOException: "+e.getMessage(), e);	//$NON-NLS-1$
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//just return 500
+			}
 		}
 		finally {
 			try {

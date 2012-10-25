@@ -41,29 +41,34 @@ public class WebActionProcessor implements ActionViewProcessor {
 	 * @see de.highbyte_le.weberknecht.request.ActionProcessor#processAction(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, de.highbyte_le.weberknecht.request.ExecutableAction)
 	 */
 	@Override
-	public void processView(HttpServletRequest request, HttpServletResponse response, Executable action) throws ServletException,
+	public boolean processView(HttpServletRequest request, HttpServletResponse response, Executable action) throws ServletException,
 			IOException, ContentProcessingException {
 		
 		if (action instanceof WebView)
-			processView(request, response, (WebView)action);
-		else
-			throw new IllegalArgumentException("Action not applicable here.");
+			return processView(request, response, (WebView)action);
+		
+		throw new IllegalArgumentException("Action not applicable here.");
 	}
 	
-	public void processView(HttpServletRequest request, HttpServletResponse response, WebView action) throws ServletException, IOException, ContentProcessingException {
+	public boolean processView(HttpServletRequest request, HttpServletResponse response, WebView action) throws ServletException, IOException, ContentProcessingException {
 		if (log.isDebugEnabled())
 			log.debug("processView() - processing action "+action.getClass().getSimpleName());
 
+		boolean processed = false;
 		View view = action.getView();
 		if (view != null && view.hasJspFileName()) {
 			processJsp(request, response, view, action.getModels(), action);	//(Don't fetch model on redirect!!)
+			processed = true;
 		}
 		else if (view != null && view.hasRedirection()) {
 			processRedirect(response, view);
+			processed = true;
 		}
 		else {
 			log.warn("processView() - " + action.getClass().getName()+" produced no view and no redirection");
 		}
+		
+		return processed;
 	}
 	
 	protected void processJsp(HttpServletRequest request, HttpServletResponse response, View view, Map<String, Object> modelMap, Object action)

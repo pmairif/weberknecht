@@ -24,6 +24,7 @@ public interface AutoView {
 	/**
 	 * get the view processor name to use to process the view of the action.
 	 * The action must implement the corresponding interface to be able to deliver the content.
+	 * 
 	 * @return the view processor name (suffix)
 	 */
 	public String getViewProcessorName();

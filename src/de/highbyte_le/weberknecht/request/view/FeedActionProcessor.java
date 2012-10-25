@@ -39,14 +39,14 @@ public class FeedActionProcessor implements ActionViewProcessor {
 	 * @see de.highbyte_le.weberknecht.request.ActionProcessor#processAction(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, de.highbyte_le.weberknecht.request.ExecutableAction)
 	 */
 	@Override
-	public void processView(HttpServletRequest request, HttpServletResponse response, Executable action) throws IOException {
+	public boolean processView(HttpServletRequest request, HttpServletResponse response, Executable action) throws IOException {
 		if (action instanceof FeedView)
-			processView(request, response, (FeedView)action);
-		else
-			throw new IllegalArgumentException("Action not applicable here.");
+			return processView(request, response, (FeedView)action);
+
+		throw new IllegalArgumentException("Action not applicable here.");
 	}
 	
-	public void processView(HttpServletRequest request, HttpServletResponse response, FeedView action) throws IOException {
+	public boolean processView(HttpServletRequest request, HttpServletResponse response, FeedView action) throws IOException {
 		if (log.isDebugEnabled())
 			log.debug("processView() - processing action "+action.getClass().getSimpleName());
 		
@@ -64,6 +64,7 @@ public class FeedActionProcessor implements ActionViewProcessor {
 		response.setContentType( feedCreator.getContentType() );
 		OutputStream out = response.getOutputStream();
 		xmlOutputter.output(doc, out);
+		return true;
 	}
 	
 	/* (non-Javadoc)

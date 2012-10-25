@@ -39,7 +39,7 @@ public class AutoViewProcessor implements ActionViewProcessor {
 	 * @see de.highbyte_le.weberknecht.request.ActionProcessor#processAction(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, de.highbyte_le.weberknecht.request.ExecutableAction)
 	 */
 	@Override
-	public void processView(HttpServletRequest request, HttpServletResponse response, Executable executable)
+	public boolean processView(HttpServletRequest request, HttpServletResponse response, Executable executable)
 			throws ServletException, IOException, ContentProcessingException, ActionExecutionException {
 		
 		if (log.isDebugEnabled())
@@ -54,10 +54,16 @@ public class AutoViewProcessor implements ActionViewProcessor {
 		if (processor instanceof AutoViewProcessor)		//avoid endless loops
 			throw new IllegalArgumentException("auto view recursivly requested");
 
-		if (null == processor)
-			log.error("processView() - no view processor for " + executable.getClass().getName());
-		else
+		boolean view = false;
+		if (null == processor) {
+			log.info("processView() - no view processor for " + executable.getClass().getName());
+		}
+		else {
 			processor.processView(request, response, executable);
+			view = true;
+		}
+		
+		return view;
 	}
 	
 	@Override

@@ -17,6 +17,10 @@ import de.highbyte_le.weberknecht.request.view.AutoView;
 /**
  * handles errors
  *
+ * <p>If you want the error pages to be used that are configured in your web.xml,
+ * just let {@link #getViewProcessorName()} return null and {@link #getStatus()} the error code you want.
+ * </p>
+ *
  * @author pmairif
  */
 public interface ErrorHandler extends Executable, AutoView {
@@ -30,6 +34,9 @@ public interface ErrorHandler extends Executable, AutoView {
 	
 	/**
 	 * get the HTTP Status code to return
+	 * 
+	 * <p>If the error handler returns any view, the status code is set with setStatus,
+	 * else the code is send via sendError() to display the standard error page.</p>
 	 */
 	public int getStatus();
 }

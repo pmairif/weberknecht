@@ -32,14 +32,14 @@ public class DataActionProcessor implements ActionViewProcessor {
 	 * @see de.highbyte_le.weberknecht.request.ActionProcessor#processAction(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, de.highbyte_le.weberknecht.request.ExecutableAction)
 	 */
 	@Override
-	public void processView(HttpServletRequest request, HttpServletResponse response, Executable action) throws IOException, ActionExecutionException {
+	public boolean processView(HttpServletRequest request, HttpServletResponse response, Executable action) throws IOException, ActionExecutionException {
 		if (action instanceof DataView)
-			processView(request, response, (DataView)action);
-		else
-			throw new IllegalArgumentException("Action not applicable here.");
+			return processView(request, response, (DataView)action);
+		
+		throw new IllegalArgumentException("Action not applicable here.");
 	}
 	
-	public void processView(HttpServletRequest request, HttpServletResponse response, DataView action)
+	public boolean processView(HttpServletRequest request, HttpServletResponse response, DataView action)
 			throws IOException, ActionExecutionException {
 		
 		if (log.isDebugEnabled())
@@ -47,6 +47,7 @@ public class DataActionProcessor implements ActionViewProcessor {
 	
 		//write output
 		action.writeData(response);
+		return true;
 	}
 	
 	/* (non-Javadoc)

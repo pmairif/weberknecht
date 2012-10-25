@@ -32,21 +32,21 @@ public class JsonActionProcessor implements ActionViewProcessor {
 	 * @see de.highbyte_le.weberknecht.request.ActionProcessor#processView(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, de.highbyte_le.weberknecht.request.ExecutableAction)
 	 */
 	@Override
-	public void processView(HttpServletRequest request, HttpServletResponse response, Executable action) throws IOException,
+	public boolean processView(HttpServletRequest request, HttpServletResponse response, Executable action) throws IOException,
 			ActionExecutionException {
 		
 		try {
 			if (action instanceof JsonView)
-				processView(request, response, (JsonView)action);
-			else
-				throw new IllegalArgumentException("Action not applicable here.");
+				return processView(request, response, (JsonView)action);
+			
+			throw new IllegalArgumentException("Action not applicable here.");
 		}
 		catch (JSONException e) {
 			throw new ActionExecutionException("JSON exception: "+e.getMessage(), e);
 		}
 	}
 
-	public void processView(HttpServletRequest request, HttpServletResponse response, JsonView action)
+	public boolean processView(HttpServletRequest request, HttpServletResponse response, JsonView action)
 			throws IOException, JSONException {
 		
 		response.setContentType( "application/json" );
@@ -58,6 +58,8 @@ public class JsonActionProcessor implements ActionViewProcessor {
 		writer.flush();
 		
 		//TODO close writer?
+		
+		return true;
 	}
 	
 	/* (non-Javadoc)

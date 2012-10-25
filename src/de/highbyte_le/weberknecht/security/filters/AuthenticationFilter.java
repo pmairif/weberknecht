@@ -29,12 +29,12 @@ import de.highbyte_le.weberknecht.security.UsernamePasswordAuthenticator;
  * Filter to handle user authentication
  * 
  * <p>
- * 	User authentication by user name and password is validated, session properties are set accordingly.
- * 	no forwarding to login-page or sth. will be done.
+ * 	User authentication by user name and password is validated. Session properties are set accordingly.
+ * 	No forwarding to login-page or sth. will be done.
  * </p>
  * 
  * <p>
- * 	The do parameter with value "auth" has to be passed via query string no matter if you call GET or POST.
+ * 	The do parameter with value "auth" has to be passed via query string, no matter if you call GET or POST.
  * </p>
  */
 @SuppressWarnings("nls")

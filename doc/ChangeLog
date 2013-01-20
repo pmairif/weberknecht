@@ -10,6 +10,7 @@ next (1.0):
 	- generic beans removed
 	- ReqUtil removed
 	- AreaCapableRouter now default
+	- sub areas introduced
 	- actions don't throw ServletExceptions any more.
 	- WebAction.getModels() throws ContentProcessingException
 	- execute() in actions without HttpServletResponse

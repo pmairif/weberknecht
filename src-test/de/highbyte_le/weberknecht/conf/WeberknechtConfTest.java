@@ -1,10 +1,9 @@
 /*
  * WeberknechtConfTest.java (weberknecht)
  *
- * Copyright 2010-2012 Patrick Mairif.
+ * Copyright 2010-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
- * created: 24.03.2010
  * tabstop=4, charset=UTF-8
  */
 package de.highbyte_le.weberknecht.conf;
@@ -23,6 +22,7 @@ import java.util.Vector;
 import org.junit.Test;
 
 import de.highbyte_le.weberknecht.request.processing.Processor;
+import de.highbyte_le.weberknecht.request.routing.AreaPath;
 
 /**
  * Testing {@link WeberknechtConf}
@@ -84,7 +84,7 @@ public class WeberknechtConfTest {
 			Map<String, ActionDeclaration> expectedActionClassMap = new HashMap<String, ActionDeclaration>();
 			expectedActionClassMap.put("foo1", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "pre2", "post1", null));
 			expectedActionClassMap.put("bar1", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "pre1", "post1", null));
-			assertEquals(expectedActionClassMap, conf.getActionClassMap("a1"));
+			assertEquals(expectedActionClassMap, conf.getActionClassMap(new AreaPath("a1")));
 		}			
 	}
 	
@@ -106,7 +106,7 @@ public class WeberknechtConfTest {
 			Map<String, ActionDeclaration> expectedActionClassMap = new HashMap<String, ActionDeclaration>();
 			expectedActionClassMap.put("foo1", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "pre2", "post1", null));
 			expectedActionClassMap.put("bar1", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "pre1", "post1", null));
-			assertEquals(expectedActionClassMap, conf.getActionClassMap("a1"));
+			assertEquals(expectedActionClassMap, conf.getActionClassMap(new AreaPath("a1")));
 		}			
 	}
 	
@@ -154,24 +154,24 @@ public class WeberknechtConfTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-2.xml");
 
 		//referred processors
-		ActionDeclaration declaration = conf.findActionDeclaration("", "foo");
+		ActionDeclaration declaration = conf.findActionDeclaration(new AreaPath(), "foo");
 		assertEquals("pre1", declaration.getPreProcessorSet());
 		assertEquals("post1", declaration.getPostProcessorSet());
 
-		declaration = conf.findActionDeclaration("", "bar");
+		declaration = conf.findActionDeclaration(new AreaPath(), "bar");
 		assertEquals("", declaration.getPreProcessorSet());
 		assertEquals("post1", declaration.getPostProcessorSet());
 
-		declaration = conf.findActionDeclaration("a1", "foo1");
+		declaration = conf.findActionDeclaration(new AreaPath("a1"), "foo1");
 		assertEquals("pre2", declaration.getPreProcessorSet());
 		assertEquals("post1", declaration.getPostProcessorSet());
 		
-		declaration = conf.findActionDeclaration("a1", "bar1");
+		declaration = conf.findActionDeclaration(new AreaPath("a1"), "bar1");
 		assertEquals("pre1", declaration.getPreProcessorSet());
 		assertEquals("post1", declaration.getPostProcessorSet());
 		
-		assertNull(conf.findActionDeclaration("a1", "foo"));
-		assertNull(conf.findActionDeclaration("a2", "foo"));
+		assertNull(conf.findActionDeclaration(new AreaPath("a1"), "foo"));
+		assertNull(conf.findActionDeclaration(new AreaPath("a2"), "foo"));
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -231,44 +231,44 @@ public class WeberknechtConfTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-3.xml");
 
 		//referred processors
-		ActionDeclaration declaration = conf.findActionDeclaration("", "foo");
+		ActionDeclaration declaration = conf.findActionDeclaration(new AreaPath(), "foo");
 		assertEquals("p1", declaration.getPreProcessorSet());
 		assertEquals("p1", declaration.getPostProcessorSet());
 
-		declaration = conf.findActionDeclaration("", "bar");
+		declaration = conf.findActionDeclaration(new AreaPath(), "bar");
 		assertEquals("", declaration.getPreProcessorSet());
 		assertEquals("", declaration.getPostProcessorSet());
 
-		declaration = conf.findActionDeclaration("a1", "foo1");
+		declaration = conf.findActionDeclaration(new AreaPath("a1"), "foo1");
 		assertEquals("p1", declaration.getPreProcessorSet());
 		assertEquals("p2", declaration.getPostProcessorSet());
 		
-		declaration = conf.findActionDeclaration("a1", "bar1");
+		declaration = conf.findActionDeclaration(new AreaPath("a1"), "bar1");
 		assertEquals("p2", declaration.getPreProcessorSet());
 		assertEquals("p3", declaration.getPostProcessorSet());
 		
-		declaration = conf.findActionDeclaration("a1", "bar2");
+		declaration = conf.findActionDeclaration(new AreaPath("a1"), "bar2");
 		assertEquals("p2", declaration.getPreProcessorSet());
 		assertEquals("p2", declaration.getPostProcessorSet());
 		
-		assertNull(conf.findActionDeclaration("a1", "foo"));
-		assertNull(conf.findActionDeclaration("a2", "foo"));
+		assertNull(conf.findActionDeclaration(new AreaPath("a1"), "foo"));
+		assertNull(conf.findActionDeclaration(new AreaPath("a2"), "foo"));
 	}
 	
 	@Test
 	public void testErrorHandler() throws IOException, ConfigurationException {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-5.xml");
 	
-		ActionDeclaration declaration = conf.findActionDeclaration("", "foo");
+		ActionDeclaration declaration = conf.findActionDeclaration(new AreaPath(), "foo");
 		assertEquals("de.highbyte_le.weberknecht.ErrHandler1", declaration.getErrorHandlerClass());
 
-		declaration = conf.findActionDeclaration("", "bar");
+		declaration = conf.findActionDeclaration(new AreaPath(), "bar");
 		assertEquals("de.highbyte_le.weberknecht.ErrHandler3", declaration.getErrorHandlerClass());
 
-		declaration = conf.findActionDeclaration("a1", "foo1");
+		declaration = conf.findActionDeclaration(new AreaPath("a1"), "foo1");
 		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
 		
-		declaration = conf.findActionDeclaration("a1", "bar1");
+		declaration = conf.findActionDeclaration(new AreaPath("a1"), "bar1");
 		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
 	}
 	

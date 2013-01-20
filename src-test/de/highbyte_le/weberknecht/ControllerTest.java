@@ -1,7 +1,7 @@
 /*
  * ControllerTest.java (weberknecht)
  *
- * Copyright 2012 Patrick Mairif.
+ * Copyright 2012-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  *
  * created: 16.10.2012
@@ -21,6 +21,7 @@ import org.junit.Test;
 import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 import de.highbyte_le.weberknecht.request.processing.ActionExecution;
 import de.highbyte_le.weberknecht.request.processing.Processor;
+import de.highbyte_le.weberknecht.request.routing.AreaPath;
 import de.highbyte_le.weberknecht.test.DummyProcessor1;
 import de.highbyte_le.weberknecht.test.DummyProcessor2;
 
@@ -51,7 +52,7 @@ public class ControllerTest {
 
 	@Test
 	public void testSetupProcessorsDefaultFoo() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		List<Processor> processors = controller.setupProcessors("", "foo");
+		List<Processor> processors = controller.setupProcessors(new AreaPath(), "foo");
 		
 		//pre1 and post1 expected
 		int i = 0;
@@ -63,7 +64,7 @@ public class ControllerTest {
 	
 	@Test
 	public void testSetupProcessorsDefaultBar() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		List<Processor> processors = controller.setupProcessors("", "bar");
+		List<Processor> processors = controller.setupProcessors(new AreaPath(), "bar");
 		
 		//post1 expected
 		int i = 0;
@@ -74,7 +75,7 @@ public class ControllerTest {
 
 	@Test
 	public void testSetupProcessorsA1Foo1() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		List<Processor> processors = controller.setupProcessors("a1", "foo1");
+		List<Processor> processors = controller.setupProcessors(new AreaPath("a1"), "foo1");
 		
 		//pre2 and post1 expected
 		int i = 0;
@@ -86,7 +87,7 @@ public class ControllerTest {
 	
 	@Test
 	public void testSetupProcessorsA1Bar1() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		List<Processor> processors = controller.setupProcessors("a1", "bar1");
+		List<Processor> processors = controller.setupProcessors(new AreaPath("a1"), "bar1");
 		
 		//pre1 and post1 expected
 		int i = 0;

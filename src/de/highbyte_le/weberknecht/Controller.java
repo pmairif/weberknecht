@@ -1,7 +1,7 @@
 /*
  * Controller.java
  *
- * Copyright 2008-2012 Patrick Mairif.
+ * Copyright 2008-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
  * created: Jan 22, 2008
@@ -49,6 +49,7 @@ import de.highbyte_le.weberknecht.request.processing.ActionExecution;
 import de.highbyte_le.weberknecht.request.processing.ProcessingChain;
 import de.highbyte_le.weberknecht.request.processing.Processor;
 import de.highbyte_le.weberknecht.request.routing.AreaCapableRouter;
+import de.highbyte_le.weberknecht.request.routing.AreaPath;
 import de.highbyte_le.weberknecht.request.routing.Router;
 import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
 import de.highbyte_le.weberknecht.request.view.ActionViewProcessor;
@@ -70,7 +71,7 @@ public class Controller extends HttpServlet {
 	/**
 	 * mapping of areas to action factories
 	 */
-	private Map<String, ActionFactory> actionFactoryMap = null;
+	private Map<AreaPath, ActionFactory> actionFactoryMap = null;
 	
 	private ActionViewProcessorFactory actionProcessorFactory = null;
 	
@@ -131,11 +132,11 @@ public class Controller extends HttpServlet {
 		}
 	}
 
-	private Map<String, ActionFactory> createActionFactoryMap(WeberknechtConf conf) {
-		Map<String, ActionFactory> map = new HashMap<String, ActionFactory>();
+	private Map<AreaPath, ActionFactory> createActionFactoryMap(WeberknechtConf conf) {
+		Map<AreaPath, ActionFactory> map = new HashMap<AreaPath, ActionFactory>();
 		
-		Set<String> areas = conf.getAreas();
-		for (String area: areas) {
+		Set<AreaPath> areas = conf.getAreas();
+		for (AreaPath area: areas) {
 			ActionFactory factory = new DynamicActionFactory();
 			map.put(area, factory);
 			
@@ -186,10 +187,10 @@ public class Controller extends HttpServlet {
 		return processors;
 	}
 	
-	protected List<Processor> setupProcessors(String area, String action) throws InstantiationException, IllegalAccessException {
+	protected List<Processor> setupProcessors(AreaPath areaPath, String action) throws InstantiationException, IllegalAccessException {
 		List<Processor> processors = new Vector<Processor>();
 
-		ActionDeclaration actionDeclaration = conf.findActionDeclaration(area, action);
+		ActionDeclaration actionDeclaration = conf.findActionDeclaration(areaPath, action);
 		
 		//pre processors
 		if (actionDeclaration != null) {
@@ -236,7 +237,7 @@ public class Controller extends HttpServlet {
 			if (log.isDebugEnabled())
 				log.debug("doGet() - processing action "+action.getClass().getSimpleName());
 
-			List<Processor> processors = setupProcessors(routingTarget.getArea(), routingTarget.getActionName());
+			List<Processor> processors = setupProcessors(routingTarget.getAreaPath(), routingTarget.getActionName());
 			
 			//main db connection
 			Connection con = null;
@@ -290,7 +291,7 @@ public class Controller extends HttpServlet {
 		try {
 			//get error handler
 			Class<? extends ErrorHandler> errHandlerClass = DefaultErrorHandler.class;
-			ActionDeclaration actionDeclaration = conf.findActionDeclaration(routingTarget.getArea(), routingTarget.getActionName());
+			ActionDeclaration actionDeclaration = conf.findActionDeclaration(routingTarget.getAreaPath(), routingTarget.getActionName());
 			if (actionDeclaration != null && actionDeclaration.hasErrorHandlerClass())
 				errHandlerClass = (Class<? extends ErrorHandler>) Class.forName(actionDeclaration.getErrorHandlerClass());
 			
@@ -352,7 +353,7 @@ public class Controller extends HttpServlet {
 		if (action1 == null)
 			throw new ActionNotFoundException();
 		
-		ActionFactory actionFactory = actionFactoryMap.get(routingTarget.getArea());
+		ActionFactory actionFactory = actionFactoryMap.get(routingTarget.getAreaPath());	//TODO use AreaPathResolver to match paths
 		if (null == actionFactory)
 			throw new ActionNotFoundException();
 		

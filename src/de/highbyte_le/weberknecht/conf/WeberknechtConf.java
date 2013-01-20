@@ -26,6 +26,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
+import de.highbyte_le.weberknecht.request.routing.AreaPath;
+
 /**
  * weberknecht configuration object
  * @author pmairif
@@ -35,7 +37,7 @@ public class WeberknechtConf {
 	 * Mapping of areas to actions to declaration.
 	 * Default area is represented by the empty string.
 	 */
-	private Map<String, Map<String, ActionDeclaration>> areaActionClassMap = new HashMap<String, Map<String, ActionDeclaration>>();
+	private Map<AreaPath, Map<String, ActionDeclaration>> areaActionClassMap = new HashMap<AreaPath, Map<String, ActionDeclaration>>();
 
 	private Map<String, ProcessorList> preProcessors = new HashMap<String, ProcessorList>();
 	private Map<String, ProcessorList> postProcessors = new HashMap<String, ProcessorList>();
@@ -184,8 +186,8 @@ public class WeberknechtConf {
 		if (actionsElements != null) {
 			for (Element actionsElement: actionsElements) {
 				String area = actionsElement.getAttributeValue("area");
-				if (area == null) area = "";
-				readArea(conf, rootPreId, rootPostId, rootErrHandler, actionsElement, area);
+				AreaPath path = new AreaPath(area);
+				readArea(conf, rootPreId, rootPostId, rootErrHandler, actionsElement, path);
 			}
 		}
 		
@@ -193,8 +195,8 @@ public class WeberknechtConf {
 		if (areaElements != null) {
 			for (Element areaElement: areaElements) {
 				String area = areaElement.getAttributeValue("name");
-				if (area == null) area = "";
-				readArea(conf, rootPreId, rootPostId, rootErrHandler, areaElement, area);
+				AreaPath path = new AreaPath(area);
+				readArea(conf, rootPreId, rootPostId, rootErrHandler, areaElement, path);
 			}
 		}
 		
@@ -206,18 +208,18 @@ public class WeberknechtConf {
 	/**
 	 * read area section
 	 */
-	protected static void readArea(WeberknechtConf conf, String rootPreId, String rootPostId, String rootErrHandler, Element areaElement, String areaName)
+	protected static void readArea(WeberknechtConf conf, String rootPreId, String rootPostId, String rootErrHandler, Element areaElement, AreaPath path)
 			throws ConfigurationException {
 		String areaPreId = getProcessorSetId(areaElement, "pre", rootPreId);
 		String areaPostId = getProcessorSetId(areaElement, "post", rootPostId);
 		String areaErrHandler = getErrorHandler(areaElement, rootErrHandler);
 
-		Map<String, ActionDeclaration> actionClassMap = conf.getActionClassMap(areaName);
+		Map<String, ActionDeclaration> actionClassMap = conf.getActionClassMap(path);
 		
 		@SuppressWarnings("unchecked")
 		List<Element> actionElements = areaElement.getChildren("action");
 		if (null == actionElements) {
-			log.error("readArea() - There are no actions configured for area \""+areaName+"\"");
+			log.error("readArea() - There are no actions configured for area \""+path+"\"");
 		}
 		else {
 			for (Element e1: actionElements) {
@@ -339,7 +341,7 @@ public class WeberknechtConf {
 			actionElements = doc.getRootElement().getChildren("action");
 
 			if (actionElements != null) {
-				Map<String, ActionDeclaration> actionClassMap = conf.getActionClassMap("");	//actions for default area
+				Map<String, ActionDeclaration> actionClassMap = conf.getActionClassMap(new AreaPath());	//actions for default area
 
 				for (Element e: actionElements) {
 					String name = e.getAttributeValue("name");
@@ -369,14 +371,14 @@ public class WeberknechtConf {
 	 * get the action map for the default area
 	 */
 	public Map<String, ActionDeclaration> getActionClassMap() {
-		return getActionClassMap("");
+		return getActionClassMap(new AreaPath());
 	}
 	
 	/**
 	 * get the action map for the area
 	 */
-	public synchronized Map<String, ActionDeclaration> getActionClassMap(String area) {
-		String key = area != null ? area : "";
+	public synchronized Map<String, ActionDeclaration> getActionClassMap(AreaPath area) {
+		AreaPath key = area != null ? area : new AreaPath();
 		Map<String, ActionDeclaration> ret = areaActionClassMap.get(key);
 		
 		if (null == ret) {
@@ -390,11 +392,11 @@ public class WeberknechtConf {
 	/**
 	 * @return the areaActionClassMap
 	 */
-	public Map<String, Map<String, ActionDeclaration>> getAreaActionClassMap() {
+	public Map<AreaPath, Map<String, ActionDeclaration>> getAreaActionClassMap() {
 		return areaActionClassMap;
 	}
 
-	public Set<String> getAreas() {
+	public Set<AreaPath> getAreas() {
 		return areaActionClassMap.keySet();
 	}
 	
@@ -422,8 +424,9 @@ public class WeberknechtConf {
 	/**
 	 * find the pre processor set to be applied to the given action
 	 */
-	public ActionDeclaration findActionDeclaration(String area, String action) {
-		Map<String, ActionDeclaration> actionClassMap = areaActionClassMap.get(area);
+	public ActionDeclaration findActionDeclaration(AreaPath path, String action) {
+		//TODO introduce AreaPathResolver to resolve paths
+		Map<String, ActionDeclaration> actionClassMap = areaActionClassMap.get(path);
 		if (actionClassMap != null)
 			return actionClassMap.get(action);
 		return null;

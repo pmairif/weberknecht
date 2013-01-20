@@ -70,4 +70,13 @@ public class AreaPathTest {
 		assertEquals(2, path1.getAreas().size());
 		assertEquals(1, path2.getAreas().size());
 	}
+
+	@Test
+	public void testFork() {
+		AreaPath path1 = new AreaPath("a1");
+		AreaPath path2 = path1.fork("a2");
+		
+		assertEquals(1, path1.getAreas().size());
+		assertEquals(2, path2.getAreas().size());
+	}
 }

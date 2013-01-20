@@ -39,6 +39,13 @@ public class AreaPath implements Cloneable {
 	}
 	
 	/**
+	 * create copy of current instance and add sub path to it.
+	 */
+	public AreaPath fork(String area) {
+		return clone().addPath(area);
+	}
+	
+	/**
 	 * @return the areas
 	 */
 	public List<String> getAreas() {

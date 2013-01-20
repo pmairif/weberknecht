@@ -189,9 +189,8 @@ public class WeberknechtConf {
 		List<Element> actionsElements = rootElement.getChildren("actions");
 		if (actionsElements != null) {
 			for (Element actionsElement: actionsElements) {
-				AreaPath subPath = path.clone();
 				String area = actionsElement.getAttributeValue("area");
-				subPath.addPath(area);
+				AreaPath subPath = path.fork(area);
 				readArea(conf, rootPreId, rootPostId, rootErrHandler, actionsElement, subPath);
 
 				readActions(conf, actionsElement, subPath);
@@ -201,9 +200,8 @@ public class WeberknechtConf {
 		List<Element> areaElements = rootElement.getChildren("area");
 		if (areaElements != null) {
 			for (Element areaElement: areaElements) {
-				AreaPath subPath = path.clone();
 				String area = areaElement.getAttributeValue("name");
-				subPath.addPath(area);
+				AreaPath subPath = path.fork(area);
 				readArea(conf, rootPreId, rootPostId, rootErrHandler, areaElement, subPath);
 
 				readActions(conf, areaElement, subPath);

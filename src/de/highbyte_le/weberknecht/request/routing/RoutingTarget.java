@@ -1,13 +1,13 @@
 /*
  * Routing.java (weberknecht)
  *
- * Copyright 2011 Patrick Mairif.
+ * Copyright 2011-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  *
- * created: 09.12.2011
  * tabstop=4, charset=UTF-8
  */
 package de.highbyte_le.weberknecht.request.routing;
+
 
 /**
  * Routing target
@@ -17,9 +17,9 @@ package de.highbyte_le.weberknecht.request.routing;
 public class RoutingTarget {
 	
 	/**
-	 * optional area
+	 * optional areas
 	 */
-	private final String area;
+	private final AreaPath areaPath;
 	
 	/**
 	 * unique name identifying the action
@@ -36,18 +36,30 @@ public class RoutingTarget {
 	 */
 	private final String task;
 	
-	public RoutingTarget(String area, String actionName, String viewProcessorName, String task) {
-		this.area = area == null ? "" : area;
+	public RoutingTarget(AreaPath path, String actionName, String viewProcessorName, String task) {
+		this.areaPath = path;
 		this.actionName = actionName;
 		this.viewProcessorName = viewProcessorName;
 		this.task = task;
 	}
-
+	
+	public RoutingTarget(String area, String actionName, String viewProcessorName, String task) {
+		this(new AreaPath(area), actionName, viewProcessorName, task);
+	}
+	
+	public RoutingTarget(String actionName, String viewProcessorName, String task) {
+		this(new AreaPath(), actionName, viewProcessorName, task);
+	}
+	
+	public void addArea(String area) {
+		this.areaPath.addPath(area);
+	}
+	
 	/**
 	 * @return the area
 	 */
-	public String getArea() {
-		return area;
+	public AreaPath getAreaPath() {
+		return areaPath;
 	}
 	
 	/**

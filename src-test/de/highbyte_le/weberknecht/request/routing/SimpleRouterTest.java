@@ -1,10 +1,9 @@
 /*
  * SimpleRouterTest.java (weberknecht)
  *
- * Copyright 2011 Patrick Mairif.
+ * Copyright 2011-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  *
- * created: 09.12.2011
  * tabstop=4, charset=UTF-8
  */
 package de.highbyte_le.weberknecht.request.routing;
@@ -35,7 +34,7 @@ public class SimpleRouterTest {
 		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
 		assertNull(target.getTask());
-		assertEquals("", target.getArea());
+		assertEquals(new AreaPath(), target.getAreaPath());
 	}
 
 	@Test

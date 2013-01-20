@@ -1,10 +1,9 @@
 /*
  * AreaCapableRouterTest.java (weberknecht)
  *
- * Copyright 2011 Patrick Mairif.
+ * Copyright 2011-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  *
- * created: 09.12.2011
  * tabstop=4, charset=UTF-8
  */
 package de.highbyte_le.weberknecht.request.routing;
@@ -34,7 +33,7 @@ public class AreaCapableRouterTest {
 		RoutingTarget target = router.routeUri("/foo.do");
 		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
-		assertEquals("", target.getArea());
+		assertEquals(new AreaPath(), target.getAreaPath());
 		assertNull(target.getTask());
 	}
 
@@ -43,7 +42,7 @@ public class AreaCapableRouterTest {
 		RoutingTarget target = router.routeUri("/bar.data");
 		assertEquals("bar", target.getActionName());
 		assertEquals("data", target.getViewProcessorName());
-		assertEquals("", target.getArea());
+		assertEquals(new AreaPath(), target.getAreaPath());
 		assertNull(target.getTask());
 	}
 
@@ -52,7 +51,7 @@ public class AreaCapableRouterTest {
 		RoutingTarget target = router.routeUri("/area/foo.do");
 		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
-		assertEquals("area", target.getArea());
+		assertEquals(new AreaPath("area"), target.getAreaPath());
 		assertNull(target.getTask());
 	}
 
@@ -61,16 +60,52 @@ public class AreaCapableRouterTest {
 		RoutingTarget target = router.routeUri("/Foo1/bar.data");
 		assertEquals("bar", target.getActionName());
 		assertEquals("data", target.getViewProcessorName());
-		assertEquals("Foo1", target.getArea());
+		assertEquals(new AreaPath("Foo1"), target.getAreaPath());
 		assertNull(target.getTask());
 	}
 
+	@Test
+	public void subAreaTest1() {
+		RoutingTarget target = router.routeUri("/Area/Sub/Action.do");
+		assertEquals("Action", target.getActionName());
+		assertEquals("do", target.getViewProcessorName());
+		assertEquals(new AreaPath("Area", "Sub"), target.getAreaPath());
+		assertNull(target.getTask());
+	}
+	
+	@Test
+	public void subAreaTest2() {
+		RoutingTarget target = router.routeUri("/a1/a2/a3/a4/a5/Action.do");
+		assertEquals("Action", target.getActionName());
+		assertEquals("do", target.getViewProcessorName());
+		assertEquals(new AreaPath("a1", "a2", "a3", "a4", "a5"), target.getAreaPath());
+		assertNull(target.getTask());
+	}
+	
+	@Test
+	public void subAreaTest3() {
+		RoutingTarget target = router.routeUri("/foo/bar/foo/bar.do");
+		assertEquals("bar", target.getActionName());
+		assertEquals("do", target.getViewProcessorName());
+		assertEquals(new AreaPath("foo", "bar", "foo"), target.getAreaPath());
+		assertNull(target.getTask());
+	}
+	
+	@Test
+	public void subAreaTest4() {
+		RoutingTarget target = router.routeUri("/a1//a2/bar.do");
+		assertEquals("bar", target.getActionName());
+		assertEquals("do", target.getViewProcessorName());
+		assertEquals(new AreaPath("a1", "a2"), target.getAreaPath());
+		assertNull(target.getTask());
+	}
+	
 	@Test
 	public void testWithUnderscore() {
 		RoutingTarget target = router.routeUri("/bar_foo.data");
 		assertEquals("bar_foo", target.getActionName());
 		assertEquals("data", target.getViewProcessorName());
-		assertEquals("", target.getArea());
+		assertEquals(new AreaPath(), target.getAreaPath());
 		assertNull(target.getTask());
 	}
 
@@ -80,7 +115,7 @@ public class AreaCapableRouterTest {
 		assertEquals("bar-foo", target.getActionName());
 		assertEquals("data", target.getViewProcessorName());
 		assertEquals("add-one", target.getTask());
-		assertEquals("", target.getArea());
+		assertEquals(new AreaPath(), target.getAreaPath());
 	}
 
 	@Test
@@ -89,13 +124,13 @@ public class AreaCapableRouterTest {
 		assertEquals("foo", target1.getActionName());
 		assertEquals("do", target1.getViewProcessorName());
 		assertEquals("sth", target1.getTask());
-		assertEquals("", target1.getArea());
+		assertEquals(new AreaPath(), target1.getAreaPath());
 
 		RoutingTarget target2 = router.routeUri("/foo!bar.do");
 		assertEquals("foo", target2.getActionName());
 		assertEquals("do", target2.getViewProcessorName());
 		assertEquals("bar", target2.getTask());
-		assertEquals("", target2.getArea());
+		assertEquals(new AreaPath(), target2.getAreaPath());
 	}
 
 	@Test
@@ -104,13 +139,13 @@ public class AreaCapableRouterTest {
 		assertEquals("foo", target1.getActionName());
 		assertEquals("do", target1.getViewProcessorName());
 		assertEquals("sth", target1.getTask());
-		assertEquals("foo-bar", target1.getArea());
+		assertEquals(new AreaPath("foo-bar"), target1.getAreaPath());
 		
 		RoutingTarget target2 = router.routeUri("/fooo/foo!bar.do");
 		assertEquals("foo", target2.getActionName());
 		assertEquals("do", target2.getViewProcessorName());
 		assertEquals("bar", target2.getTask());
-		assertEquals("fooo", target2.getArea());
+		assertEquals(new AreaPath("fooo"), target2.getAreaPath());
 	}
 	
 	@Test

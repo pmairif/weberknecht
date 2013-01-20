@@ -1,7 +1,7 @@
 /*
  * AreaCapableRouter.java (weberknecht)
  *
- * Copyright 2011 Patrick Mairif.
+ * Copyright 2011-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  *
  * created: 2011-12-22
@@ -19,7 +19,10 @@ import java.util.regex.Pattern;
  */
 public class AreaCapableRouter implements Router {
 	
-	private static final Pattern pattern = Pattern.compile("/([a-z0-9_-]+/)?([a-z0-9_-]+)(![a-z0-9_-]*)?\\.([a-z]+)", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+	private static final Pattern pattern = Pattern.compile(
+			"([/a-z0-9_-]+)?/([a-z0-9_-]+)(![a-z0-9_-]*)?\\.([a-z]+)",	//$NON-NLS-1$
+			Pattern.CASE_INSENSITIVE
+	); 
 
 	/* (non-Javadoc)
 	 * @see de.highbyte_le.weberknecht.request.routing.Router#routeUri(java.lang.String)
@@ -28,27 +31,37 @@ public class AreaCapableRouter implements Router {
 	public RoutingTarget routeUri(String servletPath) {
 		RoutingTarget target = null;
 		
-		//TODO default action/area
+		//TODO default action per area
 		
 		Matcher areaMatcher = pattern.matcher(servletPath);
 		if (areaMatcher.matches()) {
-			String a = areaMatcher.group(1);
+			String path = areaMatcher.group(1);
 			String baseName = areaMatcher.group(2);
 			String t = areaMatcher.group(3);
 			String suffix = areaMatcher.group(4);
 			
-			String area = null;
-			if (a != null && a.length() > 1)
-				area = a.substring(0, a.length()-1);
+			AreaPath areaPath = createPath(path);
 			
 			String task = null;
 			if (t != null && t.length() > 1)
 				task = t.substring(1);
 			
-			target = new RoutingTarget(area, baseName, suffix, task);
+			target = new RoutingTarget(areaPath, baseName, suffix, task);
 		}
 		
 		return target;
 	}
 
+	protected AreaPath createPath(String path) {
+		AreaPath ret = new AreaPath();
+		
+		if (path == null)
+			return ret;
+		
+		String[] splitted = path.split("/");
+		for (String s: splitted)
+			ret.addPath(s);
+		
+		return ret;
+	}
 }

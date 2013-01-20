@@ -60,4 +60,14 @@ public class AreaPathTest {
 		expected.add("a2");
 		assertEquals(expected, path.getAreas());
 	}
+	
+	@Test
+	public void testClone() {
+		AreaPath path1 = new AreaPath("a1");
+		AreaPath path2 = path1.clone();
+		
+		path1.addPath("a2");
+		assertEquals(2, path1.getAreas().size());
+		assertEquals(1, path2.getAreas().size());
+	}
 }

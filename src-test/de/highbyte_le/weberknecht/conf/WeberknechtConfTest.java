@@ -272,6 +272,52 @@ public class WeberknechtConfTest {
 		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
 	}
 	
+	@Test
+	public void testErrorHandlerWithSubAreas1() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-6a.xml");
+		
+		ActionDeclaration declaration = conf.findActionDeclaration(new AreaPath(), "foo");
+		assertEquals("de.highbyte_le.weberknecht.ErrHandler1", declaration.getErrorHandlerClass());
+		
+		declaration = conf.findActionDeclaration(new AreaPath(), "bar");
+		assertEquals("de.highbyte_le.weberknecht.ErrHandler3", declaration.getErrorHandlerClass());
+		
+		declaration = conf.findActionDeclaration(new AreaPath("a1"), "foo1");
+		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
+		
+		declaration = conf.findActionDeclaration(new AreaPath("a1"), "bar1");
+		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
+
+		declaration = conf.findActionDeclaration(new AreaPath("a1", "a2"), "foo2");
+		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
+
+		declaration = conf.findActionDeclaration(new AreaPath("a1", "a2"), "bar2");
+		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
+	}
+	
+	@Test
+	public void testErrorHandlerWithSubAreas2() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-6b.xml");
+		
+		ActionDeclaration declaration = conf.findActionDeclaration(new AreaPath(), "foo");
+		assertEquals("de.highbyte_le.weberknecht.ErrHandler1", declaration.getErrorHandlerClass());
+		
+		declaration = conf.findActionDeclaration(new AreaPath(), "bar");
+		assertEquals("de.highbyte_le.weberknecht.ErrHandler3", declaration.getErrorHandlerClass());
+		
+		declaration = conf.findActionDeclaration(new AreaPath("a1"), "foo1");
+		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
+		
+		declaration = conf.findActionDeclaration(new AreaPath("a1"), "bar1");
+		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
+		
+		declaration = conf.findActionDeclaration(new AreaPath("a1", "a2"), "foo2");
+		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
+		
+		declaration = conf.findActionDeclaration(new AreaPath("a1", "a2"), "bar2");
+		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
+	}
+	
 	/**
 	 * Exception on old configuration
 	 */

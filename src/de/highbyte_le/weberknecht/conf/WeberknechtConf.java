@@ -1,7 +1,7 @@
 /*
  * WeberknechtConf.java (weberknecht)
  *
- * Copyright 2009-2011 Patrick Mairif.
+ * Copyright 2009-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
  * created: 2009-09-14
@@ -113,7 +113,7 @@ public class WeberknechtConf {
 			readProcessors(conf, rootElement);
 			readRouter(conf, rootElement);
 			readActionViewProcessors(conf, rootElement);
-			readActions(conf, rootElement);
+			readActions(conf, rootElement, new AreaPath());
 			conf.checkActions();
 		}
 		catch (JDOMException e1) {
@@ -174,10 +174,14 @@ public class WeberknechtConf {
 					throw new ConfigurationException("Post processor '"+postProcessorSet+"' not found!");
 			}
 		}
+		
+		if (areaActionClassMap.size() == 0) {
+			log.error("checkActions() - There are no actions configured!");
+		}
 	}
 
 	@SuppressWarnings("unchecked")
-	protected static void readActions(WeberknechtConf conf, Element rootElement) throws ConfigurationException {
+	protected static void readActions(WeberknechtConf conf, Element rootElement, AreaPath path) throws ConfigurationException {
 		String rootPreId = getProcessorSetId(rootElement, "pre", "");
 		String rootPostId = getProcessorSetId(rootElement, "post", "");
 		String rootErrHandler = getErrorHandler(rootElement, null);
@@ -185,24 +189,27 @@ public class WeberknechtConf {
 		List<Element> actionsElements = rootElement.getChildren("actions");
 		if (actionsElements != null) {
 			for (Element actionsElement: actionsElements) {
+				AreaPath subPath = path.clone();
 				String area = actionsElement.getAttributeValue("area");
-				AreaPath path = new AreaPath(area);
-				readArea(conf, rootPreId, rootPostId, rootErrHandler, actionsElement, path);
+				subPath.addPath(area);
+				readArea(conf, rootPreId, rootPostId, rootErrHandler, actionsElement, subPath);
+
+				readActions(conf, actionsElement, subPath);
 			}
 		}
 		
 		List<Element> areaElements = rootElement.getChildren("area");
 		if (areaElements != null) {
 			for (Element areaElement: areaElements) {
+				AreaPath subPath = path.clone();
 				String area = areaElement.getAttributeValue("name");
-				AreaPath path = new AreaPath(area);
-				readArea(conf, rootPreId, rootPostId, rootErrHandler, areaElement, path);
+				subPath.addPath(area);
+				readArea(conf, rootPreId, rootPostId, rootErrHandler, areaElement, subPath);
+
+				readActions(conf, areaElement, subPath);
 			}
 		}
 		
-		if (null == actionsElements && null == areaElements) {
-			log.error("readActions() - There are no actions configured!");
-		}
 	}
 
 	/**

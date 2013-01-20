@@ -16,7 +16,7 @@ import java.util.Vector;
  *
  * @author rick
  */
-public class AreaPath {
+public class AreaPath implements Cloneable {
 
 	private final List<String> areas;
 	
@@ -74,5 +74,18 @@ public class AreaPath {
 	@Override
 	public String toString() {
 		return "AreaPath [areas=" + areas + "]";
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	public AreaPath clone() {
+		AreaPath newPath = new AreaPath();
+		
+		for (String s: areas)
+			newPath.areas.add(s);
+		
+		return newPath;
 	}
 }

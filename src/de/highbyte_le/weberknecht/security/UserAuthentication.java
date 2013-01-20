@@ -17,9 +17,8 @@ import javax.servlet.http.HttpSession;
  * hold general information about user authentication to be stored in the HTTP session
  * @author pmairif
  */
+@SuppressWarnings("serial")
 public class UserAuthentication implements Serializable {
-	private static final long serialVersionUID = 9177669359989739L;
-
 	private boolean authenticated = false;
 
 	/**

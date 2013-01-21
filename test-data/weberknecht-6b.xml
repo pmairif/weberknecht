@@ -15,6 +15,10 @@
 			<area name="a2">
 				<action name="foo2" class="de.highbyte_le.weberknecht.FooAction" />
 				<action name="bar2" class="de.highbyte_le.weberknecht.BarAction" />
+
+				<area name="a3">
+					<action name="foo3" class="de.highbyte_le.weberknecht.FooAction" />
+				</area>
 			</area>
 		</area>
 		

@@ -314,8 +314,47 @@ public class WeberknechtConfTest {
 		declaration = conf.findActionDeclaration(new AreaPath("a1", "a2"), "foo2");
 		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
 		
+		declaration = conf.findActionDeclaration(new AreaPath("a1", "a2", "a3"), "foo3");
+		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
+		
 		declaration = conf.findActionDeclaration(new AreaPath("a1", "a2"), "bar2");
 		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
+	}
+	
+	@Test
+	public void testGetSubAreas() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-7.xml");
+		
+		{	// root
+			Map<String, ActionDeclaration> expectedActionClassMap = new HashMap<String, ActionDeclaration>();
+			expectedActionClassMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "pre1", "post1", null));
+			expectedActionClassMap.put("bar", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "pre1", "post1", null));
+			assertEquals(expectedActionClassMap, conf.getActionClassMap(new AreaPath()));
+		}
+		{	// /a1
+			Map<String, ActionDeclaration> expectedActionClassMap = new HashMap<String, ActionDeclaration>();
+			expectedActionClassMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction1", "pre2", "post1", null));
+			assertEquals(expectedActionClassMap, conf.getActionClassMap(new AreaPath("a1")));
+		}
+		{	// /a1/a2a
+			Map<String, ActionDeclaration> expectedActionClassMap = new HashMap<String, ActionDeclaration>();
+			expectedActionClassMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction2", "pre2", "post1", null));
+			assertEquals(expectedActionClassMap, conf.getActionClassMap(new AreaPath("a1", "a2a")));
+		}
+		{	// /a1/a2b
+			Map<String, ActionDeclaration> expectedActionClassMap = new HashMap<String, ActionDeclaration>();
+			assertEquals(expectedActionClassMap, conf.getActionClassMap(new AreaPath("a1", "a2b")));
+		}
+		{	// /a1/a2c
+			Map<String, ActionDeclaration> expectedActionClassMap = new HashMap<String, ActionDeclaration>();
+			expectedActionClassMap.put("bar", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction2", "pre2", "post2", null));
+			assertEquals(expectedActionClassMap, conf.getActionClassMap(new AreaPath("a1", "a2c")));
+		}
+		{	// /a1/a2a/a3
+			Map<String, ActionDeclaration> expectedActionClassMap = new HashMap<String, ActionDeclaration>();
+			expectedActionClassMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction3", "pre1", "post1", null));
+			assertEquals(expectedActionClassMap, conf.getActionClassMap(new AreaPath("a1", "a2a", "a3")));
+		}
 	}
 	
 	/**

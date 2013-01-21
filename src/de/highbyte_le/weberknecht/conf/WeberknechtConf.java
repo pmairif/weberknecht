@@ -113,7 +113,7 @@ public class WeberknechtConf {
 			readProcessors(conf, rootElement);
 			readRouter(conf, rootElement);
 			readActionViewProcessors(conf, rootElement);
-			readActions(conf, rootElement, new AreaPath());
+			readActions(conf, rootElement, new AreaPath(), "", "", null);
 			conf.checkActions();
 		}
 		catch (JDOMException e1) {
@@ -181,19 +181,19 @@ public class WeberknechtConf {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected static void readActions(WeberknechtConf conf, Element rootElement, AreaPath path) throws ConfigurationException {
-		String rootPreId = getProcessorSetId(rootElement, "pre", "");
-		String rootPostId = getProcessorSetId(rootElement, "post", "");
-		String rootErrHandler = getErrorHandler(rootElement, null);
+	protected static void readActions(WeberknechtConf conf, Element rootElement, AreaPath path, String parentPreId, String parentPostId, String parentErrorHandler) throws ConfigurationException {
+		String preId = getProcessorSetId(rootElement, "pre", parentPreId);
+		String postId = getProcessorSetId(rootElement, "post", parentPostId);
+		String errHandler = getErrorHandler(rootElement, parentErrorHandler);
 		
 		List<Element> actionsElements = rootElement.getChildren("actions");
 		if (actionsElements != null) {
 			for (Element actionsElement: actionsElements) {
 				String area = actionsElement.getAttributeValue("area");
 				AreaPath subPath = path.fork(area);
-				readArea(conf, rootPreId, rootPostId, rootErrHandler, actionsElement, subPath);
+				readArea(conf, preId, postId, errHandler, actionsElement, subPath);
 
-				readActions(conf, actionsElement, subPath);
+				readActions(conf, actionsElement, subPath, preId, postId, errHandler);
 			}
 		}
 		
@@ -202,9 +202,9 @@ public class WeberknechtConf {
 			for (Element areaElement: areaElements) {
 				String area = areaElement.getAttributeValue("name");
 				AreaPath subPath = path.fork(area);
-				readArea(conf, rootPreId, rootPostId, rootErrHandler, areaElement, subPath);
+				readArea(conf, preId, postId, errHandler, areaElement, subPath);
 
-				readActions(conf, areaElement, subPath);
+				readActions(conf, areaElement, subPath, preId, postId, errHandler);
 			}
 		}
 		

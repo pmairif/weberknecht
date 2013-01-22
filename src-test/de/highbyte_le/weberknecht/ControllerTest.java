@@ -22,13 +22,15 @@ import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 import de.highbyte_le.weberknecht.request.processing.ActionExecution;
 import de.highbyte_le.weberknecht.request.processing.Processor;
 import de.highbyte_le.weberknecht.request.routing.AreaPath;
+import de.highbyte_le.weberknecht.request.routing.AreaPathResolver;
+import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
 import de.highbyte_le.weberknecht.test.DummyProcessor1;
 import de.highbyte_le.weberknecht.test.DummyProcessor2;
 
 /**
  * Testing Controller
  *
- * @author rick
+ * @author pmairif
  */
 public class ControllerTest {
 	
@@ -43,6 +45,7 @@ public class ControllerTest {
 			in = new FileInputStream(new File("test-data/weberknecht-4.xml"));
 			WeberknechtConf conf = WeberknechtConf.readConfig(in);
 			controller.setConf(conf);
+			controller.setPathResolver(new AreaPathResolver(conf));
 		}
 		finally {
 			if (in != null)
@@ -52,7 +55,7 @@ public class ControllerTest {
 
 	@Test
 	public void testSetupProcessorsDefaultFoo() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		List<Processor> processors = controller.setupProcessors(new AreaPath(), "foo");
+		List<Processor> processors = controller.setupProcessors(new RoutingTarget(new AreaPath(), "foo", null, null));
 		
 		//pre1 and post1 expected
 		int i = 0;
@@ -64,7 +67,7 @@ public class ControllerTest {
 	
 	@Test
 	public void testSetupProcessorsDefaultBar() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		List<Processor> processors = controller.setupProcessors(new AreaPath(), "bar");
+		List<Processor> processors = controller.setupProcessors(new RoutingTarget(new AreaPath(), "bar", null, null));
 		
 		//post1 expected
 		int i = 0;
@@ -75,7 +78,7 @@ public class ControllerTest {
 
 	@Test
 	public void testSetupProcessorsA1Foo1() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		List<Processor> processors = controller.setupProcessors(new AreaPath("a1"), "foo1");
+		List<Processor> processors = controller.setupProcessors(new RoutingTarget(new AreaPath("a1"), "foo1", null, null));
 		
 		//pre2 and post1 expected
 		int i = 0;
@@ -87,7 +90,7 @@ public class ControllerTest {
 	
 	@Test
 	public void testSetupProcessorsA1Bar1() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		List<Processor> processors = controller.setupProcessors(new AreaPath("a1"), "bar1");
+		List<Processor> processors = controller.setupProcessors(new RoutingTarget(new AreaPath("a1"), "bar1", null, null));
 		
 		//pre1 and post1 expected
 		int i = 0;

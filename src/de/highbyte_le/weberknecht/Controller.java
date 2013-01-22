@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.Vector;
 
 import javax.naming.NamingException;
@@ -38,10 +37,6 @@ import de.highbyte_le.weberknecht.request.AdditionalDatabaseCapable;
 import de.highbyte_le.weberknecht.request.Configurable;
 import de.highbyte_le.weberknecht.request.DatabaseCapable;
 import de.highbyte_le.weberknecht.request.ModelHelper;
-import de.highbyte_le.weberknecht.request.actions.ActionFactory;
-import de.highbyte_le.weberknecht.request.actions.ActionInstantiationException;
-import de.highbyte_le.weberknecht.request.actions.ActionNotFoundException;
-import de.highbyte_le.weberknecht.request.actions.DynamicActionFactory;
 import de.highbyte_le.weberknecht.request.actions.ExecutableAction;
 import de.highbyte_le.weberknecht.request.error.DefaultErrorHandler;
 import de.highbyte_le.weberknecht.request.error.ErrorHandler;
@@ -49,7 +44,7 @@ import de.highbyte_le.weberknecht.request.processing.ActionExecution;
 import de.highbyte_le.weberknecht.request.processing.ProcessingChain;
 import de.highbyte_le.weberknecht.request.processing.Processor;
 import de.highbyte_le.weberknecht.request.routing.AreaCapableRouter;
-import de.highbyte_le.weberknecht.request.routing.AreaPath;
+import de.highbyte_le.weberknecht.request.routing.AreaPathResolver;
 import de.highbyte_le.weberknecht.request.routing.Router;
 import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
 import de.highbyte_le.weberknecht.request.view.ActionViewProcessor;
@@ -68,10 +63,7 @@ public class Controller extends HttpServlet {
 	
 	private Map<String, DbConnectionProvider> additionalDbConnectionProviderMap = new HashMap<String, DbConnectionProvider>();
 	
-	/**
-	 * mapping of areas to action factories
-	 */
-	private Map<AreaPath, ActionFactory> actionFactoryMap = null;
+	private AreaPathResolver pathResolver;
 	
 	private ActionViewProcessorFactory actionProcessorFactory = null;
 	
@@ -96,7 +88,7 @@ public class Controller extends HttpServlet {
 			this.router = createRouter(conf);
 			
 			//actions
-			this.actionFactoryMap = createActionFactoryMap(conf);
+			this.pathResolver = new AreaPathResolver(conf);
 			
 			//action processors
 			actionProcessorFactory = new ActionViewProcessorFactory();
@@ -130,22 +122,6 @@ public class Controller extends HttpServlet {
 			log.error("init() - Exception: "+e.getMessage(), e);
 			throw new ServletException("internal error", e);
 		}
-	}
-
-	private Map<AreaPath, ActionFactory> createActionFactoryMap(WeberknechtConf conf) {
-		Map<AreaPath, ActionFactory> map = new HashMap<AreaPath, ActionFactory>();
-		
-		Set<AreaPath> areas = conf.getAreas();
-		for (AreaPath area: areas) {
-			ActionFactory factory = new DynamicActionFactory();
-			map.put(area, factory);
-			
-			for (Entry<String, ActionDeclaration> e: conf.getActionClassMap(area).entrySet()) {
-				factory.registerAction(e.getKey(), e.getValue().getClazz());
-			}
-		}
-		
-		return map;
 	}
 
 	private Router createRouter(WeberknechtConf conf) throws InstantiationException, IllegalAccessException,
@@ -187,10 +163,10 @@ public class Controller extends HttpServlet {
 		return processors;
 	}
 	
-	protected List<Processor> setupProcessors(AreaPath areaPath, String action) throws InstantiationException, IllegalAccessException {
+	protected List<Processor> setupProcessors(RoutingTarget routingTarget) throws InstantiationException, IllegalAccessException {
 		List<Processor> processors = new Vector<Processor>();
 
-		ActionDeclaration actionDeclaration = conf.findActionDeclaration(areaPath, action);
+		ActionDeclaration actionDeclaration = pathResolver.getActionDeclaration(routingTarget);
 		
 		//pre processors
 		if (actionDeclaration != null) {
@@ -233,11 +209,11 @@ public class Controller extends HttpServlet {
 			ModelHelper modelHelper = new ModelHelper(request, getServletContext());
 			modelHelper.setSelf(request);
 			
-			ExecutableAction action = getAction(routingTarget);
+			ExecutableAction action = pathResolver.resolveAction(routingTarget);
 			if (log.isDebugEnabled())
 				log.debug("doGet() - processing action "+action.getClass().getSimpleName());
 
-			List<Processor> processors = setupProcessors(routingTarget.getAreaPath(), routingTarget.getActionName());
+			List<Processor> processors = setupProcessors(routingTarget);
 			
 			//main db connection
 			Connection con = null;
@@ -291,7 +267,7 @@ public class Controller extends HttpServlet {
 		try {
 			//get error handler
 			Class<? extends ErrorHandler> errHandlerClass = DefaultErrorHandler.class;
-			ActionDeclaration actionDeclaration = conf.findActionDeclaration(routingTarget.getAreaPath(), routingTarget.getActionName());
+			ActionDeclaration actionDeclaration = pathResolver.getActionDeclaration(routingTarget);
 			if (actionDeclaration != null && actionDeclaration.hasErrorHandlerClass())
 				errHandlerClass = (Class<? extends ErrorHandler>) Class.forName(actionDeclaration.getErrorHandlerClass());
 			
@@ -345,28 +321,6 @@ public class Controller extends HttpServlet {
 		}
 	}
 	
-	private ExecutableAction getAction(RoutingTarget routingTarget) throws ActionNotFoundException, ActionInstantiationException {
-		if (null == routingTarget)
-			throw new ActionNotFoundException();
-		
-		String action1 = routingTarget.getActionName();
-		if (action1 == null)
-			throw new ActionNotFoundException();
-		
-		ActionFactory actionFactory = actionFactoryMap.get(routingTarget.getAreaPath());	//TODO use AreaPathResolver to match paths
-		if (null == actionFactory)
-			throw new ActionNotFoundException();
-		
-		ExecutableAction a = actionFactory.createAction(action1);
-		if (null == a)
-			throw new ActionNotFoundException();
-
-		if (log.isDebugEnabled())
-			log.debug("getAction() - action is "+a.getClass().getSimpleName());
-
-		return a;
-	}
-
 	/**
 	 * checks, if we need a DB connection
 	 */
@@ -458,7 +412,15 @@ public class Controller extends HttpServlet {
 	/**
 	 * for testing purposes only
 	 */
-	public void setConf(WeberknechtConf conf) {
+	protected void setConf(WeberknechtConf conf) {
 		this.conf = conf;
+	}
+	
+	/**
+	 * for testing purposes only
+	 * @param pathResolver the pathResolver to set
+	 */
+	protected void setPathResolver(AreaPathResolver pathResolver) {
+		this.pathResolver = pathResolver;
 	}
 }

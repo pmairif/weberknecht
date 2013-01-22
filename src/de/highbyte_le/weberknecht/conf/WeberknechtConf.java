@@ -4,7 +4,6 @@
  * Copyright 2009-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
- * created: 2009-09-14
  * tabstop=4, charset=UTF-8
  */
 package de.highbyte_le.weberknecht.conf;
@@ -34,8 +33,7 @@ import de.highbyte_le.weberknecht.request.routing.AreaPath;
  */
 public class WeberknechtConf {
 	/**
-	 * Mapping of areas to actions to declaration.
-	 * Default area is represented by the empty string.
+	 * Mapping of area paths to actions to declaration.
 	 */
 	private Map<AreaPath, Map<String, ActionDeclaration>> areaActionClassMap = new HashMap<AreaPath, Map<String, ActionDeclaration>>();
 
@@ -424,17 +422,6 @@ public class WeberknechtConf {
 	 */
 	public Map<String, ProcessorList> getPostProcessorListMap() {
 		return this.postProcessors;
-	}
-	
-	/**
-	 * find the pre processor set to be applied to the given action
-	 */
-	public ActionDeclaration findActionDeclaration(AreaPath path, String action) {
-		//TODO introduce AreaPathResolver to resolve paths
-		Map<String, ActionDeclaration> actionClassMap = areaActionClassMap.get(path);
-		if (actionClassMap != null)
-			return actionClassMap.get(action);
-		return null;
 	}
 	
 	/**

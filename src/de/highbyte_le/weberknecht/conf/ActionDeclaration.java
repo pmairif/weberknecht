@@ -61,7 +61,7 @@ public class ActionDeclaration {
 	@Override
 	public String toString() {
 		return "ActionDeclaration [clazz=" + clazz + ", preProcessorSet=" + preProcessorSet + ", postProcessorSet="
-				+ postProcessorSet + "]";
+				+ postProcessorSet + ", errorHandlerClass=" + errorHandlerClass + "]";
 	}
 
 	@Override

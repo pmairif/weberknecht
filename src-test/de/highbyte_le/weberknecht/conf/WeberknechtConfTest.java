@@ -9,7 +9,6 @@
 package de.highbyte_le.weberknecht.conf;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,7 +22,6 @@ import org.junit.Test;
 
 import de.highbyte_le.weberknecht.request.processing.Processor;
 import de.highbyte_le.weberknecht.request.routing.AreaPath;
-import de.highbyte_le.weberknecht.request.routing.AreaPathResolver;
 
 /**
  * Testing {@link WeberknechtConf}
@@ -150,32 +148,6 @@ public class WeberknechtConfTest {
 		assertEquals(expectedPost, conf.getPostProcessorListMap());
 	}
 	
-	@Test
-	public void testFindActionDeclaration2() throws IOException, ConfigurationException {
-		WeberknechtConf conf = readConfig("test-data/weberknecht-2.xml");
-		AreaPathResolver resolver = new AreaPathResolver(conf);
-		
-		//referred processors
-		ActionDeclaration declaration = resolver.getActionDeclaration(new AreaPath(), "foo");
-		assertEquals("pre1", declaration.getPreProcessorSet());
-		assertEquals("post1", declaration.getPostProcessorSet());
-
-		declaration = resolver.getActionDeclaration(new AreaPath(), "bar");
-		assertEquals("", declaration.getPreProcessorSet());
-		assertEquals("post1", declaration.getPostProcessorSet());
-
-		declaration = resolver.getActionDeclaration(new AreaPath("a1"), "foo1");
-		assertEquals("pre2", declaration.getPreProcessorSet());
-		assertEquals("post1", declaration.getPostProcessorSet());
-		
-		declaration = resolver.getActionDeclaration(new AreaPath("a1"), "bar1");
-		assertEquals("pre1", declaration.getPreProcessorSet());
-		assertEquals("post1", declaration.getPostProcessorSet());
-		
-		assertNull(resolver.getActionDeclaration(new AreaPath("a1"), "foo"));
-		assertNull(resolver.getActionDeclaration(new AreaPath("a2"), "foo"));
-	}
-	
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testGetPreProcessorListMap3() throws IOException, ConfigurationException, ClassNotFoundException {
@@ -229,102 +201,55 @@ public class WeberknechtConfTest {
 	}
 	
 	@Test
-	public void testFindActionDeclaration3() throws IOException, ConfigurationException {
-		WeberknechtConf conf = readConfig("test-data/weberknecht-3.xml");
-		AreaPathResolver resolver = new AreaPathResolver(conf);
-
-		//referred processors
-		ActionDeclaration declaration = resolver.getActionDeclaration(new AreaPath(), "foo");
-		assertEquals("p1", declaration.getPreProcessorSet());
-		assertEquals("p1", declaration.getPostProcessorSet());
-
-		declaration = resolver.getActionDeclaration(new AreaPath(), "bar");
-		assertEquals("", declaration.getPreProcessorSet());
-		assertEquals("", declaration.getPostProcessorSet());
-
-		declaration = resolver.getActionDeclaration(new AreaPath("a1"), "foo1");
-		assertEquals("p1", declaration.getPreProcessorSet());
-		assertEquals("p2", declaration.getPostProcessorSet());
-		
-		declaration = resolver.getActionDeclaration(new AreaPath("a1"), "bar1");
-		assertEquals("p2", declaration.getPreProcessorSet());
-		assertEquals("p3", declaration.getPostProcessorSet());
-		
-		declaration = resolver.getActionDeclaration(new AreaPath("a1"), "bar2");
-		assertEquals("p2", declaration.getPreProcessorSet());
-		assertEquals("p2", declaration.getPostProcessorSet());
-		
-		assertNull(resolver.getActionDeclaration(new AreaPath("a1"), "foo"));
-		assertNull(resolver.getActionDeclaration(new AreaPath("a2"), "foo"));
-	}
-	
-	@Test
-	public void testErrorHandler() throws IOException, ConfigurationException {
-		WeberknechtConf conf = readConfig("test-data/weberknecht-5.xml");
-		AreaPathResolver resolver = new AreaPathResolver(conf);
-
-		ActionDeclaration declaration = resolver.getActionDeclaration(new AreaPath(), "foo");
-		assertEquals("de.highbyte_le.weberknecht.ErrHandler1", declaration.getErrorHandlerClass());
-
-		declaration = resolver.getActionDeclaration(new AreaPath(), "bar");
-		assertEquals("de.highbyte_le.weberknecht.ErrHandler3", declaration.getErrorHandlerClass());
-
-		declaration = resolver.getActionDeclaration(new AreaPath("a1"), "foo1");
-		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
-		
-		declaration = resolver.getActionDeclaration(new AreaPath("a1"), "bar1");
-		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
-	}
-	
-	@Test
 	public void testErrorHandlerWithSubAreas1() throws IOException, ConfigurationException {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-6a.xml");
-		AreaPathResolver resolver = new AreaPathResolver(conf);
-
-		ActionDeclaration declaration = resolver.getActionDeclaration(new AreaPath(), "foo");
-		assertEquals("de.highbyte_le.weberknecht.ErrHandler1", declaration.getErrorHandlerClass());
 		
-		declaration = resolver.getActionDeclaration(new AreaPath(), "bar");
-		assertEquals("de.highbyte_le.weberknecht.ErrHandler3", declaration.getErrorHandlerClass());
+		Map<AreaPath, Map<String, ActionDeclaration>> expected = new HashMap<AreaPath, Map<String, ActionDeclaration>>();
 		
-		declaration = resolver.getActionDeclaration(new AreaPath("a1"), "foo1");
-		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
+		Map<String, ActionDeclaration> rootMap = new HashMap<String, ActionDeclaration>();
+		rootMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler1"));
+		rootMap.put("bar", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "", "de.highbyte_le.weberknecht.ErrHandler3"));
+		expected.put(new AreaPath(), rootMap);
+
+		Map<String, ActionDeclaration> a1Map = new HashMap<String, ActionDeclaration>();
+		a1Map.put("foo1", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
+		a1Map.put("bar1", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
+		expected.put(new AreaPath("a1"), a1Map);
+
+		Map<String, ActionDeclaration> a2Map = new HashMap<String, ActionDeclaration>();
+		a2Map.put("foo2", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
+		a2Map.put("bar2", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
+		expected.put(new AreaPath("a1", "a2"), a2Map);
 		
-		declaration = resolver.getActionDeclaration(new AreaPath("a1"), "bar1");
-		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
-
-		declaration = resolver.getActionDeclaration(new AreaPath("a1", "a2"), "foo2");
-		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
-
-		declaration = resolver.getActionDeclaration(new AreaPath("a1", "a2"), "bar2");
-		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
+		assertEquals(expected, conf.getAreaActionClassMap());
 	}
 	
 	@Test
 	public void testErrorHandlerWithSubAreas2() throws IOException, ConfigurationException {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-6b.xml");
-		AreaPathResolver resolver = new AreaPathResolver(conf);
+		
+		Map<AreaPath, Map<String, ActionDeclaration>> expected = new HashMap<AreaPath, Map<String, ActionDeclaration>>();
+		
+		Map<String, ActionDeclaration> rootMap = new HashMap<String, ActionDeclaration>();
+		rootMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler1"));
+		rootMap.put("bar", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "", "de.highbyte_le.weberknecht.ErrHandler3"));
+		expected.put(new AreaPath(), rootMap);
 
-		ActionDeclaration declaration = resolver.getActionDeclaration(new AreaPath(), "foo");
-		assertEquals("de.highbyte_le.weberknecht.ErrHandler1", declaration.getErrorHandlerClass());
+		Map<String, ActionDeclaration> a1Map = new HashMap<String, ActionDeclaration>();
+		a1Map.put("foo1", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
+		a1Map.put("bar1", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
+		expected.put(new AreaPath("a1"), a1Map);
+
+		Map<String, ActionDeclaration> a2Map = new HashMap<String, ActionDeclaration>();
+		a2Map.put("foo2", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
+		a2Map.put("bar2", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
+		expected.put(new AreaPath("a1", "a2"), a2Map);
 		
-		declaration = resolver.getActionDeclaration(new AreaPath(), "bar");
-		assertEquals("de.highbyte_le.weberknecht.ErrHandler3", declaration.getErrorHandlerClass());
+		Map<String, ActionDeclaration> a3Map = new HashMap<String, ActionDeclaration>();
+		a3Map.put("foo3", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
+		expected.put(new AreaPath("a1", "a2", "a3"), a3Map);
 		
-		declaration = resolver.getActionDeclaration(new AreaPath("a1"), "foo1");
-		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
-		
-		declaration = resolver.getActionDeclaration(new AreaPath("a1"), "bar1");
-		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
-		
-		declaration = resolver.getActionDeclaration(new AreaPath("a1", "a2"), "foo2");
-		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
-		
-		declaration = resolver.getActionDeclaration(new AreaPath("a1", "a2", "a3"), "foo3");
-		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
-		
-		declaration = resolver.getActionDeclaration(new AreaPath("a1", "a2"), "bar2");
-		assertEquals("de.highbyte_le.weberknecht.ErrHandler2", declaration.getErrorHandlerClass());
+		assertEquals(expected, conf.getAreaActionClassMap());
 	}
 	
 	@Test

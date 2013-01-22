@@ -17,12 +17,12 @@ package de.highbyte_le.weberknecht.request.routing;
 public class RoutingTarget {
 	
 	/**
-	 * optional areas
+	 * path to the action
 	 */
 	private final AreaPath areaPath;
 	
 	/**
-	 * unique name identifying the action
+	 * name identifying the action - must be unique within path
 	 */
 	private final String actionName;
 	

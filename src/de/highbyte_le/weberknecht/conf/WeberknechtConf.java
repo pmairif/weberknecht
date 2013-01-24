@@ -51,6 +51,11 @@ public class WeberknechtConf {
 	 * Mapping of suffixes to ActionViewProcessor classes.
 	 */
 	private Map<String, String> actionProcessorSuffixMap = new HashMap<String, String>();
+
+	/**
+	 * locale prefix
+	 */
+	private RoutingLocalePrefix routingLocalePrefix = null;
 	
 	/**
 	 * Logger for this class
@@ -110,6 +115,7 @@ public class WeberknechtConf {
 			readDbs(conf, rootElement);
 			readProcessors(conf, rootElement);
 			readRouter(conf, rootElement);
+			readRoutingLocalePrefix(conf, rootElement);
 			readActionViewProcessors(conf, rootElement);
 			readActions(conf, rootElement, new AreaPath(), "", "", null);
 			conf.checkActions();
@@ -254,6 +260,25 @@ public class WeberknechtConf {
 		}
 	}
 
+	protected static void readRoutingLocalePrefix(WeberknechtConf conf, Element rootElement) {
+		Element prefixElement = rootElement.getChild("routing-locale-prefix");
+		if (prefixElement != null) {
+			RoutingLocalePrefix prefix = new RoutingLocalePrefix();
+			String optionalAtt = prefixElement.getAttributeValue("optional");
+			prefix.setOptional(optionalAtt != null && optionalAtt.equals("true"));
+			
+			@SuppressWarnings("unchecked")
+			List<Element> allowedElements = prefixElement.getChildren("allowed-value");
+			if (allowedElements != null) {
+				for (Element allowedElement: allowedElements) {
+					prefix.addAllowedLocale(allowedElement.getTextNormalize());
+				}
+			}
+			
+			conf.setRoutingLocalePrefix(prefix);
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	protected static Map<String, ProcessorList> readProcessorMap(
 			WeberknechtConf conf, Element rootElement, String defTag, String processorTag
@@ -436,5 +461,19 @@ public class WeberknechtConf {
 	 */
 	public Map<String, String> getActionProcessorSuffixMap() {
 		return actionProcessorSuffixMap;
+	}
+
+	/**
+	 * @return the routingLocalePrefix
+	 */
+	public RoutingLocalePrefix getRoutingLocalePrefix() {
+		return routingLocalePrefix;
+	}
+	
+	/**
+	 * @param routingLocalePrefix the routingLocalePrefix to set
+	 */
+	public void setRoutingLocalePrefix(RoutingLocalePrefix routingLocalePrefix) {
+		this.routingLocalePrefix = routingLocalePrefix;
 	}
 }

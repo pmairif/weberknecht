@@ -9,6 +9,7 @@
 package de.highbyte_le.weberknecht.conf;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -326,6 +327,40 @@ public class WeberknechtConfTest {
 	@Test(expected=ConfigurationException.class)
 	public void testReadConfigCorrupt4() throws IOException, ConfigurationException {
 		readConfig("test-data/weberknecht-corrupt-4.xml");
+	}
+	
+	@Test
+	public void testRouter() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-router.xml");
+		assertEquals("com.example.Router", conf.getRouterClass());
+	}
+	
+	@Test
+	public void testNoRouter() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-1.xml");
+		assertNull(conf.getRouterClass());
+	}
+	
+	@Test
+	public void testLocalePrefix() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-lang.xml");
+		
+		RoutingLocalePrefix expected = new RoutingLocalePrefix(false, "de", "en", "en_US");
+		assertEquals(expected, conf.getRoutingLocalePrefix());
+	}
+	
+	@Test
+	public void testLocalePrefixOptional() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-lang-optional.xml");
+		
+		RoutingLocalePrefix expected = new RoutingLocalePrefix(true, "de", "en");
+		assertEquals(expected, conf.getRoutingLocalePrefix());
+	}
+	
+	@Test
+	public void testNoLocalePrefix() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-1.xml");
+		assertNull(conf.getRoutingLocalePrefix());
 	}
 	
 	private WeberknechtConf readConfig(String filename) throws IOException, ConfigurationException {

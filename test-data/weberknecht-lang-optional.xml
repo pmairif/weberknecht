@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weberknecht>
+	<routing-locale-prefix optional="true">
+		<allowed-value>de</allowed-value>
+		<allowed-value>en</allowed-value>
+	</routing-locale-prefix>
+
+	<area>
+		<action name="index" class="de.highbyte_le.weberknecht.IndexAction" />
+		
+		<area name="blog">
+			<action name="foo" class="de.highbyte_le.weberknecht.FooAction" />
+		</area>
+	</area>
+</weberknecht>

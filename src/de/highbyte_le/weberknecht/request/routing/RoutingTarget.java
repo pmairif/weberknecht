@@ -12,7 +12,7 @@ package de.highbyte_le.weberknecht.request.routing;
 /**
  * Routing target
  *
- * @author rick
+ * @author pmairif
  */
 public class RoutingTarget {
 	

@@ -1,5 +1,5 @@
 /*
- * Routing.java (weberknecht)
+ * RoutingTarget.java (weberknecht)
  *
  * Copyright 2011-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
@@ -7,6 +7,8 @@
  * tabstop=4, charset=UTF-8
  */
 package de.highbyte_le.weberknecht.request.routing;
+
+import java.util.Locale;
 
 
 /**
@@ -36,11 +38,21 @@ public class RoutingTarget {
 	 */
 	private final String task;
 	
-	public RoutingTarget(AreaPath path, String actionName, String viewProcessorName, String task) {
+	/**
+	 * requested locale (via routing-locale-prefix, optional)
+	 */
+	private final Locale locale;
+	
+	public RoutingTarget(AreaPath path, String actionName, String viewProcessorName, String task, Locale locale) {
 		this.areaPath = path;
 		this.actionName = actionName;
 		this.viewProcessorName = viewProcessorName;
 		this.task = task;
+		this.locale = locale;
+	}
+	
+	public RoutingTarget(AreaPath path, String actionName, String viewProcessorName, String task) {
+		this(path, actionName, viewProcessorName, task, null);
 	}
 	
 	public RoutingTarget(String area, String actionName, String viewProcessorName, String task) {
@@ -81,5 +93,12 @@ public class RoutingTarget {
 	 */
 	public String getTask() {
 		return task;
+	}
+	
+	/**
+	 * @return the locale
+	 */
+	public Locale getLocale() {
+		return locale;
 	}
 }

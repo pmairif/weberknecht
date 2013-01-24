@@ -20,6 +20,9 @@
 	- There is a new ActionBase offering onGet and onPost methods.
 	  You can extend the new ActionBase and replace your execute with the new
 	  methods.
+	  
+	- the router interface changed. If you implemented your own router, you
+	  have to implement the setConfig method.
 	
 	- The generic beans were removed. If they were used, they have to be
 	  replaced or copied from a previous release.

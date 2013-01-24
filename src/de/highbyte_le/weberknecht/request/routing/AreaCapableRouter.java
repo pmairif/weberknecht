@@ -12,6 +12,8 @@ package de.highbyte_le.weberknecht.request.routing;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.highbyte_le.weberknecht.conf.WeberknechtConf;
+
 /**
  * Routing capable of handling areas.
  *
@@ -63,5 +65,14 @@ public class AreaCapableRouter implements Router {
 			ret.addPath(s);
 		
 		return ret;
+	}
+
+	/* (non-Javadoc)
+	 * @see de.highbyte_le.weberknecht.request.routing.Router#setConfig(de.highbyte_le.weberknecht.conf.WeberknechtConf)
+	 */
+	@Override
+	public void setConfig(WeberknechtConf conf) {
+		// TODO Auto-generated method stub
+		
 	}
 }

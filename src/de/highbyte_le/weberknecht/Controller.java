@@ -141,6 +141,8 @@ public class Controller extends HttpServlet {
 		if (ret == null)
 			ret = new AreaCapableRouter();
 		
+		ret.setConfig(conf);
+		
 		return ret;
 	}
 	

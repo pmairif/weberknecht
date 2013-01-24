@@ -1,12 +1,14 @@
 /*
  * Router.java (weberknecht)
  *
- * Copyright 2011 Patrick Mairif.
+ * Copyright 2011-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  *
  * tabstop=4, charset=UTF-8
  */
 package de.highbyte_le.weberknecht.request.routing;
+
+import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 
 /**
  * Interface for URI routers.
@@ -23,4 +25,9 @@ public interface Router {
 	 * 		routing target information or null, if the URI didn't match
 	 */
 	public RoutingTarget routeUri(String servletPath);
+	
+	/**
+	 * routers should be able to access the configuration
+	 */
+	public void setConfig(WeberknechtConf conf);
 }

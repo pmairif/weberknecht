@@ -150,7 +150,7 @@ public class LocalePrefixRouter implements Router {
 			
 			Set<String> allowed = prefix.getAllowedLocales();
 			String candidate = pathSegments[0];
-			if (allowed.contains(candidate)) {	//TODO test '<allowed> en </allowed>'
+			if (allowed.contains(candidate)) {
 				locale = parseLocale(candidate);
 				
 				ret = new String[pathSegments.length-1];

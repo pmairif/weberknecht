@@ -188,6 +188,19 @@ public class LocalePrefixRouterTest {
 	}
 	
 	@Test
+	public void testLocaleObligatoryWithLocaleDeWithPath() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-lang.xml");
+		router.setConfig(conf);
+		
+		RoutingTarget target = router.routeUri("/de/bar/foo.do");
+		assertEquals(new AreaPath("bar"), target.getAreaPath());
+		assertEquals("foo", target.getActionName());
+		assertEquals("do", target.getViewProcessorName());
+		assertEquals(new Locale("de"), target.getLocale());
+		assertNull(target.getTask());
+	}
+	
+	@Test
 	public void testLocaleObligatoryWithLocaleUs() throws Exception {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang.xml");
 		router.setConfig(conf);
@@ -209,6 +222,9 @@ public class LocalePrefixRouterTest {
 		router.setConfig(conf);
 		
 		RoutingTarget target = router.routeUri("/foo.do");
+		assertNull(target);
+
+		target = router.routeUri("/bar/foo.do");
 		assertNull(target);
 	}
 	
@@ -302,6 +318,19 @@ public class LocalePrefixRouterTest {
 		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
 		assertNull(target.getLocale());
+		assertNull(target.getTask());
+	}
+	
+	@Test
+	public void testLocaleTrim() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-lang-trim.xml");
+		router.setConfig(conf);
+		
+		RoutingTarget target = router.routeUri("/de/foo.do");
+		assertEquals(new AreaPath(), target.getAreaPath());
+		assertEquals("foo", target.getActionName());
+		assertEquals("do", target.getViewProcessorName());
+		assertEquals(new Locale("de"), target.getLocale());
 		assertNull(target.getTask());
 	}
 	

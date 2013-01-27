@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <weberknecht>
-	<routing-locale-prefix optional="true">
-		<allowed-value>de</allowed-value>
-		<allowed-value>de_CH</allowed-value>
+	<routing-locale-prefix>
+		<allowed-value> de </allowed-value>
 	</routing-locale-prefix>
 
 	<area>

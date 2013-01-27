@@ -9,7 +9,7 @@
 	<area>
 		<action name="index" class="de.highbyte_le.weberknecht.IndexAction" />
 		
-		<area name="blog">
+		<area name="bar">
 			<action name="foo" class="de.highbyte_le.weberknecht.FooAction" />
 		</area>
 	</area>

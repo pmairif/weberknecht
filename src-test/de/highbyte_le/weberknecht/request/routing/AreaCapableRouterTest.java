@@ -29,6 +29,12 @@ public class AreaCapableRouterTest {
 	}
 
 	@Test
+	public void testEmpty() {
+		RoutingTarget target = router.routeUri("");
+		assertNull(target);
+	}
+	
+	@Test
 	public void simpleTest1() {
 		RoutingTarget target = router.routeUri("/foo.do");
 		assertEquals("foo", target.getActionName());

@@ -72,7 +72,6 @@ public class AreaCapableRouter implements Router {
 	 */
 	@Override
 	public void setConfig(WeberknechtConf conf) {
-		// TODO Auto-generated method stub
-		
+		//
 	}
 }

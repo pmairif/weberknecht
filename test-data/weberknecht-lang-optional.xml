@@ -2,7 +2,7 @@
 <weberknecht>
 	<routing-locale-prefix optional="true">
 		<allowed-value>de</allowed-value>
-		<allowed-value>en</allowed-value>
+		<allowed-value>de_CH</allowed-value>
 	</routing-locale-prefix>
 
 	<area>

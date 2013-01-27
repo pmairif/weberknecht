@@ -8,8 +8,8 @@
  */
 package de.highbyte_le.weberknecht.conf;
 
-import java.util.List;
-import java.util.Vector;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * locale prefix configuration
@@ -18,7 +18,7 @@ import java.util.Vector;
  */
 public class RoutingLocalePrefix {
 
-	private final List<String> allowedLocales = new Vector<String>();
+	private final Set<String> allowedLocales = new HashSet<String>();
 	
 	private boolean optional = false;
 	
@@ -40,7 +40,7 @@ public class RoutingLocalePrefix {
 	/**
 	 * @return the allowedLocales
 	 */
-	public List<String> getAllowedLocales() {
+	public Set<String> getAllowedLocales() {
 		return allowedLocales;
 	}
 

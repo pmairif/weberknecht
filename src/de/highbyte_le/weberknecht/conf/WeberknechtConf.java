@@ -470,6 +470,10 @@ public class WeberknechtConf {
 		return routingLocalePrefix;
 	}
 	
+	public boolean hasRoutingLocalePrefix() {
+		return routingLocalePrefix != null;
+	}
+	
 	/**
 	 * @param routingLocalePrefix the routingLocalePrefix to set
 	 */

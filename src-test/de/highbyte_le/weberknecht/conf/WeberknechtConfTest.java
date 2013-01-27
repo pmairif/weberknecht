@@ -353,7 +353,7 @@ public class WeberknechtConfTest {
 	public void testLocalePrefixOptional() throws Exception {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang-optional.xml");
 		
-		RoutingLocalePrefix expected = new RoutingLocalePrefix(true, "de", "en");
+		RoutingLocalePrefix expected = new RoutingLocalePrefix(true, "de", "de_CH");
 		assertEquals(expected, conf.getRoutingLocalePrefix());
 	}
 	

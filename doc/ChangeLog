@@ -12,7 +12,7 @@ next (1.0):
 	- AreaCapableRouter now default
 	- sub areas introduced
 	- router interface extended by setConfig method
-	- LocalePrefixRouter added
+	- LocalePrefixRouter and Localizable added
 	- actions don't throw ServletExceptions any more.
 	- WebAction.getModels() throws ContentProcessingException
 	- execute() in actions without HttpServletResponse

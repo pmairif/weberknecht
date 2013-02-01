@@ -8,3 +8,6 @@ jar/
 bin-test/
 doc/api-rpx/
 doc/api-rpx.zip
+.classpath
+.project
+.settings/

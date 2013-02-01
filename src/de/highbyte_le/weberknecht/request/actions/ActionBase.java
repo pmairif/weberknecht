@@ -1,26 +1,33 @@
 /*
  * ActionBase.java (weberknecht)
  *
- * Copyright 2012 Patrick Mairif.
+ * Copyright 2012-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  *
- * created: 26.07.2012
  * tabstop=4, charset=UTF-8
  */
 package de.highbyte_le.weberknecht.request.actions;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
 import de.highbyte_le.weberknecht.request.ContentProcessingException;
+import de.highbyte_le.weberknecht.request.Localizable;
 
 /**
  * optional base class for actions.
  *
- * @author rick
+ * @author pmairif
  */
-public abstract class ActionBase implements TaskedExecutableAction {
+public abstract class ActionBase implements TaskedExecutableAction, Localizable {
+	
+	/**
+	 * Locale extracted from requested URL.
+	 */
+	private Locale requestedLocale = null;
+	
 	/* (non-Javadoc)
 	 * @see de.highbyte_le.weberknecht.request.actions.ExecutableAction#execute(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
@@ -125,5 +132,21 @@ public abstract class ActionBase implements TaskedExecutableAction {
 	protected void onOptions(HttpServletRequest request, String task) throws IOException,
 			ActionExecutionException, ContentProcessingException {
 		throw new MethodNotSupportedException("OPTIONS");
+	}
+	
+	/* (non-Javadoc)
+	 * @see de.highbyte_le.weberknecht.request.Localizable#setRequestedLocale(java.util.Locale)
+	 */
+	@Override
+	public void setRequestedLocale(Locale requestedLocale) {
+		this.requestedLocale = requestedLocale;
+	}
+	
+	/**
+	 * get the locale extracted from the requested URL
+	 * @return the requestedLocale
+	 */
+	protected Locale getRequestedLocale() {
+		return requestedLocale;
 	}
 }

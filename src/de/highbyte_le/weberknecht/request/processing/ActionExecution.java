@@ -1,10 +1,9 @@
 /*
  * ActionExecution.java (weberknecht)
  *
- * Copyright 2010-2012 Patrick Mairif.
+ * Copyright 2010-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
- * created: 15.12.2010
  * tabstop=4, charset=UTF-8
  */
 package de.highbyte_le.weberknecht.request.processing;
@@ -15,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.highbyte_le.weberknecht.request.ContentProcessingException;
+import de.highbyte_le.weberknecht.request.Localizable;
 import de.highbyte_le.weberknecht.request.actions.ActionExecutionException;
 import de.highbyte_le.weberknecht.request.actions.ExecutableAction;
 import de.highbyte_le.weberknecht.request.actions.TaskedExecutableAction;
@@ -38,6 +38,9 @@ public class ActionExecution implements Processor {
 	throws ProcessingException, ContentProcessingException {
 		
 		try {
+			if (action instanceof Localizable)
+				((Localizable) action).setRequestedLocale(routingTarget.getLocale());
+			
 			if (action instanceof TaskedExecutableAction)
 				((TaskedExecutableAction)action).execute(request, routingTarget.getTask());
 			else

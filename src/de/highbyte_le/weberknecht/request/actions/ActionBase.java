@@ -13,8 +13,8 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import de.highbyte_le.weberknecht.i18n.Localizable;
 import de.highbyte_le.weberknecht.request.ContentProcessingException;
-import de.highbyte_le.weberknecht.request.Localizable;
 
 /**
  * optional base class for actions.
@@ -27,7 +27,7 @@ public abstract class ActionBase implements TaskedExecutableAction, Localizable 
 	 * Locale extracted from requested URL.
 	 */
 	private Locale requestedLocale = null;
-	
+
 	/* (non-Javadoc)
 	 * @see de.highbyte_le.weberknecht.request.actions.ExecutableAction#execute(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */

@@ -6,21 +6,20 @@
  *
  * tabstop=4, charset=UTF-8
  */
-package de.highbyte_le.weberknecht.request;
+package de.highbyte_le.weberknecht.i18n;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import de.highbyte_le.weberknecht.request.actions.ActionBase;
 import de.highbyte_le.weberknecht.request.routing.LocalePrefixRouter;
 
 /**
  * Actions implementing this interface will get the requested locale via the {@link LocalePrefixRouter} or a similar router.
  * 
- * The locale, that will be set is not the locale extracted from the 'Accepted-Languages' header, it is extracted from the URL.
+ * The locale, that will be set is not the locale extracted from the 'Accept-Language' header, it is extracted from the URL.
  * It's up to the action to decide which one to use. A good practice is to use that from the URL, if present.
  * If not, choose a locale based on the header via the mechanism from {@link ResourceBundle} and redirect to an URL containing
- * the chosen language. {@link ActionBase} provides some helpful methods.
+ * the chosen language. {@link LocalizationContext} provides some helpful methods.
  *
  * @author pmairif
  */

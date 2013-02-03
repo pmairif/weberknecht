@@ -13,8 +13,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.highbyte_le.weberknecht.i18n.Localizable;
 import de.highbyte_le.weberknecht.request.ContentProcessingException;
-import de.highbyte_le.weberknecht.request.Localizable;
 import de.highbyte_le.weberknecht.request.actions.ActionExecutionException;
 import de.highbyte_le.weberknecht.request.actions.ExecutableAction;
 import de.highbyte_le.weberknecht.request.actions.TaskedExecutableAction;

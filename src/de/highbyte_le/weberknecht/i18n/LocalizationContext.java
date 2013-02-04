@@ -9,8 +9,11 @@
 package de.highbyte_le.weberknecht.i18n;
 
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,10 +37,36 @@ public class LocalizationContext {
 	
 	private ResourceBundle resourceBundle = null;
 
-	private final Enumeration<Locale> locales;	//TODO use List instead
+	private final List<Locale> locales;
 	
 	private final String bundleName;
 
+	/**
+	 * @param bundleName
+	 * 		the name of your localization bundle
+	 * @param locale
+	 * 		preferred locale
+	 */
+	public LocalizationContext(String bundleName, Locale locale) {
+		this.bundleName = bundleName;
+		this.locales = null;
+		this.locale = locale;
+	}
+	
+	/**
+	 * @param bundleName
+	 * 		the name of your localization bundle
+	 * @param locales
+	 * 		the locales accepted by the user (usually from the 'Accept-Language' header, available via HttpServletRequest.getLocales())
+	 * @param locale
+	 * 		preferred locale
+	 */
+	public LocalizationContext(String bundleName, List<Locale> locales, Locale locale) {
+		this.bundleName = bundleName;
+		this.locales = locales;
+		this.locale = locale;
+	}
+	
 	/**
 	 * @param bundleName
 	 * 		the name of your localization bundle
@@ -48,8 +77,11 @@ public class LocalizationContext {
 	 */
 	public LocalizationContext(String bundleName, Enumeration<Locale> locales, Locale locale) {
 		this.bundleName = bundleName;
-		this.locales = locales;
 		this.locale = locale;
+		
+		this.locales = new Vector<Locale>();
+		while (locales.hasMoreElements())
+			this.locales.add(locales.nextElement());
 	}
 
 	public Locale getLocale() {
@@ -82,11 +114,14 @@ public class LocalizationContext {
 		public Locale getFallbackLocale(String baseName, Locale locale) {
 			Locale fallback = null;
 			
-			while (locales != null && locales.hasMoreElements()) {
-				Locale next = locales.nextElement();
-				if (next.equals(locale) && locales.hasMoreElements()) {
-					fallback = locales.nextElement();
-					break;
+			if (locales != null) {
+				Iterator<Locale> it = locales.iterator();
+				while (it.hasNext()) {
+					Locale next = it.next();
+					if (next.equals(locale) && it.hasNext()) {
+						fallback = it.next();
+						break;
+					}
 				}
 			}
 

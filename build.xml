@@ -107,7 +107,7 @@
 		
 		<property name="version.weberknecht"		value="${version.weberknecht.major}.${version.weberknecht.minor}.${version.weberknecht.patch}${branch-suffix}" />
 		<property name="version.weberknecht.short"	value="${version.weberknecht.major}.${version.weberknecht.minor}${branch-suffix}" />
-		<echo message="${version.weberknecht} build ${version.weberknecht.build}" />
+		<echo message="${version.weberknecht}" />
 	</target>
 
 	<!-- ================================= 

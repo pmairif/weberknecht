@@ -1,10 +1,9 @@
 /*
  * ProcessingChain.java (weberknecht)
  *
- * Copyright 2010 Patrick Mairif.
+ * Copyright 2010-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
- * created: 15.12.2010
  * tabstop=4, charset=UTF-8
  */
 package de.highbyte_le.weberknecht.request.processing;
@@ -48,7 +47,7 @@ public class ProcessingChain {
 	/**
 	 * Continue processing. Returns after all processors are done. Which allows cleanup operations. 
 	 */
-	public void doContinue() throws ProcessingException, ContentProcessingException {
+	public void doContinue() throws ProcessingException, ContentProcessingException, RedirectException {
 		if (it.hasNext()) {
 			it.next().execute(request, response, routingTarget, action, this);
 		}

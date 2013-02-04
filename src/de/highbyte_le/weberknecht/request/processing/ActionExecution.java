@@ -35,7 +35,7 @@ public class ActionExecution implements Processor {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response, RoutingTarget routingTarget,
 			ExecutableAction action, ProcessingChain chain)
-	throws ProcessingException, ContentProcessingException {
+	throws ProcessingException, ContentProcessingException, RedirectException {
 		
 		try {
 			if (action instanceof Localizable)

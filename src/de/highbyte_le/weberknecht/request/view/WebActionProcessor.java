@@ -61,6 +61,7 @@ public class WebActionProcessor implements ActionViewProcessor {
 			processed = true;
 		}
 		else if (view != null && view.hasRedirection()) {
+			//TODO throw RedirectException instead
 			processRedirect(response, view);
 			processed = true;
 		}

@@ -10,6 +10,8 @@
 package de.highbyte_le.weberknecht;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -43,6 +45,7 @@ import de.highbyte_le.weberknecht.request.error.ErrorHandler;
 import de.highbyte_le.weberknecht.request.processing.ActionExecution;
 import de.highbyte_le.weberknecht.request.processing.ProcessingChain;
 import de.highbyte_le.weberknecht.request.processing.Processor;
+import de.highbyte_le.weberknecht.request.processing.RedirectException;
 import de.highbyte_le.weberknecht.request.routing.AreaCapableRouter;
 import de.highbyte_le.weberknecht.request.routing.AreaPathResolver;
 import de.highbyte_le.weberknecht.request.routing.Router;
@@ -233,14 +236,18 @@ public class Controller extends HttpServlet {
 			connectionList.addAll( initializeAction(action, con) );
 
 			//processing
-			ProcessingChain chain = new ProcessingChain(processors, request, response, routingTarget, action);
-			chain.doContinue();
-			
-			//process view
-			//TODO implement as processor
-			ActionViewProcessor processor = actionProcessorFactory.createActionProcessor(routingTarget.getViewProcessorName(), getServletContext()); 
-			processor.processView(request, response, action);
-			
+			try {
+				ProcessingChain chain = new ProcessingChain(processors, request, response, routingTarget, action);
+				chain.doContinue();
+				
+				//process view
+				//TODO implement as processor
+				ActionViewProcessor processor = actionProcessorFactory.createActionProcessor(routingTarget.getViewProcessorName(), getServletContext()); 
+				processor.processView(request, response, action);
+			}
+			catch (RedirectException e) {
+				doRedirect(request, response, e.getLocalRedirectDestination());
+			}
 		}
 		catch (Exception e) {
 			handleException(request, response, routingTarget, e);
@@ -260,6 +267,14 @@ public class Controller extends HttpServlet {
 		if (log.isInfoEnabled()) {
 			log.info("page delivery took "+(finish-start)+" ms");
 		}
+	}
+
+	private void doRedirect(HttpServletRequest request, HttpServletResponse response, String redirectDestination)
+			throws MalformedURLException {
+		URL reqURL = new URL(request.getRequestURL().toString());
+		URL dest = new URL(reqURL, redirectDestination);
+		response.setHeader("Location", dest.toExternalForm());
+		response.setStatus(303);	//303 - "see other" (http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)
 	}
 
 	@SuppressWarnings("unchecked")

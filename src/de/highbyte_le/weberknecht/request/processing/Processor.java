@@ -1,7 +1,7 @@
 /*
  * Processor.java (weberknecht)
  *
- * Copyright 2010-2012 Patrick Mairif.
+ * Copyright 2010-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
  * tabstop=4, charset=UTF-8
@@ -30,5 +30,5 @@ public interface Processor {
 	 */
 	public void execute(HttpServletRequest request, HttpServletResponse response, RoutingTarget routingTarget,
 			ExecutableAction action, ProcessingChain chain)
-	throws ProcessingException, ContentProcessingException;
+	throws ProcessingException, ContentProcessingException, RedirectException;
 }

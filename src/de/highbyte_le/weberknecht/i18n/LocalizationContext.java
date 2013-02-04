@@ -10,7 +10,6 @@ package de.highbyte_le.weberknecht.i18n;
 
 import java.util.Enumeration;
 import java.util.Locale;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.apache.commons.logging.Log;
@@ -35,20 +34,22 @@ public class LocalizationContext {
 	
 	private ResourceBundle resourceBundle = null;
 
-	private final Enumeration<Locale> locales;
+	private final Enumeration<Locale> locales;	//TODO use List instead
 	
 	private final String bundleName;
 
 	/**
-	 * 
 	 * @param bundleName
 	 * 		the name of your localization bundle
 	 * @param locales
 	 * 		the locales accepted by the user (usually from the 'Accept-Language' header, available via HttpServletRequest.getLocales())
+	 * @param locale
+	 * 		preferred locale
 	 */
-	public LocalizationContext(String bundleName, Enumeration<Locale> locales) {
+	public LocalizationContext(String bundleName, Enumeration<Locale> locales, Locale locale) {
 		this.bundleName = bundleName;
 		this.locales = locales;
+		this.locale = locale;
 	}
 
 	public Locale getLocale() {
@@ -64,22 +65,9 @@ public class LocalizationContext {
 	}
 	
 	/**
-	 * get localized string
-	 */
-	public String getString(String key) {
-		try {
-			return getResourceBundle().getString(key);
-		}
-		catch (MissingResourceException e) {
-			log.error("l10n key not found: "+key);
-			return '!' + key + '!';
-		}
-	}
-	
-	/**
 	 * @return the resourceBundle
 	 */
-	protected synchronized ResourceBundle getResourceBundle() {
+	public synchronized ResourceBundle getResourceBundle() {
 		if (null == resourceBundle) {
 			this.resourceBundle = ResourceBundle.getBundle(bundleName, locale, new ResourceBundleControl());
 		}

@@ -15,6 +15,7 @@ next (1.0):
 	- LocalePrefixRouter and Localizable added
 	- actions don't throw ServletExceptions any more.
 	- WebAction.getModels() throws ContentProcessingException
+	- RedirectException
 	- execute() in actions without HttpServletResponse
 	- Action renamed to WebAction
 	- optional ActionBase introduced
@@ -24,7 +25,6 @@ next (1.0):
 	- syntax of weberknecht.xml changed
 	- error handlers
 	- error pages, configured via web.xml are used
-	- RedirectException
 
 0.12.2:
 	- bugfix: fixed null pointer exception, when routing didn't match.

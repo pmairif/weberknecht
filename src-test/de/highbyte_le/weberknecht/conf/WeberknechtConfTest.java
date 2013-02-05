@@ -290,6 +290,42 @@ public class WeberknechtConfTest {
 	}
 	
 	/**
+	 * unnamed sub areas
+	 */
+	@Test
+	public void testGetNoNameSubs() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-no-name-sub.xml");
+		
+		Map<String, ActionDeclaration> expectedActionClassMap = new HashMap<String, ActionDeclaration>();
+		expectedActionClassMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "pre1", "post1", null));
+		expectedActionClassMap.put("bar", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction2", "pre2", "post1", "de.highbyte_le.weberknecht.test.DummyErrorHandler"));
+		assertEquals(expectedActionClassMap, conf.getActionClassMap(new AreaPath()));
+	}
+	
+	/**
+	 * unnamed sub areas, another example
+	 */
+	@Test
+	public void testGetNoNameSubs2() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-no-name-sub-2.xml");
+		
+		{	// root
+			Map<String, ActionDeclaration> expectedActionClassMap = new HashMap<String, ActionDeclaration>();
+			expectedActionClassMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "pre1", "post1", null));
+			expectedActionClassMap.put("bar", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction2", "pre2", "post1", "de.highbyte_le.weberknecht.test.DummyErrorHandler"));
+			assertEquals(expectedActionClassMap, conf.getActionClassMap(new AreaPath()));
+		}
+		
+		{	// /sub
+			Map<String, ActionDeclaration> expectedActionClassMap = new HashMap<String, ActionDeclaration>();
+			expectedActionClassMap.put("foo1", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction3", "pre3", "post1", null));
+			expectedActionClassMap.put("bar1", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction4", "pre3", "post2", "de.highbyte_le.weberknecht.test.DummyErrorHandler2"));
+			expectedActionClassMap.put("bar2", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction5", "pre3", "post2", "de.highbyte_le.weberknecht.test.DummyErrorHandler2"));
+			assertEquals(expectedActionClassMap, conf.getActionClassMap(new AreaPath("sub")));
+		}
+	}
+	
+	/**
 	 * Exception on old configuration
 	 */
 	@Test(expected=ConfigurationException.class)

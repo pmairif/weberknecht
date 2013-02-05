@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weberknecht>
+	<actions>
+		<pre-processors ref="pre1" />
+		<post-processors ref="post1" />
+		<action name="foo" class="de.highbyte_le.weberknecht.test.DummyAction1" />
+
+		<!-- sub action without separate directory -->
+		<actions>
+			<error-handler class="de.highbyte_le.weberknecht.test.DummyErrorHandler" />
+			<pre-processors ref="pre2" />
+			<action name="bar" class="de.highbyte_le.weberknecht.test.DummyAction2" />
+		</actions>
+		
+		<actions area="sub">
+			<pre-processors ref="pre3" />
+			<action name="foo1" class="de.highbyte_le.weberknecht.test.DummyAction3" />
+
+			<actions>
+				<error-handler class="de.highbyte_le.weberknecht.test.DummyErrorHandler2" />
+				<post-processors ref="post2" />
+				<action name="bar1" class="de.highbyte_le.weberknecht.test.DummyAction4" />
+				<action name="bar2" class="de.highbyte_le.weberknecht.test.DummyAction5" />
+			</actions>
+		</actions>
+	</actions>
+
+	<pre-processors-def id="pre1">
+		<pre-processor class="de.highbyte_le.weberknecht.test.DummyProcessor1"/>
+		<pre-processor class="de.highbyte_le.weberknecht.test.DummyProcessor2"/>
+	</pre-processors-def>
+	
+	<pre-processors-def id="pre2">
+		<pre-processor class="de.highbyte_le.weberknecht.test.DummyProcessor1"/>
+	</pre-processors-def>
+	
+	<pre-processors-def id="pre3">
+		<pre-processor class="de.highbyte_le.weberknecht.test.DummyProcessor2"/>
+	</pre-processors-def>
+	
+	<post-processors-def id="post1">
+		<post-processor class="de.highbyte_le.weberknecht.test.DummyProcessor3"/>
+		<post-processor class="de.highbyte_le.weberknecht.test.DummyProcessor4"/>
+	</post-processors-def>
+
+	<post-processors-def id="post2">
+	</post-processors-def>
+</weberknecht>

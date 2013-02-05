@@ -14,7 +14,7 @@ import java.util.Vector;
 /**
  * path of areas to access the action
  *
- * @author rick
+ * @author pmairif
  */
 public class AreaPath implements Cloneable {
 

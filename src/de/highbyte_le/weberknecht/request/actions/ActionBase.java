@@ -146,7 +146,7 @@ public abstract class ActionBase implements TaskedExecutableAction, Localizable 
 	 * get the locale extracted from the requested URL
 	 * @return the requestedLocale
 	 */
-	protected Locale getRequestedLocale() {
+	public Locale getRequestedLocale() {
 		return requestedLocale;
 	}
 }

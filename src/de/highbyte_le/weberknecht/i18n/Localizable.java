@@ -19,7 +19,7 @@ import de.highbyte_le.weberknecht.request.routing.LocalePrefixRouter;
  * The locale, that will be set is not the locale extracted from the 'Accept-Language' header, it is extracted from the URL.
  * It's up to the action to decide which one to use. A good practice is to use that from the URL, if present.
  * If not, choose a locale based on the header via the mechanism from {@link ResourceBundle} and redirect to an URL containing
- * the chosen language. {@link LocalizationContext} provides some helpful methods.
+ * the chosen language. {@link LocaleMatcher} provides some helpful methods.
  *
  * @author pmairif
  */

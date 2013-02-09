@@ -20,7 +20,15 @@ import de.highbyte_le.weberknecht.conf.WeberknechtConf;
  */
 public class MetaRouter implements Router {
 
-	private List<Router> routers = new Vector<Router>();
+	private List<Router> routers;
+	
+	public MetaRouter(List<Router> routers) {
+		this.routers = routers;
+	}
+
+	public MetaRouter() {
+		this.routers = new Vector<Router>();
+	}
 	
 	/* (non-Javadoc)
 	 * @see de.highbyte_le.weberknecht.request.routing.Router#routeUri(java.lang.String)
@@ -49,5 +57,12 @@ public class MetaRouter implements Router {
 
 	public void addRouter(Router router) {
 		this.routers.add(router);
+	}
+	
+	/**
+	 * @return the routers
+	 */
+	public List<Router> getRouters() {
+		return routers;
 	}
 }

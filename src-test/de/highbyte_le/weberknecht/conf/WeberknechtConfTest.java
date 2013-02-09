@@ -381,13 +381,24 @@ public class WeberknechtConfTest {
 	@Test
 	public void testRouter() throws Exception {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-router.xml");
-		assertEquals("com.example.Router", conf.getRouterClass());
+		List<String> expected = new Vector<String>();
+		expected.add("com.example.Router");
+		assertEquals(expected, conf.getRouterClasses());
+	}
+	
+	@Test
+	public void testRouter2() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-router2.xml");
+		List<String> expected = new Vector<String>();
+		expected.add("de.highbyte_le.weberknecht.request.routing.SimpleRouter");
+		expected.add("de.highbyte_le.weberknecht.request.routing.AreaCapableRouter");
+		assertEquals(expected, conf.getRouterClasses());
 	}
 	
 	@Test
 	public void testNoRouter() throws Exception {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-1.xml");
-		assertNull(conf.getRouterClass());
+		assertEquals(0, conf.getRouterClasses().size());
 	}
 	
 	@Test

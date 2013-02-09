@@ -4,7 +4,6 @@
  * Copyright 2012-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  *
- * created: 16.10.2012
  * tabstop=4, charset=UTF-8
  */
 package de.highbyte_le.weberknecht;
@@ -13,17 +12,23 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import de.highbyte_le.weberknecht.conf.ConfigurationException;
 import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 import de.highbyte_le.weberknecht.request.processing.ActionExecution;
 import de.highbyte_le.weberknecht.request.processing.Processor;
+import de.highbyte_le.weberknecht.request.routing.AreaCapableRouter;
 import de.highbyte_le.weberknecht.request.routing.AreaPath;
 import de.highbyte_le.weberknecht.request.routing.AreaPathResolver;
+import de.highbyte_le.weberknecht.request.routing.MetaRouter;
+import de.highbyte_le.weberknecht.request.routing.Router;
 import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
+import de.highbyte_le.weberknecht.request.routing.SimpleRouter;
 import de.highbyte_le.weberknecht.test.DummyProcessor1;
 import de.highbyte_le.weberknecht.test.DummyProcessor2;
 
@@ -40,19 +45,23 @@ public class ControllerTest {
 	public void setUp() throws Exception {
 		this.controller = new Controller();
 		
+		WeberknechtConf conf = readConf("test-data/weberknecht-4.xml");
+		controller.setConf(conf);
+		controller.setPathResolver(new AreaPathResolver(conf));
+	}
+
+	private WeberknechtConf readConf(String filename) throws ConfigurationException, IOException {
 		FileInputStream in = null;
 		try {
-			in = new FileInputStream(new File("test-data/weberknecht-4.xml"));
-			WeberknechtConf conf = WeberknechtConf.readConfig(in);
-			controller.setConf(conf);
-			controller.setPathResolver(new AreaPathResolver(conf));
+			in = new FileInputStream(new File(filename));
+			return WeberknechtConf.readConfig(in);
 		}
 		finally {
 			if (in != null)
 				in.close();
 		}
 	}
-
+	
 	@Test
 	public void testSetupProcessorsDefaultFoo() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		List<Processor> processors = controller.setupProcessors(new RoutingTarget(new AreaPath(), "foo", null, null));
@@ -98,5 +107,30 @@ public class ControllerTest {
 		assertTrue(processors.get(i++) instanceof ActionExecution);	//action
 		assertTrue(processors.get(i++) instanceof DummyProcessor1);	//post1
 		assertTrue(processors.get(i++) instanceof DummyProcessor2);
+	}
+	
+	@Test
+	public void testCreateRouterDefault() throws Exception {
+		WeberknechtConf conf = readConf("test-data/weberknecht-1.xml");
+		Router router = controller.createRouter(conf);
+		assertTrue(router instanceof AreaCapableRouter);
+	}
+	
+	@Test
+	public void testCreateRouter1() throws Exception {
+		WeberknechtConf conf = readConf("test-data/weberknecht-router1.xml");
+		Router router = controller.createRouter(conf);
+		assertTrue(router instanceof SimpleRouter);
+	}
+
+	@Test
+	public void testCreateRouter2() throws Exception {
+		WeberknechtConf conf = readConf("test-data/weberknecht-router2.xml");
+		Router router = controller.createRouter(conf);
+		assertTrue(router instanceof MetaRouter);
+		MetaRouter metaRouter = (MetaRouter) router;
+		List<Router> routers = metaRouter.getRouters();
+		assertTrue(routers.get(0) instanceof SimpleRouter);
+		assertTrue(routers.get(1) instanceof AreaCapableRouter);
 	}
 }

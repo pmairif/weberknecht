@@ -48,6 +48,7 @@ import de.highbyte_le.weberknecht.request.processing.Processor;
 import de.highbyte_le.weberknecht.request.processing.RedirectException;
 import de.highbyte_le.weberknecht.request.routing.AreaCapableRouter;
 import de.highbyte_le.weberknecht.request.routing.AreaPathResolver;
+import de.highbyte_le.weberknecht.request.routing.MetaRouter;
 import de.highbyte_le.weberknecht.request.routing.Router;
 import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
 import de.highbyte_le.weberknecht.request.view.ActionViewProcessor;
@@ -127,23 +128,28 @@ public class Controller extends HttpServlet {
 		}
 	}
 
-	private Router createRouter(WeberknechtConf conf) throws InstantiationException, IllegalAccessException,
+	Router createRouter(WeberknechtConf conf) throws InstantiationException, IllegalAccessException,
 			ClassNotFoundException {
 		
-		Router ret = null;
-		
-		String routerClass = conf.getRouterClass();
-		if (routerClass != null) {
+		List<Router> routers = new Vector<Router>();
+		List<String> routerClasses = conf.getRouterClasses();
+		for (String routerClass: routerClasses) {
 			Object o = Class.forName(routerClass).newInstance();
-			if (o instanceof Router)
-				ret = (Router) o;
+			if (o instanceof Router) {
+				routers.add((Router) o);
+			}
 			else
 				log.error(routerClass + " is not an instance of Router");
 		}
 		
-		if (ret == null)
+		Router ret = null;
+		if (routers.size() == 0)
 			ret = new AreaCapableRouter();
-		
+		else if (routers.size() == 1)
+			ret = routers.get(0);
+		else
+			ret = new MetaRouter(routers);
+
 		ret.setConfig(conf);
 		
 		return ret;

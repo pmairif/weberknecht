@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weberknecht>
+	<router class="de.highbyte_le.weberknecht.request.routing.SimpleRouter" />
+	<router class="de.highbyte_le.weberknecht.request.routing.AreaCapableRouter" />
+
+	<area>
+		<action name="index" class="com.example.IndexAction" />
+	</area>
+</weberknecht>

@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.servlet.ServletContext;
 
@@ -45,7 +46,7 @@ public class WeberknechtConf {
 	 */
 	private Set<String> dbs = new HashSet<String>();
 	
-	private String routerClass = null;
+	private List<String> routerClasses = new Vector<String>();
 	
 	/**
 	 * Mapping of suffixes to ActionViewProcessor classes.
@@ -249,14 +250,13 @@ public class WeberknechtConf {
 		}
 	}
 
-	/**
-	 * @param conf
-	 * @param rootElement
-	 */
 	protected static void readRouter(WeberknechtConf conf, Element rootElement) {
-		Element routerElement = rootElement.getChild("router");
-		if (routerElement != null) {
-			conf.routerClass = routerElement.getAttributeValue("class");
+		@SuppressWarnings("unchecked")
+		List<Element> routerElements = rootElement.getChildren("router");
+		if (routerElements != null) {
+			for (Element routerElement: routerElements) {
+				conf.routerClasses.add(routerElement.getAttributeValue("class"));
+			}
 		}
 	}
 
@@ -452,8 +452,8 @@ public class WeberknechtConf {
 	/**
 	 * @return the routerClass
 	 */
-	public String getRouterClass() {
-		return routerClass;
+	public List<String> getRouterClasses() {
+		return routerClasses;
 	}
 	
 	/**

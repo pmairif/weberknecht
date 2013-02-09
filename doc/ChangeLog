@@ -10,7 +10,7 @@ next (1.0):
 	- generic beans removed
 	- ReqUtil removed
 	- AreaCapableRouter now default
-	- MetaRouter introduced
+	- MetaRouter introduced and ability to use more than one router
 	- sub areas introduced
 	- router interface extended by setConfig method
 	- LocalePrefixRouter and Localizable added

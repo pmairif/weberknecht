@@ -23,8 +23,19 @@ import de.highbyte_le.weberknecht.conf.WeberknechtConf;
  */
 public class LocalePrefixRouter implements Router {
 	
+	/**
+	 * pattern for the whole URI
+	 */
 	private static final Pattern pattern = Pattern.compile(
-			"([/a-z0-9_-]+)?/([a-z0-9_-]+)(![a-z0-9_-]*)?\\.([a-z]+)",	//$NON-NLS-1$
+			"([/a-z0-9_-]+)?(/[a-z0-9_!-]+\\.[a-z]+)?",	//$NON-NLS-1$
+			Pattern.CASE_INSENSITIVE
+	); 
+
+	/**
+	 * pattern for the action part
+	 */
+	private static final Pattern actionPattern = Pattern.compile(
+			"/?([a-z0-9_-]+)(![a-z0-9_-]*)?\\.([a-z]+)",	//$NON-NLS-1$
 			Pattern.CASE_INSENSITIVE
 	);
 	
@@ -40,28 +51,28 @@ public class LocalePrefixRouter implements Router {
 		try {
 			RoutingTarget target = null;
 			
-			//TODO default action per area
-			
 			Matcher areaMatcher = pattern.matcher(servletPath);
 			if (areaMatcher.matches()) {
 				String path = areaMatcher.group(1);
-				String baseName = areaMatcher.group(2);
-				String t = areaMatcher.group(3);
-				String suffix = areaMatcher.group(4);
+				String action = areaMatcher.group(2);
 				
 				LocalePathResolver resolver = createPath(path);
 				AreaPath areaPath = resolver.getPath();
 				Locale locale = resolver.getLocale();
 				if (null == locale && conf.hasRoutingLocalePrefix() && !conf.getRoutingLocalePrefix().isOptional())
 					throw new RoutingNotPossibleException();
-				
-				String task = null;
-				if (t != null && t.length() > 1)
-					task = t.substring(1);
-				
-				target = new RoutingTarget(areaPath, baseName, suffix, task, locale);
+
+				if (action != null && action.length() > 0) {
+					target = createTarget(locale, areaPath, action);
+				}
+				else {
+					String defaultAction = conf.getDefaultAction(areaPath);
+					if (defaultAction != null)
+						target = createTarget(locale, areaPath, defaultAction);
+				}
+
 			}
-			
+
 			return target;
 		}
 		catch (RoutingNotPossibleException e) {
@@ -83,6 +94,25 @@ public class LocalePrefixRouter implements Router {
 		return resolver;
 	}
 	
+	protected RoutingTarget createTarget(Locale locale, AreaPath areaPath, String actionString) {
+		RoutingTarget target = null;
+
+		Matcher m = actionPattern.matcher(actionString);
+		if (m.matches()) {
+			String baseName = m.group(1);
+			String t = m.group(2);
+			String suffix = m.group(3);
+
+			String task = null;
+			if (t != null && t.length() > 1)
+				task = t.substring(1);
+			
+			target = new RoutingTarget(areaPath, baseName, suffix, task, locale);
+		}
+		
+		return target;
+	}
+
 	/* (non-Javadoc)
 	 * @see de.highbyte_le.weberknecht.request.routing.Router#setConfig(de.highbyte_le.weberknecht.conf.WeberknechtConf)
 	 */

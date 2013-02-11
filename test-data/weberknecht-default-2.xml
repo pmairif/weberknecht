@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weberknecht>
+	<area>
+		<action name="foo" class="de.highbyte_le.weberknecht.FooAction" />
+		<action name="bar" class="de.highbyte_le.weberknecht.BarAction" />
+	</area>
+
+	<area name="a1" default="bar1.data">
+		<action name="foo1" class="de.highbyte_le.weberknecht.FooAction" />
+		<action name="bar1" class="de.highbyte_le.weberknecht.BarAction" />
+	</area>
+</weberknecht>

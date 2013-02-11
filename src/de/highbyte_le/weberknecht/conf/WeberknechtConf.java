@@ -38,6 +38,8 @@ public class WeberknechtConf {
 	 */
 	private Map<AreaPath, Map<String, ActionDeclaration>> areaActionClassMap = new HashMap<AreaPath, Map<String, ActionDeclaration>>();
 
+	private Map<AreaPath, String> defaultActions = new HashMap<AreaPath, String>();
+	
 	private Map<String, ProcessorList> preProcessors = new HashMap<String, ProcessorList>();
 	private Map<String, ProcessorList> postProcessors = new HashMap<String, ProcessorList>();
 
@@ -196,6 +198,10 @@ public class WeberknechtConf {
 			for (Element actionsElement: actionsElements) {
 				String area = actionsElement.getAttributeValue("area");
 				AreaPath subPath = path.fork(area);
+				
+				String defaultAction = actionsElement.getAttributeValue("default");
+				conf.defaultActions.put(subPath, defaultAction);
+				
 				readArea(conf, preId, postId, errHandler, actionsElement, subPath);
 
 				readActions(conf, actionsElement, subPath, preId, postId, errHandler);
@@ -207,12 +213,15 @@ public class WeberknechtConf {
 			for (Element areaElement: areaElements) {
 				String area = areaElement.getAttributeValue("name");
 				AreaPath subPath = path.fork(area);
+
+				String defaultAction = areaElement.getAttributeValue("default");
+				conf.defaultActions.put(subPath, defaultAction);
+
 				readArea(conf, preId, postId, errHandler, areaElement, subPath);
 
 				readActions(conf, areaElement, subPath, preId, postId, errHandler);
 			}
 		}
-		
 	}
 
 	/**
@@ -426,6 +435,17 @@ public class WeberknechtConf {
 
 	public Set<AreaPath> getAreas() {
 		return areaActionClassMap.keySet();
+	}
+	
+	/**
+	 * @return the defaultActions
+	 */
+	public Map<AreaPath, String> getDefaultActions() {
+		return defaultActions;
+	}
+	
+	public String getDefaultAction(AreaPath area) {
+		return defaultActions.get(area);
 	}
 	
 	/**

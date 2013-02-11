@@ -8,11 +8,10 @@
  */
 package de.highbyte_le.weberknecht.conf;
 
+import static de.highbyte_le.weberknecht.test.TestUtil.readConfig;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -423,15 +422,41 @@ public class WeberknechtConfTest {
 		assertNull(conf.getRoutingLocalePrefix());
 	}
 	
-	private WeberknechtConf readConfig(String filename) throws IOException, ConfigurationException {
-		FileInputStream in = null;
-		try {
-			in = new FileInputStream(new File(filename));
-			return WeberknechtConf.readConfig(in);
-		}
-		finally {
-			if (in != null)
-				in.close();
-		}
+	@Test
+	public void testGetDefaultAction1() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-default-1.xml");
+		
+		assertEquals("foo.do", conf.getDefaultAction(new AreaPath()));
+		assertNull(conf.getDefaultAction(new AreaPath("a1")));
+	}
+	
+	@Test
+	public void testGetDefaultAction1a() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-default-1a.xml");
+		
+		assertEquals("foo.do", conf.getDefaultAction(new AreaPath()));
+		assertNull(conf.getDefaultAction(new AreaPath("a1")));
+	}
+	
+	@Test
+	public void testGetDefaultAction2() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-default-2.xml");
+		
+		assertNull(conf.getDefaultAction(new AreaPath()));
+		assertEquals("bar1.data", conf.getDefaultAction(new AreaPath("a1")));
+	}
+	
+	@Test
+	public void testGetDefaultAction3() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-default-3.xml");
+		
+		assertEquals("bar1!foo.do", conf.getDefaultAction(new AreaPath()));
+	}
+	
+	@Test
+	public void testGetDefaultAction4() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-default-4.xml");
+		
+		assertEquals("bar1.do", conf.getDefaultAction(new AreaPath()));
 	}
 }

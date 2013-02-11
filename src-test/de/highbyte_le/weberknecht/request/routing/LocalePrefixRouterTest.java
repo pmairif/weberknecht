@@ -8,18 +8,15 @@
  */
 package de.highbyte_le.weberknecht.request.routing;
 
+import static de.highbyte_le.weberknecht.test.TestUtil.readConfig;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Locale;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import de.highbyte_le.weberknecht.conf.ConfigurationException;
 import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 
 /**
@@ -346,16 +343,117 @@ public class LocalePrefixRouterTest {
 		assertNull(router.parseLocale(null));
 	}
 	
-	private WeberknechtConf readConfig(String filename) throws IOException, ConfigurationException {
-		FileInputStream in = null;
-		try {
-			in = new FileInputStream(new File(filename));
-			return WeberknechtConf.readConfig(in);
+	
+	@Test
+	public void testDefaultAction1() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-default-1.xml");
+		router.setConfig(conf);
+
+		{	//expect default action
+			RoutingTarget target = router.routeUri("/");
+			assertEquals("foo", target.getActionName());
+			assertEquals("do", target.getViewProcessorName());
+			assertNull(target.getTask());
 		}
-		finally {
-			if (in != null)
-				in.close();
+
+		{	//no default action declared
+			RoutingTarget target = router.routeUri("/a1/");
+			assertNull(target);
+		}
+		
+		{	//no default action declared
+			RoutingTarget target = router.routeUri("/de/a1/");
+			assertNull(target);
 		}
 	}
 
+	@Test
+	public void testDefaultAction1WithLocale() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-default-1-locale.xml");
+		router.setConfig(conf);
+		
+		{	//expect default action
+			RoutingTarget target = router.routeUri("/");
+			assertEquals("foo", target.getActionName());
+			assertEquals("do", target.getViewProcessorName());
+			assertNull(target.getTask());
+		}
+		
+		{	//same with locale v1
+			RoutingTarget target = router.routeUri("/de/");
+			assertEquals("foo", target.getActionName());
+			assertEquals("do", target.getViewProcessorName());
+			assertNull(target.getTask());
+			assertEquals(new Locale("de"), target.getLocale());
+		}
+		
+		{	//same with locale v2
+			RoutingTarget target = router.routeUri("/de");
+			assertEquals("foo", target.getActionName());
+			assertEquals("do", target.getViewProcessorName());
+			assertNull(target.getTask());
+			assertEquals(new Locale("de"), target.getLocale());
+		}
+		
+		{	//no default action declared
+			RoutingTarget target = router.routeUri("/a1/");
+			assertNull(target);
+		}
+		
+		{	//no default action declared
+			RoutingTarget target = router.routeUri("/de/a1/");
+			assertNull(target);
+		}
+	}
+	
+	@Test
+	public void testDefaultAction2() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-default-2.xml");
+		router.setConfig(conf);
+		
+		{	//no default action declared
+			RoutingTarget target = router.routeUri("/");
+			assertNull(target);
+		}
+		
+		{	//expect default action
+			RoutingTarget target = router.routeUri("/a1/");
+			assertEquals("bar1", target.getActionName());
+			assertEquals("data", target.getViewProcessorName());
+			assertNull(target.getTask());
+		}
+		
+		{	//without trailing slash
+			RoutingTarget target = router.routeUri("/a1");
+			assertEquals("bar1", target.getActionName());
+			assertEquals("data", target.getViewProcessorName());
+			assertNull(target.getTask());
+		}
+	}
+
+	@Test
+	public void testDefaultAction3() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-default-3.xml");
+		router.setConfig(conf);
+		
+		{	//expect default action
+			RoutingTarget target = router.routeUri("/");
+			assertEquals("bar1", target.getActionName());
+			assertEquals("do", target.getViewProcessorName());
+			assertEquals("foo", target.getTask());
+		}
+	}
+	
+	@Test
+	public void testDefaultAction4() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-default-4.xml");
+		router.setConfig(conf);
+		
+		{	//expect default action
+			RoutingTarget target = router.routeUri("/");
+			assertEquals("bar1", target.getActionName());
+			assertEquals("do", target.getViewProcessorName());
+			assertNull(target.getTask());
+		}
+	}
 }

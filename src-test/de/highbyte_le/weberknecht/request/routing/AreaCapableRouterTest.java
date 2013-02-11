@@ -8,11 +8,14 @@
  */
 package de.highbyte_le.weberknecht.request.routing;
 
+import static de.highbyte_le.weberknecht.test.TestUtil.readConfig;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 
 /**
  * testing the {@link AreaCapableRouter}
@@ -26,6 +29,9 @@ public class AreaCapableRouterTest {
 	@Before
 	public void setUp() throws Exception {
 		router = new AreaCapableRouter();
+
+		WeberknechtConf conf = readConfig("test-data/weberknecht-1.xml");
+		router.setConfig(conf);
 	}
 
 	@Test
@@ -160,5 +166,79 @@ public class AreaCapableRouterTest {
 		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
 		assertNull(target.getTask());
+	}
+	
+	@Test
+	public void testDefaultAction1() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-default-1.xml");
+		router.setConfig(conf);
+
+		{	//expect default action
+			RoutingTarget target = router.routeUri("/");
+			assertEquals("foo", target.getActionName());
+			assertEquals("do", target.getViewProcessorName());
+			assertNull(target.getTask());
+		}
+		
+		{	//we want at least a slash
+			RoutingTarget target = router.routeUri("");
+			assertNull(target);
+		}
+		
+		{	//no default action declared
+			RoutingTarget target = router.routeUri("/a1/");
+			assertNull(target);
+		}
+	}
+
+	@Test
+	public void testDefaultAction2() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-default-2.xml");
+		router.setConfig(conf);
+		
+		{	//no default action declared
+			RoutingTarget target = router.routeUri("/");
+			assertNull(target);
+		}
+		
+		{	//expect default action
+			RoutingTarget target = router.routeUri("/a1/");
+			assertEquals("bar1", target.getActionName());
+			assertEquals("data", target.getViewProcessorName());
+			assertNull(target.getTask());
+		}
+		
+		{	//without trailing slash
+			RoutingTarget target = router.routeUri("/a1");
+			assertEquals("bar1", target.getActionName());
+			assertEquals("data", target.getViewProcessorName());
+			assertNull(target.getTask());
+		}
+	}
+
+	@Test
+	public void testDefaultAction3() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-default-3.xml");
+		router.setConfig(conf);
+		
+		{	//expect default action
+			RoutingTarget target = router.routeUri("/");
+			assertEquals("bar1", target.getActionName());
+			assertEquals("do", target.getViewProcessorName());
+			assertEquals("foo", target.getTask());
+		}
+	}
+	
+	@Test
+	public void testDefaultAction4() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-default-4.xml");
+		router.setConfig(conf);
+		
+		{	//expect default action
+			RoutingTarget target = router.routeUri("/");
+			assertEquals("bar1", target.getActionName());
+			assertEquals("do", target.getViewProcessorName());
+			assertNull(target.getTask());
+		}
 	}
 }

@@ -27,6 +27,7 @@ next (1.0):
 	- syntax of weberknecht.xml changed
 	- error handlers
 	- error pages, configured via web.xml are used
+	- default actions
 
 0.12.2:
 	- bugfix: fixed null pointer exception, when routing didn't match.

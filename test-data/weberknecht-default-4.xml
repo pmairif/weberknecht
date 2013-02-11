@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weberknecht>
+	<area default="bar.do">
+		<action name="foo" class="de.highbyte_le.weberknecht.FooAction" />
+		<action name="bar" class="de.highbyte_le.weberknecht.BarAction" />
+	</area>
+
+	<!-- area with same name, only one default possible, second declaration overrides first one.  -->
+	<area default="bar1.do">
+		<action name="foo1" class="de.highbyte_le.weberknecht.FooAction" />
+		<action name="bar1" class="de.highbyte_le.weberknecht.BarAction" />
+	</area>
+</weberknecht>

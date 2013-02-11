@@ -155,18 +155,10 @@ public class Controller extends HttpServlet {
 		return processors;
 	}
 	
-	/* (non-Javadoc)
-	 * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
 	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
-	}
-
-	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (log.isDebugEnabled())
-			log.debug("doGet() - start");
+			log.debug("service() - start");
 		
 		long start = System.currentTimeMillis();
 		
@@ -182,7 +174,7 @@ public class Controller extends HttpServlet {
 				
 				ExecutableAction action = pathResolver.resolveAction(routingTarget);
 				if (log.isDebugEnabled())
-					log.debug("doGet() - processing action "+action.getClass().getSimpleName());
+					log.debug("service() - processing action "+action.getClass().getSimpleName());
 	
 				List<Processor> processors = setupProcessors(routingTarget);
 				
@@ -212,11 +204,11 @@ public class Controller extends HttpServlet {
 		}
 		catch (Exception e1) {
 			try {
-				log.error("handleException() - exception while error handler instantiation: "+e1.getMessage(), e1);	//$NON-NLS-1$
+				log.error("service() - exception while error handler instantiation: "+e1.getMessage(), e1);	//$NON-NLS-1$
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//call error page 500
 			}
 			catch (IOException e) {
-				log.error("handleException() - IOException: "+e.getMessage(), e);	//$NON-NLS-1$
+				log.error("service() - IOException: "+e.getMessage(), e);	//$NON-NLS-1$
 				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//just return 500
 			}
 		}
@@ -225,13 +217,13 @@ public class Controller extends HttpServlet {
 				conHolder.close();
 			}
 			catch (SQLException e) {
-				log.error("SQLException while closing db connection: "+e.getMessage());	//$NON-NLS-1$
+				log.error("service() - SQLException while closing db connection: "+e.getMessage());	//$NON-NLS-1$
 			}
 		}
 		
 		long finish = System.currentTimeMillis();
 		if (log.isInfoEnabled()) {
-			log.info("page delivery took "+(finish-start)+" ms");
+			log.info("service() - page delivery took "+(finish-start)+" ms");
 		}
 	}
 	

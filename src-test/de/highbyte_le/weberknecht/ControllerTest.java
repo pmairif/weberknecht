@@ -31,6 +31,7 @@ import de.highbyte_le.weberknecht.request.routing.MetaRouter;
 import de.highbyte_le.weberknecht.request.routing.Router;
 import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
 import de.highbyte_le.weberknecht.request.routing.SimpleRouter;
+import de.highbyte_le.weberknecht.test.DbUsingRouter;
 import de.highbyte_le.weberknecht.test.DummyProcessor1;
 import de.highbyte_le.weberknecht.test.DummyProcessor2;
 
@@ -137,5 +138,16 @@ public class ControllerTest {
 		List<Router> routers = metaRouter.getRouters();
 		assertTrue(routers.get(0) instanceof SimpleRouter);
 		assertTrue(routers.get(1) instanceof AreaCapableRouter);
+		
+		verify(conHolder, times(0)).getConnection();
+	}
+
+	@Test
+	public void testCreateRouterWithDb() throws Exception {
+		WeberknechtConf conf = readConf("test-data/weberknecht-router3.xml");
+		Router router = controller.createRouter(conf, conHolder);
+		assertTrue(router instanceof DbUsingRouter);
+		
+		verify(conHolder, atLeast(1)).getConnection();
 	}
 }

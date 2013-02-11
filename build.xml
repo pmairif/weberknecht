@@ -34,7 +34,7 @@
 	<target name="compile" depends="version, json"
 		description="compiles the java sources">
 		
-		<javac srcdir="${dir.src}" destdir="${dir.classes}" encoding="UTF-8" includeantruntime="false">
+		<javac srcdir="${dir.src}" destdir="${dir.classes}" encoding="UTF-8" includeantruntime="false" source="1.6" target="1.6">
 			<classpath refid="cp.webapp" />
 		</javac>
 	</target>
@@ -42,7 +42,7 @@
 	<target name="module.rpx.compile" depends="compile"
 		description="compiles the rpx-module java sources">
 		
-		<javac srcdir="${dir.rpx}/src" destdir="${dir.rpx}/bin" encoding="UTF-8" includeantruntime="false">
+		<javac srcdir="${dir.rpx}/src" destdir="${dir.rpx}/bin" encoding="UTF-8" includeantruntime="false" source="1.6" target="1.6">
 			<classpath>
 				<path refid="cp.webapp"/>
 				<pathelement path="bin"/>

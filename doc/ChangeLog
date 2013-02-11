@@ -7,12 +7,15 @@ next (1.0):
 	- DataAction2 renamed to DataAction
 	- DataAction.writeData() throws ActionExecutionException
 	- The method needsDatabase of the interface DatabaseCapable was dropped and actions that need a database just have to implement the interface.
+	- AdditionalDatabaseCapable removed.
 	- generic beans removed
 	- ReqUtil removed
 	- AreaCapableRouter now default
 	- MetaRouter introduced and ability to use more than one router
 	- sub areas introduced
 	- router interface extended by setConfig method
+	- router not shared across requests
+	- routers can implement DatabaseCapable and Configurable
 	- LocalePrefixRouter and Localizable added
 	- LocaleMatcher
 	- actions don't throw ServletExceptions any more.
@@ -23,6 +26,7 @@ next (1.0):
 	- optional ActionBase introduced
 	- rpx-stuff moved to module 
 	- build number and Version.DEFAULT was dropped
+	- processors can implement Configurable
 	- pre-/post-processor sets must be reffered explicitly by ids and can be assigned to areas or single classes
 	- syntax of weberknecht.xml changed
 	- error handlers

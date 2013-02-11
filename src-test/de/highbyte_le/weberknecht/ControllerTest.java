@@ -8,6 +8,7 @@
  */
 package de.highbyte_le.weberknecht;
 
+import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -20,6 +21,7 @@ import org.junit.Test;
 
 import de.highbyte_le.weberknecht.conf.ConfigurationException;
 import de.highbyte_le.weberknecht.conf.WeberknechtConf;
+import de.highbyte_le.weberknecht.db.DbConnectionHolder;
 import de.highbyte_le.weberknecht.request.processing.ActionExecution;
 import de.highbyte_le.weberknecht.request.processing.Processor;
 import de.highbyte_le.weberknecht.request.routing.AreaCapableRouter;
@@ -41,9 +43,12 @@ public class ControllerTest {
 	
 	private Controller controller;
 	
+	private DbConnectionHolder conHolder;
+	
 	@Before
 	public void setUp() throws Exception {
 		this.controller = new Controller();
+		conHolder = mock(DbConnectionHolder.class);
 		
 		WeberknechtConf conf = readConf("test-data/weberknecht-4.xml");
 		controller.setConf(conf);
@@ -112,21 +117,21 @@ public class ControllerTest {
 	@Test
 	public void testCreateRouterDefault() throws Exception {
 		WeberknechtConf conf = readConf("test-data/weberknecht-1.xml");
-		Router router = controller.createRouter(conf);
+		Router router = controller.createRouter(conf, conHolder);
 		assertTrue(router instanceof AreaCapableRouter);
 	}
 	
 	@Test
 	public void testCreateRouter1() throws Exception {
 		WeberknechtConf conf = readConf("test-data/weberknecht-router1.xml");
-		Router router = controller.createRouter(conf);
+		Router router = controller.createRouter(conf, conHolder);
 		assertTrue(router instanceof SimpleRouter);
 	}
 
 	@Test
 	public void testCreateRouter2() throws Exception {
 		WeberknechtConf conf = readConf("test-data/weberknecht-router2.xml");
-		Router router = controller.createRouter(conf);
+		Router router = controller.createRouter(conf, conHolder);
 		assertTrue(router instanceof MetaRouter);
 		MetaRouter metaRouter = (MetaRouter) router;
 		List<Router> routers = metaRouter.getRouters();

@@ -4,7 +4,6 @@
  * Copyright 2008-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
- * created: Jan 22, 2008
  * tabstop=4, charset=UTF-8
  */
 package de.highbyte_le.weberknecht;
@@ -14,9 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
@@ -33,9 +30,9 @@ import de.highbyte_le.weberknecht.conf.ActionDeclaration;
 import de.highbyte_le.weberknecht.conf.ProcessorList;
 import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 import de.highbyte_le.weberknecht.db.DBConnectionException;
+import de.highbyte_le.weberknecht.db.DbConnectionHolder;
 import de.highbyte_le.weberknecht.db.DbConnectionProvider;
 import de.highbyte_le.weberknecht.db.DefaultWebDbConnectionProvider2;
-import de.highbyte_le.weberknecht.request.AdditionalDatabaseCapable;
 import de.highbyte_le.weberknecht.request.Configurable;
 import de.highbyte_le.weberknecht.request.DatabaseCapable;
 import de.highbyte_le.weberknecht.request.ModelHelper;
@@ -65,15 +62,11 @@ public class Controller extends HttpServlet {
 	
 	private DbConnectionProvider mainDbConnectionProvider = null;
 	
-	private Map<String, DbConnectionProvider> additionalDbConnectionProviderMap = new HashMap<String, DbConnectionProvider>();
-	
 	private AreaPathResolver pathResolver;
 	
 	private ActionViewProcessorFactory actionProcessorFactory = null;
 	
 	private WeberknechtConf conf;
-	
-	private Router router = null;
 	
 	/**
 	 * Logger for this class
@@ -87,9 +80,6 @@ public class Controller extends HttpServlet {
 	public void init() throws ServletException {
 		try {
 			conf = WeberknechtConf.readConfig(getServletContext());
-			
-			// choose router depending on config
-			this.router = createRouter(conf);
 			
 			//actions
 			this.pathResolver = new AreaPathResolver(conf);
@@ -109,18 +99,6 @@ public class Controller extends HttpServlet {
 				if (log.isInfoEnabled())
 					log.info("init() - jdbc/mydb not configured ("+e.getMessage()+")");	//$NON-NLS-1$
 			}
-
-			//additional DBs
-			for (String db: conf.getDbs()) {
-				try {
-					log.info("got db config for "+db);
-					additionalDbConnectionProviderMap.put(db, new DefaultWebDbConnectionProvider2("jdbc/"+db));
-				}
-				catch (NamingException e) {
-					if (log.isInfoEnabled())
-						log.info("init() - jdbc/"+db+" not configured ("+e.getMessage()+")");	//$NON-NLS-1$
-				}
-			}
 		}
 		catch (Exception e) {
 			log.error("init() - Exception: "+e.getMessage(), e);
@@ -128,24 +106,27 @@ public class Controller extends HttpServlet {
 		}
 	}
 
-	Router createRouter(WeberknechtConf conf) throws InstantiationException, IllegalAccessException,
-			ClassNotFoundException {
+	Router createRouter(WeberknechtConf conf, DbConnectionHolder conHolder) throws InstantiationException, IllegalAccessException,
+			ClassNotFoundException, DBConnectionException {
 		
-		List<Router> routers = new Vector<Router>();
 		List<String> routerClasses = conf.getRouterClasses();
+		List<Router> routers = new Vector<Router>(routerClasses.size());
 		for (String routerClass: routerClasses) {
 			Object o = Class.forName(routerClass).newInstance();
 			if (o instanceof Router) {
-				routers.add((Router) o);
+				Router router = (Router) o;
+				initializeObject(router, conHolder);
+				routers.add(router);
 			}
 			else
 				log.error(routerClass + " is not an instance of Router");
 		}
 		
 		Router ret = null;
-		if (routers.size() == 0)
+		int size = routers.size();
+		if (size == 0)
 			ret = new AreaCapableRouter();
-		else if (routers.size() == 1)
+		else if (size == 1)
 			ret = routers.get(0);
 		else
 			ret = new MetaRouter(routers);
@@ -174,6 +155,86 @@ public class Controller extends HttpServlet {
 		return processors;
 	}
 	
+	/* (non-Javadoc)
+	 * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
+	}
+
+	@Override
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if (log.isDebugEnabled())
+			log.debug("doGet() - start");
+		
+		long start = System.currentTimeMillis();
+		
+		DbConnectionHolder conHolder = new DbConnectionHolder(mainDbConnectionProvider);
+		try {
+			Router router = createRouter(conf, conHolder);	//choose router depending on config
+			RoutingTarget routingTarget = router.routeUri(request.getServletPath());
+
+			try {
+	
+				ModelHelper modelHelper = new ModelHelper(request, getServletContext());
+				modelHelper.setSelf(request);
+				
+				ExecutableAction action = pathResolver.resolveAction(routingTarget);
+				if (log.isDebugEnabled())
+					log.debug("doGet() - processing action "+action.getClass().getSimpleName());
+	
+				List<Processor> processors = setupProcessors(routingTarget);
+				
+				//initialization
+				for (Processor p: processors)
+					initializeObject(p, conHolder);
+				
+				initializeObject(action, conHolder);
+	
+				//processing
+				try {
+					ProcessingChain chain = new ProcessingChain(processors, request, response, routingTarget, action);
+					chain.doContinue();
+					
+					//process view
+					//TODO implement as processor
+					ActionViewProcessor processor = actionProcessorFactory.createActionProcessor(routingTarget.getViewProcessorName(), getServletContext()); 
+					processor.processView(request, response, action);
+				}
+				catch (RedirectException e) {
+					doRedirect(request, response, e.getLocalRedirectDestination());
+				}
+			}
+			catch (Exception e) {
+				handleException(request, response, routingTarget, e);
+			}
+		}
+		catch (Exception e1) {
+			try {
+				log.error("handleException() - exception while error handler instantiation: "+e1.getMessage(), e1);	//$NON-NLS-1$
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//call error page 500
+			}
+			catch (IOException e) {
+				log.error("handleException() - IOException: "+e.getMessage(), e);	//$NON-NLS-1$
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//just return 500
+			}
+		}
+		finally {
+			try {
+				conHolder.close();
+			}
+			catch (SQLException e) {
+				log.error("SQLException while closing db connection: "+e.getMessage());	//$NON-NLS-1$
+			}
+		}
+		
+		long finish = System.currentTimeMillis();
+		if (log.isInfoEnabled()) {
+			log.info("page delivery took "+(finish-start)+" ms");
+		}
+	}
+	
 	protected List<Processor> setupProcessors(RoutingTarget routingTarget) throws InstantiationException, IllegalAccessException {
 		List<Processor> processors = new Vector<Processor>();
 
@@ -198,81 +259,22 @@ public class Controller extends HttpServlet {
 		return processors;
 	}
 	
-	/* (non-Javadoc)
-	 * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	/**
+	 * do initialization stuff here.
+	 * 
+	 * @param action	the action instance, processor or whatever to be initialized
+	 * @param conHolder		holds database connection
 	 */
-	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
-	}
-
-	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if (log.isDebugEnabled())
-			log.debug("doGet() - start");
+	protected void initializeObject(Object action, DbConnectionHolder conHolder) throws DBConnectionException {
+		log.debug("initializeAction()");
 		
-		long start = System.currentTimeMillis();
-		
-		List<Connection> connectionList = new Vector<Connection>();
-		RoutingTarget routingTarget = router.routeUri(request.getServletPath());
-		try {
-
-			ModelHelper modelHelper = new ModelHelper(request, getServletContext());
-			modelHelper.setSelf(request);
-			
-			ExecutableAction action = pathResolver.resolveAction(routingTarget);
-			if (log.isDebugEnabled())
-				log.debug("doGet() - processing action "+action.getClass().getSimpleName());
-
-			List<Processor> processors = setupProcessors(routingTarget);
-			
-			//main db connection
-			Connection con = null;
-			if (isDbConnectionNeeded(action, processors)) {
-				con = getConnection();
-				connectionList.add(con);
-			}
-
-			//initialization
-			for (Processor p: processors) {
-				if (p instanceof DatabaseCapable)
-					((DatabaseCapable) p).setDatabase(con);
-			}
-			
-			connectionList.addAll( initializeAction(action, con) );
-
-			//processing
-			try {
-				ProcessingChain chain = new ProcessingChain(processors, request, response, routingTarget, action);
-				chain.doContinue();
-				
-				//process view
-				//TODO implement as processor
-				ActionViewProcessor processor = actionProcessorFactory.createActionProcessor(routingTarget.getViewProcessorName(), getServletContext()); 
-				processor.processView(request, response, action);
-			}
-			catch (RedirectException e) {
-				doRedirect(request, response, e.getLocalRedirectDestination());
-			}
+		if (action instanceof DatabaseCapable) {
+			log.debug("setting action database");
+			((DatabaseCapable)action).setDatabase(conHolder.getConnection());
 		}
-		catch (Exception e) {
-			handleException(request, response, routingTarget, e);
-		}
-		finally {
-			for (Connection con: connectionList) {
-				try {
-					con.close();
-				}
-				catch (SQLException e) {
-					log.error("SQLException while closing db connection: "+e.getMessage());	//$NON-NLS-1$
-				}
-			}
-		}
-		
-		long finish = System.currentTimeMillis();
-		if (log.isInfoEnabled()) {
-			log.info("page delivery took "+(finish-start)+" ms");
-		}
+
+		if (action instanceof Configurable)
+			((Configurable)action).setContext(getServletConfig(), getServletContext());
 	}
 
 	private void doRedirect(HttpServletRequest request, HttpServletResponse response, String redirectDestination)
@@ -345,74 +347,6 @@ public class Controller extends HttpServlet {
 	}
 	
 	/**
-	 * checks, if we need a DB connection
-	 */
-	private boolean isDbConnectionNeeded(ExecutableAction action, List<Processor> processors) {
-		if (action instanceof DatabaseCapable)
-			return true;
-		
-		boolean need = false;
-		for (Processor pp: processors) {
-			if (pp instanceof DatabaseCapable) {
-				need = true;
-				break;
-			}
-		}
-		
-		return need;
-	}
-
-	/**
-	 * do initialization stuff here.
-	 * 
-	 * @param action	the action instance to be initialized
-	 * @param con		the main database connection
-	 */
-	protected List<Connection> initializeAction(ExecutableAction action, Connection con) {
-		
-		//TODO find a generic way to initialize processors and actions and make processors as well Configurable and AdditionalDatabaseCapable
-		log.debug("initializeAction()");
-		
-		List<Connection> connectionList = new Vector<Connection>();
-		
-		if (action instanceof DatabaseCapable) {
-			log.debug("setting action database");
-			((DatabaseCapable)action).setDatabase(con);
-		}
-
-		//set additional db connections
-		if (action instanceof AdditionalDatabaseCapable)	//TODO implement as processor?
-			connectionList.addAll( initDbConnections( (AdditionalDatabaseCapable) action ) );
-		
-		if (action instanceof Configurable)
-			((Configurable)action).setContext(getServletConfig(), getServletContext());
-
-		return connectionList;
-	}
-
-	private List<Connection> initDbConnections(AdditionalDatabaseCapable action) {
-		List<Connection> connectionList = new Vector<Connection>();
-		
-		for (Entry<String, DbConnectionProvider> e: additionalDbConnectionProviderMap.entrySet()) {
-			String db = e.getKey();
-			DbConnectionProvider prov = e.getValue();
-
-			try {
-				if (action.needsDatabase(db)) {
-					Connection con = prov.getConnection();
-					action.setDatabase(db, con);
-					connectionList.add(con);
-				}
-			}
-			catch (DBConnectionException e1) {
-				log.error("initDbConnections() - DBConnectionException with '"+db+"': "+e1.getMessage(), e1);	//$NON-NLS-1$
-			}
-		}
-		
-		return connectionList;
-	}
-	
-	/**
 	 * get the main db connection
 	 */
 	protected Connection getConnection() throws DBConnectionException {
@@ -420,16 +354,6 @@ public class Controller extends HttpServlet {
 			throw new DBConnectionException("missing db configuration.");
 
 		return mainDbConnectionProvider.getConnection();
-	}
-	
-	protected Connection getConnection(String contectName) throws DBConnectionException {
-		if (null == additionalDbConnectionProviderMap)
-			throw new DBConnectionException("missing db configuration.");
-		
-		DbConnectionProvider prov =  additionalDbConnectionProviderMap.get(contectName);
-		if (prov != null)
-			return prov.getConnection();
-		return null;
 	}
 	
 	/**

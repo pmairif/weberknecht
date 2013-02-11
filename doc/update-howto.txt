@@ -7,6 +7,10 @@
 	
 	- Actions that need a database connection, have to implement
 	  DatabaseCapable. The old method needsDatabase was dropped.
+	  
+	- Support for additional databases was removed. If your application needs
+	  more than one database, just write a custom pre processor, that provides
+	  the actions with the connections they need.
 	
 	- replace any ServletException thrown in actions with ActionException
 	

@@ -30,7 +30,7 @@ public class SimpleRouterTest {
 
 	@Test
 	public void simpleTest1() {
-		RoutingTarget target = router.routeUri("/foo.do");
+		RoutingTarget target = router.routeUri("/foo.do", null);
 		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
 		assertNull(target.getTask());
@@ -38,8 +38,17 @@ public class SimpleRouterTest {
 	}
 
 	@Test
+	public void simpleTest1b() {
+		RoutingTarget target = router.routeUri("", "/foo.do");
+		assertEquals("foo", target.getActionName());
+		assertEquals("do", target.getViewProcessorName());
+		assertNull(target.getTask());
+		assertEquals(new AreaPath(), target.getAreaPath());
+	}
+	
+	@Test
 	public void simpleTest2() {
-		RoutingTarget util = router.routeUri("/bar.data");
+		RoutingTarget util = router.routeUri("/bar.data", null);
 		assertEquals("bar", util.getActionName());
 		assertEquals("data", util.getViewProcessorName());
 		assertNull(util.getTask());
@@ -47,7 +56,7 @@ public class SimpleRouterTest {
 
 	@Test
 	public void testWithUnderscore() {
-		RoutingTarget util = router.routeUri("/bar_foo.data");
+		RoutingTarget util = router.routeUri("/bar_foo.data", null);
 		assertEquals("bar_foo", util.getActionName());
 		assertEquals("data", util.getViewProcessorName());
 		assertNull(util.getTask());
@@ -55,7 +64,7 @@ public class SimpleRouterTest {
 
 	@Test
 	public void testWithDash() {
-		RoutingTarget util = router.routeUri("/bar-foo!add-one.data");
+		RoutingTarget util = router.routeUri("/bar-foo!add-one.data", null);
 		assertEquals("bar-foo", util.getActionName());
 		assertEquals("data", util.getViewProcessorName());
 		assertEquals("add-one", util.getTask());
@@ -63,12 +72,12 @@ public class SimpleRouterTest {
 
 	@Test
 	public void testWithTask() {
-		RoutingTarget util1 = router.routeUri("/foo!sth.do");
+		RoutingTarget util1 = router.routeUri("/foo!sth.do", null);
 		assertEquals("foo", util1.getActionName());
 		assertEquals("do", util1.getViewProcessorName());
 		assertEquals("sth", util1.getTask());
 		
-		RoutingTarget util2 = router.routeUri("/foo!bar.do");
+		RoutingTarget util2 = router.routeUri("/foo!bar.do", null);
 		assertEquals("foo", util2.getActionName());
 		assertEquals("do", util2.getViewProcessorName());
 		assertEquals("bar", util2.getTask());
@@ -76,7 +85,7 @@ public class SimpleRouterTest {
 
 	@Test
 	public void testWithEmptyTask() {
-		RoutingTarget util1 = router.routeUri("/foo!.do");
+		RoutingTarget util1 = router.routeUri("/foo!.do", null);
 		assertEquals("foo", util1.getActionName());
 		assertEquals("do", util1.getViewProcessorName());
 		assertNull(util1.getTask());

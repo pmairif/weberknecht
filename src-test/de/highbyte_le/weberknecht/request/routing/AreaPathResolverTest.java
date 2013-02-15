@@ -8,11 +8,10 @@
  */
 package de.highbyte_le.weberknecht.request.routing;
 
+import static de.highbyte_le.weberknecht.test.TestUtil.readConfig;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.junit.Test;
@@ -235,15 +234,11 @@ public class AreaPathResolverTest {
 		assertEquals(expected, declaration);
 	}
 	
-	private WeberknechtConf readConfig(String filename) throws IOException, ConfigurationException {
-		FileInputStream in = null;
-		try {
-			in = new FileInputStream(new File(filename));
-			return WeberknechtConf.readConfig(in);
-		}
-		finally {
-			if (in != null)
-				in.close();
-		}
+	@Test
+	public void testGetActionDeclarationNull() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-1.xml");
+		AreaPathResolver resolver = new AreaPathResolver(conf);
+		
+		assertNull(resolver.getActionDeclaration(null));
 	}
 }

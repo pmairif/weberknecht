@@ -42,16 +42,16 @@ public class MetaRouterTest {
 	public void testRouteUri() {
 		RoutingTarget targetFoo = new RoutingTarget("foo", "do", null);
 		RoutingTarget targetBar = new RoutingTarget("bar", "do", null);
-		when(r1.routeUri("/foo")).thenReturn(targetFoo);
-		when(r2.routeUri("/bar")).thenReturn(targetBar);
+		when(r1.routeUri("/foo", null)).thenReturn(targetFoo);
+		when(r2.routeUri("/bar", null)).thenReturn(targetBar);
 		
-		assertEquals(targetFoo, router.routeUri("/foo"));
-		assertEquals(targetBar, router.routeUri("/bar"));
-		assertNull(router.routeUri("/foobar"));
+		assertEquals(targetFoo, router.routeUri("/foo", null));
+		assertEquals(targetBar, router.routeUri("/bar", null));
+		assertNull(router.routeUri("/foobar", null));
 		
-		verify(r1, times(1)).routeUri("/foo");
-		verify(r1, times(1)).routeUri("/bar");
-		verify(r2, times(0)).routeUri("/foo");
-		verify(r2, times(1)).routeUri("/bar");
+		verify(r1, times(1)).routeUri("/foo", null);
+		verify(r1, times(1)).routeUri("/bar", null);
+		verify(r2, times(0)).routeUri("/foo", null);
+		verify(r2, times(1)).routeUri("/bar", null);
 	}
 }

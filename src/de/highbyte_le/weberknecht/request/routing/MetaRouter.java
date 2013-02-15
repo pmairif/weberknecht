@@ -34,11 +34,11 @@ public class MetaRouter implements Router {
 	 * @see de.highbyte_le.weberknecht.request.routing.Router#routeUri(java.lang.String)
 	 */
 	@Override
-	public RoutingTarget routeUri(String servletPath) {
+	public RoutingTarget routeUri(String servletPath, String pathInfo) {
 		RoutingTarget target = null;
 		
 		for (Router r: routers) {
-			target = r.routeUri(servletPath);
+			target = r.routeUri(servletPath, pathInfo);
 			if (target != null)
 				break;
 		}

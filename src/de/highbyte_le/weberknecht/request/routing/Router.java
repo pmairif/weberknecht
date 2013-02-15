@@ -24,7 +24,7 @@ public interface Router {
 	 * @return
 	 * 		routing target information or null, if the URI didn't match
 	 */
-	public RoutingTarget routeUri(String servletPath);
+	public RoutingTarget routeUri(String servletPath, String pathInfo);
 	
 	/**
 	 * routers should be able to access the configuration

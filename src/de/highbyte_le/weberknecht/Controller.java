@@ -36,6 +36,7 @@ import de.highbyte_le.weberknecht.db.DefaultWebDbConnectionProvider2;
 import de.highbyte_le.weberknecht.request.Configurable;
 import de.highbyte_le.weberknecht.request.DatabaseCapable;
 import de.highbyte_le.weberknecht.request.ModelHelper;
+import de.highbyte_le.weberknecht.request.actions.ActionNotFoundException;
 import de.highbyte_le.weberknecht.request.actions.ExecutableAction;
 import de.highbyte_le.weberknecht.request.error.DefaultErrorHandler;
 import de.highbyte_le.weberknecht.request.error.ErrorHandler;
@@ -165,9 +166,11 @@ public class Controller extends HttpServlet {
 		DbConnectionHolder conHolder = new DbConnectionHolder(mainDbConnectionProvider);
 		try {
 			Router router = createRouter(conf, conHolder);	//choose router depending on config
-			RoutingTarget routingTarget = router.routeUri(request.getServletPath());
+			RoutingTarget routingTarget = router.routeUri(request.getServletPath(), request.getPathInfo());
 
 			try {
+				if (null == routingTarget)
+					throw new ActionNotFoundException();
 	
 				ModelHelper modelHelper = new ModelHelper(request, getServletContext());
 				modelHelper.setSelf(request);

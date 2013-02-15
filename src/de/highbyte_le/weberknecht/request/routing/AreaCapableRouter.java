@@ -47,10 +47,15 @@ public class AreaCapableRouter implements Router {
 	 * @see de.highbyte_le.weberknecht.request.routing.Router#routeUri(java.lang.String)
 	 */
 	@Override
-	public RoutingTarget routeUri(String servletPath) {
+	public RoutingTarget routeUri(String servletPath, String pathInfo) {
+		StringBuilder b = new StringBuilder(servletPath);
+		if (pathInfo != null)
+			b.append(pathInfo);
+		String combinedPath = b.toString();
+		
 		RoutingTarget target = null;
 		
-		Matcher areaMatcher = pattern.matcher(servletPath);
+		Matcher areaMatcher = pattern.matcher(combinedPath);
 		if (areaMatcher.matches()) {
 			String path = areaMatcher.group(1);
 			String action = areaMatcher.group(2);
@@ -59,9 +64,9 @@ public class AreaCapableRouter implements Router {
 			target = createTarget(areaPath, action);
 		}
 		else {	//check default action
-			Matcher m = pathPattern.matcher(servletPath);
+			Matcher m = pathPattern.matcher(combinedPath);
 			if (m.matches()) {
-				AreaPath areaPath = createPath(servletPath);
+				AreaPath areaPath = createPath(combinedPath);
 				
 				String defaultAction = conf.getDefaultAction(areaPath);
 				if (defaultAction != null)

@@ -39,13 +39,13 @@ public class LocalePrefixRouterTest {
 
 	@Test
 	public void testEmpty() {
-		RoutingTarget target = router.routeUri("");
+		RoutingTarget target = router.routeUri("", null);
 		assertNull(target);
 	}
 	
 	@Test
 	public void simpleTest1() {
-		RoutingTarget target = router.routeUri("/foo.do");
+		RoutingTarget target = router.routeUri("/foo.do", null);
 		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
 		assertEquals(new AreaPath(), target.getAreaPath());
@@ -53,8 +53,17 @@ public class LocalePrefixRouterTest {
 	}
 
 	@Test
+	public void simpleTest1b() {
+		RoutingTarget target = router.routeUri("", "/foo.do");
+		assertEquals("foo", target.getActionName());
+		assertEquals("do", target.getViewProcessorName());
+		assertEquals(new AreaPath(), target.getAreaPath());
+		assertNull(target.getTask());
+	}
+	
+	@Test
 	public void simpleTest2() {
-		RoutingTarget target = router.routeUri("/bar.data");
+		RoutingTarget target = router.routeUri("/bar.data", null);
 		assertEquals("bar", target.getActionName());
 		assertEquals("data", target.getViewProcessorName());
 		assertEquals(new AreaPath(), target.getAreaPath());
@@ -63,7 +72,7 @@ public class LocalePrefixRouterTest {
 
 	@Test
 	public void areaTest1() {
-		RoutingTarget target = router.routeUri("/area/foo.do");
+		RoutingTarget target = router.routeUri("/area/foo.do", null);
 		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
 		assertEquals(new AreaPath("area"), target.getAreaPath());
@@ -71,8 +80,26 @@ public class LocalePrefixRouterTest {
 	}
 
 	@Test
+	public void areaTest1b() {
+		RoutingTarget target = router.routeUri("/area", "/foo.do");
+		assertEquals("foo", target.getActionName());
+		assertEquals("do", target.getViewProcessorName());
+		assertEquals(new AreaPath("area"), target.getAreaPath());
+		assertNull(target.getTask());
+	}
+	
+	@Test
+	public void areaTest1c() {
+		RoutingTarget target = router.routeUri("", "/area/foo.do");
+		assertEquals("foo", target.getActionName());
+		assertEquals("do", target.getViewProcessorName());
+		assertEquals(new AreaPath("area"), target.getAreaPath());
+		assertNull(target.getTask());
+	}
+	
+	@Test
 	public void areaTest2() {
-		RoutingTarget target = router.routeUri("/Foo1/bar.data");
+		RoutingTarget target = router.routeUri("/Foo1/bar.data", null);
 		assertEquals("bar", target.getActionName());
 		assertEquals("data", target.getViewProcessorName());
 		assertEquals(new AreaPath("Foo1"), target.getAreaPath());
@@ -81,7 +108,7 @@ public class LocalePrefixRouterTest {
 
 	@Test
 	public void subAreaTest1() {
-		RoutingTarget target = router.routeUri("/Area/Sub/Action.do");
+		RoutingTarget target = router.routeUri("/Area/Sub/Action.do", null);
 		assertEquals("Action", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
 		assertEquals(new AreaPath("Area", "Sub"), target.getAreaPath());
@@ -90,7 +117,7 @@ public class LocalePrefixRouterTest {
 	
 	@Test
 	public void subAreaTest2() {
-		RoutingTarget target = router.routeUri("/a1/a2/a3/a4/a5/Action.do");
+		RoutingTarget target = router.routeUri("/a1/a2/a3/a4/a5/Action.do", null);
 		assertEquals("Action", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
 		assertEquals(new AreaPath("a1", "a2", "a3", "a4", "a5"), target.getAreaPath());
@@ -99,7 +126,7 @@ public class LocalePrefixRouterTest {
 	
 	@Test
 	public void subAreaTest3() {
-		RoutingTarget target = router.routeUri("/foo/bar/foo/bar.do");
+		RoutingTarget target = router.routeUri("/foo/bar/foo/bar.do", null);
 		assertEquals("bar", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
 		assertEquals(new AreaPath("foo", "bar", "foo"), target.getAreaPath());
@@ -108,7 +135,7 @@ public class LocalePrefixRouterTest {
 	
 	@Test
 	public void subAreaTest4() {
-		RoutingTarget target = router.routeUri("/a1//a2/bar.do");
+		RoutingTarget target = router.routeUri("/a1//a2/bar.do", null);
 		assertEquals("bar", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
 		assertEquals(new AreaPath("a1", "a2"), target.getAreaPath());
@@ -117,7 +144,7 @@ public class LocalePrefixRouterTest {
 	
 	@Test
 	public void testWithUnderscore() {
-		RoutingTarget target = router.routeUri("/bar_foo.data");
+		RoutingTarget target = router.routeUri("/bar_foo.data", null);
 		assertEquals("bar_foo", target.getActionName());
 		assertEquals("data", target.getViewProcessorName());
 		assertEquals(new AreaPath(), target.getAreaPath());
@@ -126,7 +153,7 @@ public class LocalePrefixRouterTest {
 
 	@Test
 	public void testWithDash() {
-		RoutingTarget target = router.routeUri("/bar-foo!add-one.data");
+		RoutingTarget target = router.routeUri("/bar-foo!add-one.data", null);
 		assertEquals("bar-foo", target.getActionName());
 		assertEquals("data", target.getViewProcessorName());
 		assertEquals("add-one", target.getTask());
@@ -135,13 +162,13 @@ public class LocalePrefixRouterTest {
 
 	@Test
 	public void testWithTask() {
-		RoutingTarget target1 = router.routeUri("/foo!sth.do");
+		RoutingTarget target1 = router.routeUri("/foo!sth.do", null);
 		assertEquals("foo", target1.getActionName());
 		assertEquals("do", target1.getViewProcessorName());
 		assertEquals("sth", target1.getTask());
 		assertEquals(new AreaPath(), target1.getAreaPath());
 
-		RoutingTarget target2 = router.routeUri("/foo!bar.do");
+		RoutingTarget target2 = router.routeUri("/foo!bar.do", null);
 		assertEquals("foo", target2.getActionName());
 		assertEquals("do", target2.getViewProcessorName());
 		assertEquals("bar", target2.getTask());
@@ -150,13 +177,13 @@ public class LocalePrefixRouterTest {
 
 	@Test
 	public void testWithTaskAndArea() {
-		RoutingTarget target1 = router.routeUri("/foo-bar/foo!sth.do");
+		RoutingTarget target1 = router.routeUri("/foo-bar/foo!sth.do", null);
 		assertEquals("foo", target1.getActionName());
 		assertEquals("do", target1.getViewProcessorName());
 		assertEquals("sth", target1.getTask());
 		assertEquals(new AreaPath("foo-bar"), target1.getAreaPath());
 		
-		RoutingTarget target2 = router.routeUri("/fooo/foo!bar.do");
+		RoutingTarget target2 = router.routeUri("/fooo/foo!bar.do", null);
 		assertEquals("foo", target2.getActionName());
 		assertEquals("do", target2.getViewProcessorName());
 		assertEquals("bar", target2.getTask());
@@ -165,7 +192,7 @@ public class LocalePrefixRouterTest {
 	
 	@Test
 	public void testWithEmptyTask() {
-		RoutingTarget target = router.routeUri("/foo!.do");
+		RoutingTarget target = router.routeUri("/foo!.do", null);
 		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
 		assertNull(target.getTask());
@@ -176,7 +203,33 @@ public class LocalePrefixRouterTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang.xml");
 		router.setConfig(conf);
 		
-		RoutingTarget target = router.routeUri("/de/foo.do");
+		RoutingTarget target = router.routeUri("/de/foo.do", null);
+		assertEquals(new AreaPath(), target.getAreaPath());
+		assertEquals("foo", target.getActionName());
+		assertEquals("do", target.getViewProcessorName());
+		assertEquals(new Locale("de"), target.getLocale());
+		assertNull(target.getTask());
+	}
+	
+	@Test
+	public void testLocaleObligatoryWithLocaleDe2() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-lang.xml");
+		router.setConfig(conf);
+		
+		RoutingTarget target = router.routeUri("/de", "/foo.do");
+		assertEquals(new AreaPath(), target.getAreaPath());
+		assertEquals("foo", target.getActionName());
+		assertEquals("do", target.getViewProcessorName());
+		assertEquals(new Locale("de"), target.getLocale());
+		assertNull(target.getTask());
+	}
+	
+	@Test
+	public void testLocaleObligatoryWithLocaleDe3() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-lang.xml");
+		router.setConfig(conf);
+		
+		RoutingTarget target = router.routeUri("", "/de/foo.do");
 		assertEquals(new AreaPath(), target.getAreaPath());
 		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
@@ -189,7 +242,7 @@ public class LocalePrefixRouterTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang.xml");
 		router.setConfig(conf);
 		
-		RoutingTarget target = router.routeUri("/de/bar/foo.do");
+		RoutingTarget target = router.routeUri("/de/bar/foo.do", null);
 		assertEquals(new AreaPath("bar"), target.getAreaPath());
 		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
@@ -202,7 +255,7 @@ public class LocalePrefixRouterTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang.xml");
 		router.setConfig(conf);
 		
-		RoutingTarget target = router.routeUri("/en_US/foo.do");
+		RoutingTarget target = router.routeUri("/en_US/foo.do", null);
 		assertEquals(new AreaPath(), target.getAreaPath());
 		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
@@ -218,10 +271,10 @@ public class LocalePrefixRouterTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang.xml");
 		router.setConfig(conf);
 		
-		RoutingTarget target = router.routeUri("/foo.do");
+		RoutingTarget target = router.routeUri("/foo.do", null);
 		assertNull(target);
 
-		target = router.routeUri("/bar/foo.do");
+		target = router.routeUri("/bar/foo.do", null);
 		assertNull(target);
 	}
 	
@@ -233,7 +286,7 @@ public class LocalePrefixRouterTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang.xml");
 		router.setConfig(conf);
 		
-		RoutingTarget target = router.routeUri("/fr/foo.do");
+		RoutingTarget target = router.routeUri("/fr/foo.do", null);
 		assertNull(target);
 	}
 	
@@ -242,7 +295,7 @@ public class LocalePrefixRouterTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang-optional.xml");
 		router.setConfig(conf);
 		
-		RoutingTarget target = router.routeUri("/de/foo.do");
+		RoutingTarget target = router.routeUri("/de/foo.do", null);
 		assertEquals(new AreaPath(), target.getAreaPath());
 		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
@@ -255,7 +308,7 @@ public class LocalePrefixRouterTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang-optional.xml");
 		router.setConfig(conf);
 		
-		RoutingTarget target = router.routeUri("/de_CH/foo.do");
+		RoutingTarget target = router.routeUri("/de_CH/foo.do", null);
 		assertEquals(new AreaPath(), target.getAreaPath());
 		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
@@ -268,7 +321,7 @@ public class LocalePrefixRouterTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang-optional.xml");
 		router.setConfig(conf);
 		
-		RoutingTarget target = router.routeUri("/de_CH/en/foo.do");
+		RoutingTarget target = router.routeUri("/de_CH/en/foo.do", null);
 		assertEquals(new AreaPath("en"), target.getAreaPath());
 		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
@@ -281,7 +334,7 @@ public class LocalePrefixRouterTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang-optional.xml");
 		router.setConfig(conf);
 		
-		RoutingTarget target = router.routeUri("/foo.do");
+		RoutingTarget target = router.routeUri("/foo.do", null);
 		assertEquals(new AreaPath(), target.getAreaPath());
 		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
@@ -294,7 +347,7 @@ public class LocalePrefixRouterTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang-optional.xml");
 		router.setConfig(conf);
 		
-		RoutingTarget target = router.routeUri("/bar/foo.do");
+		RoutingTarget target = router.routeUri("/bar/foo.do", null);
 		assertEquals(new AreaPath("bar"), target.getAreaPath());
 		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
@@ -310,7 +363,7 @@ public class LocalePrefixRouterTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang-optional.xml");
 		router.setConfig(conf);
 		
-		RoutingTarget target = router.routeUri("/fr/foo.do");
+		RoutingTarget target = router.routeUri("/fr/foo.do", null);
 		assertEquals(new AreaPath("fr"), target.getAreaPath());
 		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
@@ -323,7 +376,7 @@ public class LocalePrefixRouterTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang-trim.xml");
 		router.setConfig(conf);
 		
-		RoutingTarget target = router.routeUri("/de/foo.do");
+		RoutingTarget target = router.routeUri("/de/foo.do", null);
 		assertEquals(new AreaPath(), target.getAreaPath());
 		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
@@ -350,19 +403,19 @@ public class LocalePrefixRouterTest {
 		router.setConfig(conf);
 
 		{	//expect default action
-			RoutingTarget target = router.routeUri("/");
+			RoutingTarget target = router.routeUri("/", null);
 			assertEquals("foo", target.getActionName());
 			assertEquals("do", target.getViewProcessorName());
 			assertNull(target.getTask());
 		}
 
 		{	//no default action declared
-			RoutingTarget target = router.routeUri("/a1/");
+			RoutingTarget target = router.routeUri("/a1/", null);
 			assertNull(target);
 		}
 		
 		{	//no default action declared
-			RoutingTarget target = router.routeUri("/de/a1/");
+			RoutingTarget target = router.routeUri("/de/a1/", null);
 			assertNull(target);
 		}
 	}
@@ -373,14 +426,14 @@ public class LocalePrefixRouterTest {
 		router.setConfig(conf);
 		
 		{	//expect default action
-			RoutingTarget target = router.routeUri("/");
+			RoutingTarget target = router.routeUri("/", null);
 			assertEquals("foo", target.getActionName());
 			assertEquals("do", target.getViewProcessorName());
 			assertNull(target.getTask());
 		}
 		
 		{	//same with locale v1
-			RoutingTarget target = router.routeUri("/de/");
+			RoutingTarget target = router.routeUri("/de/", null);
 			assertEquals("foo", target.getActionName());
 			assertEquals("do", target.getViewProcessorName());
 			assertNull(target.getTask());
@@ -388,7 +441,7 @@ public class LocalePrefixRouterTest {
 		}
 		
 		{	//same with locale v2
-			RoutingTarget target = router.routeUri("/de");
+			RoutingTarget target = router.routeUri("/de", null);
 			assertEquals("foo", target.getActionName());
 			assertEquals("do", target.getViewProcessorName());
 			assertNull(target.getTask());
@@ -396,12 +449,12 @@ public class LocalePrefixRouterTest {
 		}
 		
 		{	//no default action declared
-			RoutingTarget target = router.routeUri("/a1/");
+			RoutingTarget target = router.routeUri("/a1/", null);
 			assertNull(target);
 		}
 		
 		{	//no default action declared
-			RoutingTarget target = router.routeUri("/de/a1/");
+			RoutingTarget target = router.routeUri("/de/a1/", null);
 			assertNull(target);
 		}
 	}
@@ -412,19 +465,19 @@ public class LocalePrefixRouterTest {
 		router.setConfig(conf);
 		
 		{	//no default action declared
-			RoutingTarget target = router.routeUri("/");
+			RoutingTarget target = router.routeUri("/", null);
 			assertNull(target);
 		}
 		
 		{	//expect default action
-			RoutingTarget target = router.routeUri("/a1/");
+			RoutingTarget target = router.routeUri("/a1/", null);
 			assertEquals("bar1", target.getActionName());
 			assertEquals("data", target.getViewProcessorName());
 			assertNull(target.getTask());
 		}
 		
 		{	//without trailing slash
-			RoutingTarget target = router.routeUri("/a1");
+			RoutingTarget target = router.routeUri("/a1", null);
 			assertEquals("bar1", target.getActionName());
 			assertEquals("data", target.getViewProcessorName());
 			assertNull(target.getTask());
@@ -437,7 +490,7 @@ public class LocalePrefixRouterTest {
 		router.setConfig(conf);
 		
 		{	//expect default action
-			RoutingTarget target = router.routeUri("/");
+			RoutingTarget target = router.routeUri("/", null);
 			assertEquals("bar1", target.getActionName());
 			assertEquals("do", target.getViewProcessorName());
 			assertEquals("foo", target.getTask());
@@ -450,7 +503,7 @@ public class LocalePrefixRouterTest {
 		router.setConfig(conf);
 		
 		{	//expect default action
-			RoutingTarget target = router.routeUri("/");
+			RoutingTarget target = router.routeUri("/", null);
 			assertEquals("bar1", target.getActionName());
 			assertEquals("do", target.getViewProcessorName());
 			assertNull(target.getTask());

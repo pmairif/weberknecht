@@ -32,7 +32,7 @@ public class DbUsingRouter implements Router, DatabaseCapable {
 	 * @see de.highbyte_le.weberknecht.request.routing.Router#routeUri(java.lang.String)
 	 */
 	@Override
-	public RoutingTarget routeUri(String servletPath) {
+	public RoutingTarget routeUri(String servletPath, String pathInfo) {
 		return null;
 	}
 

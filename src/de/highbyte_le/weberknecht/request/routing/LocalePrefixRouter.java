@@ -47,11 +47,15 @@ public class LocalePrefixRouter implements Router {
 	 * @see de.highbyte_le.weberknecht.request.routing.Router#routeUri(java.lang.String)
 	 */
 	@Override
-	public RoutingTarget routeUri(String servletPath) {
+	public RoutingTarget routeUri(String servletPath, String pathInfo) {
 		try {
 			RoutingTarget target = null;
+
+			StringBuilder b = new StringBuilder(servletPath);
+			if (pathInfo != null)
+				b.append(pathInfo);
 			
-			Matcher areaMatcher = pattern.matcher(servletPath);
+			Matcher areaMatcher = pattern.matcher(b.toString());
 			if (areaMatcher.matches()) {
 				String path = areaMatcher.group(1);
 				String action = areaMatcher.group(2);

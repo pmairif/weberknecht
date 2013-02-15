@@ -10,12 +10,13 @@ next (1.0):
 	- AdditionalDatabaseCapable removed.
 	- generic beans removed
 	- ReqUtil removed
-	- AreaCapableRouter now default
+	- AreaCapableRouter is now default
 	- MetaRouter introduced and ability to use more than one router
 	- sub areas introduced
-	- router interface extended by setConfig method
+	- router interface changed
 	- router not shared across requests
 	- routers can implement DatabaseCapable and Configurable
+	- now it is possible to use the controller servlet with prefix mapping  
 	- LocalePrefixRouter and Localizable added
 	- LocaleMatcher
 	- actions don't throw ServletExceptions any more.
@@ -31,7 +32,7 @@ next (1.0):
 	- syntax of weberknecht.xml changed
 	- error handlers
 	- error pages, configured via web.xml are used
-	- default actions
+	- default actions for areas
 
 0.12.2:
 	- bugfix: fixed null pointer exception, when routing didn't match.

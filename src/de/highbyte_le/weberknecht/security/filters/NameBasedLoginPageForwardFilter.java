@@ -32,6 +32,7 @@ import de.highbyte_le.weberknecht.security.UserAuthentication;
  * forward to login page, if user is not authenticated.
  */
 @SuppressWarnings("nls")
+@Deprecated
 public class NameBasedLoginPageForwardFilter implements Filter {
 	@Override
 	public void init(FilterConfig config) {

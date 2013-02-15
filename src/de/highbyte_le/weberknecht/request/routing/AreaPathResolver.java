@@ -74,6 +74,9 @@ public class AreaPathResolver {
 	 * get the matching action declaration
 	 */
 	public ActionDeclaration getActionDeclaration(RoutingTarget routingTarget) {
+		if (null == routingTarget)
+			return null;
+		
 		AreaPath path = routingTarget.getAreaPath();
 		String actionName = routingTarget.getActionName();
 		return getActionDeclaration(path, actionName);

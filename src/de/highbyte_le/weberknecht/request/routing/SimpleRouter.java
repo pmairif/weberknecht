@@ -1,10 +1,9 @@
 /*
  * SimpleRouter.java (weberknecht)
  *
- * Copyright 2011 Patrick Mairif.
+ * Copyright 2011-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  *
- * created: 09.12.2011
  * tabstop=4, charset=UTF-8
  */
 package de.highbyte_le.weberknecht.request.routing;
@@ -27,10 +26,14 @@ public class SimpleRouter implements Router {
 	 * @see de.highbyte_le.weberknecht.request.routing.Router#routeUri(java.lang.String)
 	 */
 	@Override
-	public RoutingTarget routeUri(String servletPath) {
+	public RoutingTarget routeUri(String servletPath, String pathInfo) {
 		RoutingTarget target = null;
 		
-		Matcher m = contextPathActionPattern.matcher(servletPath);
+		StringBuilder b = new StringBuilder(servletPath);
+		if (pathInfo != null)
+			b.append(pathInfo);
+		
+		Matcher m = contextPathActionPattern.matcher(b.toString());
 		if (m.matches()) {
 			String area = null;				//simple router doesn't support areas
 			String baseName = m.group(1);

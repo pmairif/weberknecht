@@ -11,7 +11,6 @@ package de.highbyte_le.weberknecht;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map.Entry;
@@ -40,6 +39,7 @@ import de.highbyte_le.weberknecht.db.DbConnectionProvider;
 import de.highbyte_le.weberknecht.db.DefaultWebDbConnectionProvider2;
 import de.highbyte_le.weberknecht.request.DatabaseCapable;
 import de.highbyte_le.weberknecht.request.ModelHelper;
+import de.highbyte_le.weberknecht.request.actions.ActionNotFoundException;
 import de.highbyte_le.weberknecht.request.actions.ExecutableAction;
 import de.highbyte_le.weberknecht.request.error.DefaultErrorHandler;
 import de.highbyte_le.weberknecht.request.error.ErrorHandler;
@@ -80,37 +80,47 @@ public class ControllerFilter implements Filter {	//TODO join with Controller
 	private final Log log = LogFactory.getLog(ControllerFilter.class);
 
 	/**
-	 * initialization of the controller
+	 * filter initialization
 	 */
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		try {
-			conf = WeberknechtConf.readConfig(filterConfig.getServletContext());
-			servletContext = filterConfig.getServletContext();
-			
-			//actions
-			this.pathResolver = new AreaPathResolver(conf);
-			
-			//action processors
-			actionProcessorFactory = new ActionViewProcessorFactory();
-			//register action processors from config
-			for (Entry<String, String> e: conf.getActionProcessorSuffixMap().entrySet()) {
-				actionProcessorFactory.registerProcessor(e.getKey(), e.getValue());
-			}
+			WeberknechtConf conf = WeberknechtConf.readConfig(filterConfig.getServletContext());
+			ServletContext servletContext = filterConfig.getServletContext();
 			
 			//main DB
+			DbConnectionProvider dbConnectionProvider = null;
 			try {
-				mainDbConnectionProvider = new DefaultWebDbConnectionProvider2("jdbc/mydb");
+				dbConnectionProvider = new DefaultWebDbConnectionProvider2("jdbc/mydb");
 			}
 			catch (NamingException e) {
 				if (log.isInfoEnabled())
 					log.info("init() - jdbc/mydb not configured ("+e.getMessage()+")");	//$NON-NLS-1$
 			}
+			
+			init(conf, servletContext, dbConnectionProvider);
 		}
 		catch (Exception e) {
 			log.error("init() - Exception: "+e.getMessage(), e);
 			throw new ServletException("internal error", e);
 		}
+	}
+	
+	protected void init(WeberknechtConf conf, ServletContext servletContext, DbConnectionProvider dbConnectionProvider) throws ClassNotFoundException {
+		this.conf = conf;
+		this.servletContext = servletContext;
+		
+		//actions
+		this.pathResolver = new AreaPathResolver(conf);
+		
+		//action processors
+		actionProcessorFactory = new ActionViewProcessorFactory();
+		//register action processors from config
+		for (Entry<String, String> e: conf.getActionProcessorSuffixMap().entrySet()) {
+			actionProcessorFactory.registerProcessor(e.getKey(), e.getValue());
+		}
+		
+		this.mainDbConnectionProvider = dbConnectionProvider;
 	}
 
 	Router createRouter(WeberknechtConf conf, DbConnectionHolder conHolder) throws InstantiationException, IllegalAccessException,
@@ -183,16 +193,26 @@ public class ControllerFilter implements Filter {	//TODO join with Controller
 		try {
 			Router router = createRouter(conf, conHolder);	//choose router depending on config
 			RoutingTarget routingTarget = router.routeUri(httpRequest.getServletPath(), httpRequest.getPathInfo());
-			if (null == routingTarget)
+			if (null == routingTarget) {
 				filterChain.doFilter(request, response);
+			}
 			else {
 				executeAction(httpRequest, httpResponse, conHolder, routingTarget);
+
+				long finish = System.currentTimeMillis();
+				if (log.isInfoEnabled()) {
+					log.info("service() - page delivery of '"+httpRequest.getRequestURI()+"' took "+(finish-start)+" ms");
+				}
 			}
+		}
+		catch (ActionNotFoundException e) {
+			//TODO eleganter wäre es schon, wenn der router endgültig entscheidet, ob es die action gibt oder nicht 
+			filterChain.doFilter(request, response);
 		}
 		catch (Exception e1) {
 			try {
 				log.error("service() - exception while error handler instantiation: "+e1.getMessage(), e1);	//$NON-NLS-1$
-				httpResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//call error page 500
+				httpResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//call error page 500, TODO wird das vielleicht eh gemacht?
 			}
 			catch (IOException e) {
 				log.error("service() - IOException: "+e.getMessage(), e);	//$NON-NLS-1$
@@ -207,21 +227,10 @@ public class ControllerFilter implements Filter {	//TODO join with Controller
 				log.error("service() - SQLException while closing db connection: "+e.getMessage());	//$NON-NLS-1$
 			}
 		}
-		
-		long finish = System.currentTimeMillis();
-		if (log.isInfoEnabled()) {
-			log.info("service() - page delivery took "+(finish-start)+" ms");
-		}
 	}
 
-	/**
-	 * @param httpRequest
-	 * @param httpResponse
-	 * @param conHolder
-	 * @param routingTarget
-	 */
 	private void executeAction(HttpServletRequest httpRequest, HttpServletResponse httpResponse,
-			DbConnectionHolder conHolder, RoutingTarget routingTarget) {
+			DbConnectionHolder conHolder, RoutingTarget routingTarget) throws ActionNotFoundException {
 		try {
 
 			ModelHelper modelHelper = new ModelHelper(httpRequest, servletContext);
@@ -252,6 +261,9 @@ public class ControllerFilter implements Filter {	//TODO join with Controller
 			catch (RedirectException e) {
 				doRedirect(httpRequest, httpResponse, e.getLocalRedirectDestination());
 			}
+		}
+		catch (ActionNotFoundException e) {
+			throw e;
 		}
 		catch (Exception e) {
 			handleException(httpRequest, httpResponse, routingTarget, e);
@@ -312,7 +324,7 @@ public class ControllerFilter implements Filter {	//TODO join with Controller
 	@SuppressWarnings("unchecked")
 	protected void handleException(HttpServletRequest request, HttpServletResponse response,
 			RoutingTarget routingTarget, Exception exception) {
-		Connection con = null;
+		DbConnectionHolder dbConHolder = new DbConnectionHolder(mainDbConnectionProvider); 
 		try {
 			//get error handler
 			Class<? extends ErrorHandler> errHandlerClass = DefaultErrorHandler.class;
@@ -323,13 +335,7 @@ public class ControllerFilter implements Filter {	//TODO join with Controller
 			ErrorHandler handler = errHandlerClass.newInstance();
 			
 			//initialize error handler
-			if (handler instanceof DatabaseCapable) {
-				con = getConnection();
-				((DatabaseCapable) handler).setDatabase(con);
-			}
-			//TODO irgendwie mit FilterConfig lösen
-//			if (handler instanceof Configurable)
-//				((Configurable)handler).setContext(getServletConfig(), getServletContext());
+			initializeObject(handler, dbConHolder);
 
 			//handle exception
 			handler.handleException(exception, request, routingTarget);
@@ -362,8 +368,7 @@ public class ControllerFilter implements Filter {	//TODO join with Controller
 		}
 		finally {
 			try {
-				if (con != null)
-					con.close();
+				dbConHolder.close();
 			}
 			catch (SQLException e) {
 				log.error("SQLException while closing db connection: "+e.getMessage());	//$NON-NLS-1$
@@ -371,37 +376,11 @@ public class ControllerFilter implements Filter {	//TODO join with Controller
 		}
 	}
 	
-	/**
-	 * get the main db connection
-	 */
-	protected Connection getConnection() throws DBConnectionException {
-		if (null == mainDbConnectionProvider)
-			throw new DBConnectionException("missing db configuration.");
-
-		return mainDbConnectionProvider.getConnection();
-	}
-	
-	/**
-	 * for testing purposes only
-	 */
-	protected void setConf(WeberknechtConf conf) {
-		this.conf = conf;
-	}
-	
-	/**
-	 * for testing purposes only
-	 * @param pathResolver the pathResolver to set
-	 */
-	protected void setPathResolver(AreaPathResolver pathResolver) {
-		this.pathResolver = pathResolver;
-	}
-
 	/* (non-Javadoc)
 	 * @see javax.servlet.Filter#destroy()
 	 */
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
-		
+		//
 	}
 }

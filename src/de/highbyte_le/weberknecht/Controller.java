@@ -18,6 +18,7 @@ import java.util.Map.Entry;
 import java.util.Vector;
 
 import javax.naming.NamingException;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -69,6 +70,8 @@ public class Controller extends HttpServlet {
 	
 	private WeberknechtConf conf;
 	
+	private ServletContext servletContext; //TODO check, if servlet context can be shared across requests
+
 	/**
 	 * Logger for this class
 	 */
@@ -80,32 +83,44 @@ public class Controller extends HttpServlet {
 	@Override
 	public void init() throws ServletException {
 		try {
-			conf = WeberknechtConf.readConfig(getServletContext());
-			
-			//actions
-			this.pathResolver = new AreaPathResolver(conf);
-			
-			//action processors
-			actionProcessorFactory = new ActionViewProcessorFactory();
-			//register action processors from config
-			for (Entry<String, String> e: conf.getActionProcessorSuffixMap().entrySet()) {
-				actionProcessorFactory.registerProcessor(e.getKey(), e.getValue());
-			}
+			ServletContext servletContext = getServletContext();
+			WeberknechtConf conf = WeberknechtConf.readConfig(servletContext);
 			
 			//main DB
+			DbConnectionProvider dbConnectionProvider = null;
 			try {
-				mainDbConnectionProvider = new DefaultWebDbConnectionProvider2("jdbc/mydb");
+				dbConnectionProvider = new DefaultWebDbConnectionProvider2("jdbc/mydb");
 			}
 			catch (NamingException e) {
 				if (log.isInfoEnabled())
 					log.info("init() - jdbc/mydb not configured ("+e.getMessage()+")");	//$NON-NLS-1$
 			}
+			
+			init(conf, servletContext, dbConnectionProvider);
 		}
 		catch (Exception e) {
 			log.error("init() - Exception: "+e.getMessage(), e);
 			throw new ServletException("internal error", e);
 		}
 	}
+
+	protected void init(WeberknechtConf conf, ServletContext servletContext, DbConnectionProvider dbConnectionProvider) throws ClassNotFoundException {
+		this.conf = conf;
+		this.servletContext = servletContext;
+		
+		//actions
+		this.pathResolver = new AreaPathResolver(conf);
+		
+		//action processors
+		actionProcessorFactory = new ActionViewProcessorFactory();
+		//register action processors from config
+		for (Entry<String, String> e: conf.getActionProcessorSuffixMap().entrySet()) {
+			actionProcessorFactory.registerProcessor(e.getKey(), e.getValue());
+		}
+		
+		this.mainDbConnectionProvider = dbConnectionProvider;
+	}
+
 
 	Router createRouter(WeberknechtConf conf, DbConnectionHolder conHolder) throws InstantiationException, IllegalAccessException,
 			ClassNotFoundException, DBConnectionException {
@@ -172,7 +187,7 @@ public class Controller extends HttpServlet {
 				if (null == routingTarget)
 					throw new ActionNotFoundException();
 	
-				ModelHelper modelHelper = new ModelHelper(request, getServletContext());
+				ModelHelper modelHelper = new ModelHelper(request, servletContext);
 				modelHelper.setSelf(request);
 				
 				ExecutableAction action = pathResolver.resolveAction(routingTarget);
@@ -194,7 +209,7 @@ public class Controller extends HttpServlet {
 					
 					//process view
 					//TODO implement as processor
-					ActionViewProcessor processor = actionProcessorFactory.createActionProcessor(routingTarget.getViewProcessorName(), getServletContext()); 
+					ActionViewProcessor processor = actionProcessorFactory.createActionProcessor(routingTarget.getViewProcessorName(), servletContext); 
 					processor.processView(request, response, action);
 				}
 				catch (RedirectException e) {
@@ -269,7 +284,7 @@ public class Controller extends HttpServlet {
 		}
 
 		if (action instanceof Configurable)
-			((Configurable)action).setContext(getServletConfig(), getServletContext());
+			((Configurable)action).setContext(getServletConfig(), servletContext);
 	}
 
 	private void doRedirect(HttpServletRequest request, HttpServletResponse response, String redirectDestination)
@@ -283,7 +298,8 @@ public class Controller extends HttpServlet {
 	@SuppressWarnings("unchecked")
 	protected void handleException(HttpServletRequest request, HttpServletResponse response,
 			RoutingTarget routingTarget, Exception exception) {
-		Connection con = null;
+
+		DbConnectionHolder conHolder = new DbConnectionHolder(mainDbConnectionProvider);
 		try {
 			//get error handler
 			Class<? extends ErrorHandler> errHandlerClass = DefaultErrorHandler.class;
@@ -294,19 +310,14 @@ public class Controller extends HttpServlet {
 			ErrorHandler handler = errHandlerClass.newInstance();
 			
 			//initialize error handler
-			if (handler instanceof DatabaseCapable) {
-				con = getConnection();
-				((DatabaseCapable) handler).setDatabase(con);
-			}
-			if (handler instanceof Configurable)
-				((Configurable)handler).setContext(getServletConfig(), getServletContext());
+			initializeObject(handler, conHolder);
 
 			//handle exception
 			handler.handleException(exception, request, routingTarget);
 			
 			//process view, respecting requested content type
 			AutoViewProcessor processor = new AutoViewProcessor();
-			processor.setServletContext(getServletContext());
+			processor.setServletContext(servletContext);
 			processor.setActionViewProcessorFactory(actionProcessorFactory);
 			boolean view = processor.processView(request, response, handler);
 
@@ -332,8 +343,7 @@ public class Controller extends HttpServlet {
 		}
 		finally {
 			try {
-				if (con != null)
-					con.close();
+				conHolder.close();
 			}
 			catch (SQLException e) {
 				log.error("SQLException while closing db connection: "+e.getMessage());	//$NON-NLS-1$

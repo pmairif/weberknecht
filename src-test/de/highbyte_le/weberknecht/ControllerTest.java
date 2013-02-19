@@ -8,13 +8,22 @@
  */
 package de.highbyte_le.weberknecht;
 
-import static org.mockito.Mockito.*;
+import static de.highbyte_le.weberknecht.test.TestUtil.readConfig;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +43,7 @@ import de.highbyte_le.weberknecht.request.routing.SimpleRouter;
 import de.highbyte_le.weberknecht.test.DbUsingRouter;
 import de.highbyte_le.weberknecht.test.DummyProcessor1;
 import de.highbyte_le.weberknecht.test.DummyProcessor2;
+import de.highbyte_le.weberknecht.test.MockAction;
 
 /**
  * Testing Controller
@@ -46,28 +56,27 @@ public class ControllerTest {
 	
 	private DbConnectionHolder conHolder;
 	
+	private HttpServletRequest request;
+	private HttpServletResponse response;
+	private ServletContext servletContext;
+
 	@Before
 	public void setUp() throws Exception {
 		this.controller = new Controller();
 		conHolder = mock(DbConnectionHolder.class);
 		
-		WeberknechtConf conf = readConf("test-data/weberknecht-4.xml");
+		WeberknechtConf conf = readConfig("test-data/weberknecht-4.xml");
 		controller.setConf(conf);
 		controller.setPathResolver(new AreaPathResolver(conf));
+
+		servletContext = mock(ServletContext.class);
+
+		request = mock(HttpServletRequest.class);
+		response = mock(HttpServletResponse.class);
+		
+		MockAction.setCallCount(0);
 	}
 
-	private WeberknechtConf readConf(String filename) throws ConfigurationException, IOException {
-		FileInputStream in = null;
-		try {
-			in = new FileInputStream(new File(filename));
-			return WeberknechtConf.readConfig(in);
-		}
-		finally {
-			if (in != null)
-				in.close();
-		}
-	}
-	
 	@Test
 	public void testSetupProcessorsDefaultFoo() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		List<Processor> processors = controller.setupProcessors(new RoutingTarget(new AreaPath(), "foo", null, null));
@@ -117,21 +126,21 @@ public class ControllerTest {
 	
 	@Test
 	public void testCreateRouterDefault() throws Exception {
-		WeberknechtConf conf = readConf("test-data/weberknecht-1.xml");
+		WeberknechtConf conf = readConfig("test-data/weberknecht-1.xml");
 		Router router = controller.createRouter(conf, conHolder);
 		assertTrue(router instanceof AreaCapableRouter);
 	}
 	
 	@Test
 	public void testCreateRouter1() throws Exception {
-		WeberknechtConf conf = readConf("test-data/weberknecht-router1.xml");
+		WeberknechtConf conf = readConfig("test-data/weberknecht-router1.xml");
 		Router router = controller.createRouter(conf, conHolder);
 		assertTrue(router instanceof SimpleRouter);
 	}
 
 	@Test
 	public void testCreateRouter2() throws Exception {
-		WeberknechtConf conf = readConf("test-data/weberknecht-router2.xml");
+		WeberknechtConf conf = readConfig("test-data/weberknecht-router2.xml");
 		Router router = controller.createRouter(conf, conHolder);
 		assertTrue(router instanceof MetaRouter);
 		MetaRouter metaRouter = (MetaRouter) router;
@@ -144,10 +153,45 @@ public class ControllerTest {
 
 	@Test
 	public void testCreateRouterWithDb() throws Exception {
-		WeberknechtConf conf = readConf("test-data/weberknecht-router3.xml");
+		WeberknechtConf conf = readConfig("test-data/weberknecht-router3.xml");
 		Router router = controller.createRouter(conf, conHolder);
 		assertTrue(router instanceof DbUsingRouter);
 		
 		verify(conHolder, atLeast(1)).getConnection();
 	}
+	
+	/**
+	 * action is executed
+	 */
+	@Test
+	public void testDoFilterActionExecuted() throws IOException, ServletException, ConfigurationException, ClassNotFoundException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-controller-test.xml");
+		controller.init(conf, servletContext, null);
+
+		when(request.getServletPath()).thenReturn("/foo.do");
+		when(request.getPathInfo()).thenReturn(null);
+		
+		controller.service(request, response);
+		
+		//action was executed
+		assertEquals(1, MockAction.getCallCount());
+	}
+
+	/**
+	 * router found no target, no action executed
+	 */
+	@Test
+	public void testDoFilterActionNotExecuted() throws IOException, ServletException, ConfigurationException, ClassNotFoundException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-controller-test.xml");
+		controller.init(conf, servletContext, null);
+
+		when(request.getServletPath()).thenReturn("/xyz");
+		when(request.getPathInfo()).thenReturn(null);
+		
+		controller.service(request, response);
+		
+		//no action executed
+		assertEquals(0, MockAction.getCallCount());
+	}
+
 }

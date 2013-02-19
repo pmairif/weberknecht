@@ -27,7 +27,7 @@ import de.highbyte_le.weberknecht.request.actions.ExecutableAction;
 /**
  * resolve paths
  *
- * @author rick
+ * @author pmairif
  */
 public class AreaPathResolver {
 

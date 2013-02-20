@@ -164,6 +164,10 @@ public class ControllerCore {
 	
 	public void executeAction(HttpServletRequest httpRequest, HttpServletResponse httpResponse,
 			DbConnectionHolder conHolder, RoutingTarget routingTarget) throws ActionNotFoundException {
+
+		if (null == routingTarget)
+			throw new ActionNotFoundException();
+
 		try {
 
 			ModelHelper modelHelper = new ModelHelper(httpRequest, servletContext);

@@ -19,6 +19,8 @@ import java.sql.SQLException;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.highbyte_le.weberknecht.conf.ConfigurationException;
+
 /**
  * @author pmairif
  */
@@ -43,13 +45,13 @@ public class DbConnectionHolderTest {
 	 * Test method for {@link de.highbyte_le.weberknecht.db.DbConnectionHolder#getConnection()}.
 	 */
 	@Test
-	public void testGetConnectionOnceCalled() throws DBConnectionException {
+	public void testGetConnectionOnceCalled() throws DBConnectionException, ConfigurationException {
 		holder.getConnection();
 		verify(provider, times(1)).getConnection();
 	}
 
 	@Test
-	public void testGetConnectionTwiceCalled() throws DBConnectionException {
+	public void testGetConnectionTwiceCalled() throws DBConnectionException, ConfigurationException {
 		holder.getConnection();
 		holder.getConnection();
 		verify(provider, times(1)).getConnection();
@@ -70,10 +72,14 @@ public class DbConnectionHolderTest {
 	}
 
 	@Test
-	public void testCloseWithConnection() throws SQLException, DBConnectionException {
+	public void testCloseWithConnection() throws SQLException, DBConnectionException, ConfigurationException {
 		holder.getConnection();
 		holder.close();
 		verify(con, times(1)).close();
 	}
-	
+
+	@Test(expected=ConfigurationException.class)
+	public void testGetConnectionWithoutConnectionProvider() throws DBConnectionException, ConfigurationException {
+		new DbConnectionHolder(null).getConnection();
+	}
 }

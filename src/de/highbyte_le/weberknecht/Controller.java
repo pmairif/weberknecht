@@ -28,6 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import de.highbyte_le.weberknecht.conf.ActionDeclaration;
+import de.highbyte_le.weberknecht.conf.ConfigurationException;
 import de.highbyte_le.weberknecht.conf.ProcessorList;
 import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 import de.highbyte_le.weberknecht.db.DBConnectionException;
@@ -123,7 +124,7 @@ public class Controller extends HttpServlet {
 
 
 	Router createRouter(WeberknechtConf conf, DbConnectionHolder conHolder) throws InstantiationException, IllegalAccessException,
-			ClassNotFoundException, DBConnectionException {
+			ClassNotFoundException, DBConnectionException, ConfigurationException {
 		
 		List<String> routerClasses = conf.getRouterClasses();
 		List<Router> routers = new Vector<Router>(routerClasses.size());
@@ -275,7 +276,7 @@ public class Controller extends HttpServlet {
 	 * @param action	the action instance, processor or whatever to be initialized
 	 * @param conHolder		holds database connection
 	 */
-	protected void initializeObject(Object action, DbConnectionHolder conHolder) throws DBConnectionException {
+	protected void initializeObject(Object action, DbConnectionHolder conHolder) throws DBConnectionException, ConfigurationException {
 		log.debug("initializeAction()");
 		
 		if (action instanceof DatabaseCapable) {

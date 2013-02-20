@@ -11,6 +11,8 @@ package de.highbyte_le.weberknecht.db;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import de.highbyte_le.weberknecht.conf.ConfigurationException;
+
 /**
  * retrieves and holds db connections on demand. If a connection is requested twice, it is reused.
  *
@@ -25,7 +27,10 @@ public class DbConnectionHolder {
 		this.dbConnectionProvider = dbConnectionProvider;
 	}
 
-	public synchronized Connection getConnection() throws DBConnectionException {
+	public synchronized Connection getConnection() throws DBConnectionException, ConfigurationException {
+		if (null == dbConnectionProvider)
+			throw new ConfigurationException("missing db connection provider. probably no database configured");
+		
 		if (null == con)
 			 con = dbConnectionProvider.getConnection();
 		

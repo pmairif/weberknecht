@@ -45,7 +45,7 @@ public class ControllerFilterTest {
 		servletContext = mock(ServletContext.class);
 
 		WeberknechtConf conf = readConfig("test-data/weberknecht-controller-test.xml");
-		filter.init(conf, servletContext, null);
+		filter.init(servletContext, conf, null);
 
 		request = mock(HttpServletRequest.class);
 		when(request.getServletPath()).thenReturn("");

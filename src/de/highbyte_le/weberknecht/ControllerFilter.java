@@ -28,7 +28,6 @@ import de.highbyte_le.weberknecht.conf.ConfigurationException;
 import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 import de.highbyte_le.weberknecht.db.DbConnectionHolder;
 import de.highbyte_le.weberknecht.db.DbConnectionProvider;
-import de.highbyte_le.weberknecht.request.actions.ActionNotFoundException;
 import de.highbyte_le.weberknecht.request.routing.Router;
 import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
 
@@ -100,10 +99,9 @@ public class ControllerFilter implements Filter {
 				}
 			}
 		}
-		catch (ActionNotFoundException e) {
-			//TODO eleganter wäre es schon, wenn der router endgültig entscheidet, ob es die action gibt oder nicht 
-			filterChain.doFilter(request, response);
-		}
+//		catch (ActionNotFoundException e) {
+//			filterChain.doFilter(request, response);
+//		}
 		catch (Exception e1) {
 			try {
 				log.error("service() - exception while error handler instantiation: "+e1.getMessage(), e1);	//$NON-NLS-1$

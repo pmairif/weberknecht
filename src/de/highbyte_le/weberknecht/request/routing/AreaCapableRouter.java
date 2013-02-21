@@ -77,7 +77,9 @@ public class AreaCapableRouter implements Router {
 			}
 		}
 		
-		return target;
+		if (pathResolver.knownTarget(target))
+			return target;
+		return null;
 	}
 	
 	protected RoutingTarget createTarget(AreaPath areaPath, String actionString) {

@@ -32,8 +32,6 @@ import de.highbyte_le.weberknecht.request.actions.ExecutableAction;
  */
 public class AreaPathResolver {
 
-	//TODO matching only on valid actions
-
 	/**
 	 * Logger for this class
 	 */

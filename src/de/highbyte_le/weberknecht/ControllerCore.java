@@ -55,7 +55,7 @@ import de.highbyte_le.weberknecht.request.view.ActionViewProcessorFactory;
 import de.highbyte_le.weberknecht.request.view.AutoViewProcessor;
 
 /**
- * webapp controller to be used in servlet ({@link Controller}) or filter ( {@ControllerFilter} )
+ * webapp controller to be used in servlet ({@link Controller}) or filter ( {@link ControllerFilter} )
  * 
  * @author pmairif
  */

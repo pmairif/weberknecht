@@ -18,8 +18,6 @@ import de.highbyte_le.weberknecht.conf.WeberknechtConf;
  * @author pmairif
  */
 public interface Router {
-	//TODO app state (login etc)
-	
 	/**
 	 * @return
 	 * 		routing target information or null, if the URI didn't match
@@ -27,7 +25,7 @@ public interface Router {
 	public RoutingTarget routeUri(String servletPath, String pathInfo);
 	
 	/**
-	 * routers should be able to access the configuration
+	 * routers should be able to access the configuration and path resolver
 	 */
-	public void setConfig(WeberknechtConf conf);
+	public void setConfig(WeberknechtConf conf, AreaPathResolver areaPathResolver);
 }

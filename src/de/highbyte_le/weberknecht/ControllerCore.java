@@ -159,7 +159,7 @@ public class ControllerCore {
 		else
 			ret = new MetaRouter(routers);
 
-		ret.setConfig(conf);
+		ret.setConfig(conf, pathResolver);
 		
 		return ret;
 	}

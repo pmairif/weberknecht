@@ -50,9 +50,9 @@ public class MetaRouter implements Router {
 	 * @see de.highbyte_le.weberknecht.request.routing.Router#setConfig(de.highbyte_le.weberknecht.conf.WeberknechtConf)
 	 */
 	@Override
-	public void setConfig(WeberknechtConf conf) {
+	public void setConfig(WeberknechtConf conf, AreaPathResolver pathResolver) {
 		for (Router r: routers)
-			r.setConfig(conf);
+			r.setConfig(conf, pathResolver);
 	}
 
 	public void addRouter(Router router) {

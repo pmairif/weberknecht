@@ -11,6 +11,7 @@ package de.highbyte_le.weberknecht.request.routing;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.highbyte_le.weberknecht.conf.ConfigurationException;
 import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 
 /**
@@ -43,6 +44,8 @@ public class AreaCapableRouter implements Router {
 	
 	private WeberknechtConf conf = null;
 	
+	private AreaPathResolver pathResolver = null;
+
 	/* (non-Javadoc)
 	 * @see de.highbyte_le.weberknecht.request.routing.Router#routeUri(java.lang.String)
 	 */
@@ -113,7 +116,15 @@ public class AreaCapableRouter implements Router {
 	 * @see de.highbyte_le.weberknecht.request.routing.Router#setConfig(de.highbyte_le.weberknecht.conf.WeberknechtConf)
 	 */
 	@Override
-	public void setConfig(WeberknechtConf conf) {
+	public void setConfig(WeberknechtConf conf, AreaPathResolver pathResolver) {
 		this.conf = conf;
+		this.pathResolver = pathResolver;
+	}
+	
+	/**
+	 * set config and create new instance of {@link AreaPathResolver}.
+	 */
+	public void setConfig(WeberknechtConf conf) throws ConfigurationException {
+		setConfig(conf, new AreaPathResolver(conf));
 	}
 }

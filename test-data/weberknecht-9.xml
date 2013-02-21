@@ -5,6 +5,8 @@
 		<post-processors ref="post1" />
 		<action name="foo" class="de.highbyte_le.weberknecht.test.DummyAction1" />
 		<action name="bar" class="de.highbyte_le.weberknecht.test.DummyAction2" />
+		<action name="bar_foo" class="de.highbyte_le.weberknecht.test.DummyAction3" />
+		<action name="bar-foo" class="de.highbyte_le.weberknecht.test.DummyAction1" />
 		
 		<area name="a1">
 			<pre-processors ref="pre2" />
@@ -13,9 +15,8 @@
 			<area name="a2a">
 				<action name="foo" class="de.highbyte_le.weberknecht.test.DummyAction1" />
 
-				<area name="a3">
-					<pre-processors ref="pre1" />
-					<action name="foo" class="de.highbyte_le.weberknecht.test.DummyAction2" />
+				<area name="a1">
+					<action name="bar" class="de.highbyte_le.weberknecht.test.DummyAction2" />
 				</area>
 			</area>
 
@@ -29,6 +30,14 @@
 				</action>
 			</area>
 		</area>
+	</area>
+	
+	<area name="foo-bar">
+		<action name="foo" class="de.highbyte_le.weberknecht.test.DummyAction1" />
+	</area>
+
+	<area name="fooo">
+		<action name="foo" class="de.highbyte_le.weberknecht.test.DummyAction1" />
 	</area>
 
 	<pre-processors-def id="pre1">

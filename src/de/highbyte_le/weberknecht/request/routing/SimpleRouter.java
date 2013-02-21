@@ -19,6 +19,7 @@ import de.highbyte_le.weberknecht.conf.WeberknechtConf;
  * @author pmairif
  */
 public class SimpleRouter implements Router {
+	//TODO matching only on valid actions
 	
 	private static final Pattern contextPathActionPattern = Pattern.compile("/([a-z0-9_-]+)(![a-z0-9_-]*)?\\.([a-z]+)"); //$NON-NLS-1$
 
@@ -54,7 +55,7 @@ public class SimpleRouter implements Router {
 	 * @see de.highbyte_le.weberknecht.request.routing.Router#setConfig(de.highbyte_le.weberknecht.conf.WeberknechtConf)
 	 */
 	@Override
-	public void setConfig(WeberknechtConf conf) {
+	public void setConfig(WeberknechtConf conf, AreaPathResolver pathResolver) {
 		//
 	}
 }

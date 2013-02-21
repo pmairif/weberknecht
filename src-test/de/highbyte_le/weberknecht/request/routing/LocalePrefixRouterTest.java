@@ -12,11 +12,13 @@ import static de.highbyte_le.weberknecht.test.TestUtil.readConfig;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.io.IOException;
 import java.util.Locale;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import de.highbyte_le.weberknecht.conf.ConfigurationException;
 import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 
 /**
@@ -71,79 +73,116 @@ public class LocalePrefixRouterTest {
 	}
 
 	@Test
-	public void areaTest1() {
-		RoutingTarget target = router.routeUri("/area/foo.do", null);
-		assertEquals("foo", target.getActionName());
+	public void unknownActionTest1() {
+		assertNull(router.routeUri("/abc.do", null));
+	}
+
+	@Test
+	public void unknownActionTest2() {
+		assertNull(router.routeUri("/abc/foo.do", null));
+	}
+	
+	@Test
+	public void areaTest1() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-2.xml");
+		router.setConfig(conf);
+
+		RoutingTarget target = router.routeUri("/a1/foo1.do", null);
+		assertEquals("foo1", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
-		assertEquals(new AreaPath("area"), target.getAreaPath());
+		assertEquals(new AreaPath("a1"), target.getAreaPath());
 		assertNull(target.getTask());
 	}
 
 	@Test
-	public void areaTest1b() {
-		RoutingTarget target = router.routeUri("/area", "/foo.do");
-		assertEquals("foo", target.getActionName());
+	public void areaTest1b() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-2.xml");
+		router.setConfig(conf);
+
+		RoutingTarget target = router.routeUri("/a1", "/foo1.do");
+		assertEquals("foo1", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
-		assertEquals(new AreaPath("area"), target.getAreaPath());
+		assertEquals(new AreaPath("a1"), target.getAreaPath());
 		assertNull(target.getTask());
 	}
 	
 	@Test
-	public void areaTest1c() {
-		RoutingTarget target = router.routeUri("", "/area/foo.do");
-		assertEquals("foo", target.getActionName());
+	public void areaTest1c() throws ConfigurationException, IOException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-2.xml");
+		router.setConfig(conf);
+
+		RoutingTarget target = router.routeUri("", "/a1/foo1.do");
+		assertEquals("foo1", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
-		assertEquals(new AreaPath("area"), target.getAreaPath());
+		assertEquals(new AreaPath("a1"), target.getAreaPath());
 		assertNull(target.getTask());
 	}
 	
 	@Test
-	public void areaTest2() {
-		RoutingTarget target = router.routeUri("/Foo1/bar.data", null);
-		assertEquals("bar", target.getActionName());
+	public void areaTest2() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-2.xml");
+		router.setConfig(conf);
+
+		RoutingTarget target = router.routeUri("/a1/foo1.data", null);
+		assertEquals("foo1", target.getActionName());
 		assertEquals("data", target.getViewProcessorName());
-		assertEquals(new AreaPath("Foo1"), target.getAreaPath());
+		assertEquals(new AreaPath("a1"), target.getAreaPath());
 		assertNull(target.getTask());
 	}
 
 	@Test
-	public void subAreaTest1() {
-		RoutingTarget target = router.routeUri("/Area/Sub/Action.do", null);
-		assertEquals("Action", target.getActionName());
+	public void subAreaTest1() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-7.xml");
+		router.setConfig(conf);
+
+		RoutingTarget target = router.routeUri("/a1/a2a/foo.do", null);
+		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
-		assertEquals(new AreaPath("Area", "Sub"), target.getAreaPath());
+		assertEquals(new AreaPath("a1", "a2a"), target.getAreaPath());
 		assertNull(target.getTask());
 	}
 	
 	@Test
-	public void subAreaTest2() {
-		RoutingTarget target = router.routeUri("/a1/a2/a3/a4/a5/Action.do", null);
-		assertEquals("Action", target.getActionName());
+	public void subAreaTest2() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-7.xml");
+		router.setConfig(conf);
+
+		RoutingTarget target = router.routeUri("/a1/a2a/a3/foo.do", null);
+		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
-		assertEquals(new AreaPath("a1", "a2", "a3", "a4", "a5"), target.getAreaPath());
+		assertEquals(new AreaPath("a1", "a2a", "a3"), target.getAreaPath());
 		assertNull(target.getTask());
 	}
 	
 	@Test
-	public void subAreaTest3() {
-		RoutingTarget target = router.routeUri("/foo/bar/foo/bar.do", null);
+	public void subAreaTest3() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-9.xml");
+		router.setConfig(conf);
+
+		RoutingTarget target = router.routeUri("/a1/a2a/a1/bar.do", null);
 		assertEquals("bar", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
-		assertEquals(new AreaPath("foo", "bar", "foo"), target.getAreaPath());
+		assertEquals(new AreaPath("a1", "a2a", "a1"), target.getAreaPath());
 		assertNull(target.getTask());
 	}
 	
 	@Test
-	public void subAreaTest4() {
-		RoutingTarget target = router.routeUri("/a1//a2/bar.do", null);
-		assertEquals("bar", target.getActionName());
+	public void subAreaTest4() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-9.xml");
+		router.setConfig(conf);
+
+		RoutingTarget target = router.routeUri("/a1//a2a/foo.do", null);
+		assertEquals("foo", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
-		assertEquals(new AreaPath("a1", "a2"), target.getAreaPath());
+		assertEquals(new AreaPath("a1", "a2a"), target.getAreaPath());
 		assertNull(target.getTask());
 	}
 	
 	@Test
-	public void testWithUnderscore() {
+	public void testWithUnderscore() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-9.xml");
+		router.setConfig(conf);
+
 		RoutingTarget target = router.routeUri("/bar_foo.data", null);
 		assertEquals("bar_foo", target.getActionName());
 		assertEquals("data", target.getViewProcessorName());
@@ -152,7 +191,10 @@ public class LocalePrefixRouterTest {
 	}
 
 	@Test
-	public void testWithDash() {
+	public void testWithDash() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-9.xml");
+		router.setConfig(conf);
+
 		RoutingTarget target = router.routeUri("/bar-foo!add-one.data", null);
 		assertEquals("bar-foo", target.getActionName());
 		assertEquals("data", target.getViewProcessorName());
@@ -176,7 +218,10 @@ public class LocalePrefixRouterTest {
 	}
 
 	@Test
-	public void testWithTaskAndArea() {
+	public void testWithTaskAndArea() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-9.xml");
+		router.setConfig(conf);
+
 		RoutingTarget target1 = router.routeUri("/foo-bar/foo!sth.do", null);
 		assertEquals("foo", target1.getActionName());
 		assertEquals("do", target1.getViewProcessorName());
@@ -203,9 +248,9 @@ public class LocalePrefixRouterTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang.xml");
 		router.setConfig(conf);
 		
-		RoutingTarget target = router.routeUri("/de/foo.do", null);
+		RoutingTarget target = router.routeUri("/de/index.do", null);
 		assertEquals(new AreaPath(), target.getAreaPath());
-		assertEquals("foo", target.getActionName());
+		assertEquals("index", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
 		assertEquals(new Locale("de"), target.getLocale());
 		assertNull(target.getTask());
@@ -216,9 +261,9 @@ public class LocalePrefixRouterTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang.xml");
 		router.setConfig(conf);
 		
-		RoutingTarget target = router.routeUri("/de", "/foo.do");
+		RoutingTarget target = router.routeUri("/de", "/index.do");
 		assertEquals(new AreaPath(), target.getAreaPath());
-		assertEquals("foo", target.getActionName());
+		assertEquals("index", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
 		assertEquals(new Locale("de"), target.getLocale());
 		assertNull(target.getTask());
@@ -229,9 +274,9 @@ public class LocalePrefixRouterTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang.xml");
 		router.setConfig(conf);
 		
-		RoutingTarget target = router.routeUri("", "/de/foo.do");
+		RoutingTarget target = router.routeUri("", "/de/index.do");
 		assertEquals(new AreaPath(), target.getAreaPath());
-		assertEquals("foo", target.getActionName());
+		assertEquals("index", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
 		assertEquals(new Locale("de"), target.getLocale());
 		assertNull(target.getTask());
@@ -255,9 +300,9 @@ public class LocalePrefixRouterTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang.xml");
 		router.setConfig(conf);
 		
-		RoutingTarget target = router.routeUri("/en_US/foo.do", null);
+		RoutingTarget target = router.routeUri("/en_US/index.do", null);
 		assertEquals(new AreaPath(), target.getAreaPath());
-		assertEquals("foo", target.getActionName());
+		assertEquals("index", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
 		assertEquals(new Locale("en", "US"), target.getLocale());
 		assertNull(target.getTask());
@@ -295,9 +340,9 @@ public class LocalePrefixRouterTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang-optional.xml");
 		router.setConfig(conf);
 		
-		RoutingTarget target = router.routeUri("/de/foo.do", null);
+		RoutingTarget target = router.routeUri("/de/index.do", null);
 		assertEquals(new AreaPath(), target.getAreaPath());
-		assertEquals("foo", target.getActionName());
+		assertEquals("index", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
 		assertEquals(new Locale("de"), target.getLocale());
 		assertNull(target.getTask());
@@ -308,9 +353,9 @@ public class LocalePrefixRouterTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang-optional.xml");
 		router.setConfig(conf);
 		
-		RoutingTarget target = router.routeUri("/de_CH/foo.do", null);
+		RoutingTarget target = router.routeUri("/de_CH/index.do", null);
 		assertEquals(new AreaPath(), target.getAreaPath());
-		assertEquals("foo", target.getActionName());
+		assertEquals("index", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
 		assertEquals(new Locale("de", "CH"), target.getLocale());
 		assertNull(target.getTask());
@@ -334,9 +379,9 @@ public class LocalePrefixRouterTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang-optional.xml");
 		router.setConfig(conf);
 		
-		RoutingTarget target = router.routeUri("/foo.do", null);
+		RoutingTarget target = router.routeUri("/index.do", null);
 		assertEquals(new AreaPath(), target.getAreaPath());
-		assertEquals("foo", target.getActionName());
+		assertEquals("index", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
 		assertNull(target.getLocale());
 		assertNull(target.getTask());
@@ -376,9 +421,9 @@ public class LocalePrefixRouterTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang-trim.xml");
 		router.setConfig(conf);
 		
-		RoutingTarget target = router.routeUri("/de/foo.do", null);
+		RoutingTarget target = router.routeUri("/de/index.do", null);
 		assertEquals(new AreaPath(), target.getAreaPath());
-		assertEquals("foo", target.getActionName());
+		assertEquals("index", target.getActionName());
 		assertEquals("do", target.getViewProcessorName());
 		assertEquals(new Locale("de"), target.getLocale());
 		assertNull(target.getTask());

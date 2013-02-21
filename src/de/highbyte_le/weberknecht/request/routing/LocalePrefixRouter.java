@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.highbyte_le.weberknecht.conf.ConfigurationException;
 import de.highbyte_le.weberknecht.conf.RoutingLocalePrefix;
 import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 
@@ -22,7 +23,7 @@ import de.highbyte_le.weberknecht.conf.WeberknechtConf;
  * @author pmairif
  */
 public class LocalePrefixRouter implements Router {
-	
+
 	/**
 	 * pattern for the whole URI
 	 */
@@ -42,6 +43,8 @@ public class LocalePrefixRouter implements Router {
 	private static final Pattern localePattern = Pattern.compile("([a-z]{2})(?:_([A-Z]{2}))?");
 	
 	private WeberknechtConf conf = null;
+	
+	private AreaPathResolver pathResolver = null;
 
 	/* (non-Javadoc)
 	 * @see de.highbyte_le.weberknecht.request.routing.Router#routeUri(java.lang.String)
@@ -77,7 +80,9 @@ public class LocalePrefixRouter implements Router {
 
 			}
 
-			return target;
+			if (pathResolver.knownTarget(target))
+				return target;
+			return null;
 		}
 		catch (RoutingNotPossibleException e) {
 			//we cannot route, just return null
@@ -121,8 +126,16 @@ public class LocalePrefixRouter implements Router {
 	 * @see de.highbyte_le.weberknecht.request.routing.Router#setConfig(de.highbyte_le.weberknecht.conf.WeberknechtConf)
 	 */
 	@Override
-	public void setConfig(WeberknechtConf conf) {
+	public void setConfig(WeberknechtConf conf, AreaPathResolver pathResolver) {
 		this.conf = conf;
+		this.pathResolver = pathResolver;
+	}
+	
+	/**
+	 * set config and create new instance of {@link AreaPathResolver}.
+	 */
+	public void setConfig(WeberknechtConf conf) throws ConfigurationException {
+		setConfig(conf, new AreaPathResolver(conf));
 	}
 	
 	protected Locale parseLocale(String candidate) {

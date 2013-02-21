@@ -3,6 +3,7 @@
 	<area>
 		<pre-processors ref="pre1" />
 		<post-processors ref="post1" />
+		
 		<action name="foo" class="de.highbyte_le.weberknecht.test.DummyAction1" />
 		<action name="bar" class="de.highbyte_le.weberknecht.test.DummyAction2" />
 	</area>

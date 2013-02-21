@@ -8,11 +8,17 @@
  */
 package de.highbyte_le.weberknecht.request.routing;
 
+import static de.highbyte_le.weberknecht.test.TestUtil.readConfig;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import de.highbyte_le.weberknecht.conf.ConfigurationException;
+import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 
 /**
  * testing the {@link SimpleRouter}
@@ -26,6 +32,10 @@ public class SimpleRouterTest {
 	@Before
 	public void setUp() throws Exception {
 		router = new SimpleRouter();
+		
+		//apply simple confg without locale prefix
+		WeberknechtConf conf = readConfig("test-data/weberknecht-1.xml");
+		router.setConfig(conf);
 	}
 
 	@Test
@@ -55,7 +65,21 @@ public class SimpleRouterTest {
 	}
 
 	@Test
-	public void testWithUnderscore() {
+	public void unknownActionTest1() {
+		assertNull(router.routeUri("/abc.do", null));
+	}
+
+	@Test
+	public void unknownActionTest2() {
+		assertNull(router.routeUri("/abc/foo.do", null));
+	}
+	
+
+	@Test
+	public void testWithUnderscore() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-9.xml");
+		router.setConfig(conf);
+
 		RoutingTarget util = router.routeUri("/bar_foo.data", null);
 		assertEquals("bar_foo", util.getActionName());
 		assertEquals("data", util.getViewProcessorName());
@@ -63,7 +87,10 @@ public class SimpleRouterTest {
 	}
 
 	@Test
-	public void testWithDash() {
+	public void testWithDash() throws ConfigurationException, IOException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-9.xml");
+		router.setConfig(conf);
+
 		RoutingTarget util = router.routeUri("/bar-foo!add-one.data", null);
 		assertEquals("bar-foo", util.getActionName());
 		assertEquals("data", util.getViewProcessorName());

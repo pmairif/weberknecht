@@ -11,6 +11,7 @@ package de.highbyte_le.weberknecht.request.routing;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.highbyte_le.weberknecht.conf.ConfigurationException;
 import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 
 /**
@@ -19,9 +20,10 @@ import de.highbyte_le.weberknecht.conf.WeberknechtConf;
  * @author pmairif
  */
 public class SimpleRouter implements Router {
-	//TODO matching only on valid actions
 	
 	private static final Pattern contextPathActionPattern = Pattern.compile("/([a-z0-9_-]+)(![a-z0-9_-]*)?\\.([a-z]+)"); //$NON-NLS-1$
+
+	private AreaPathResolver pathResolver = null;
 
 	/* (non-Javadoc)
 	 * @see de.highbyte_le.weberknecht.request.routing.Router#routeUri(java.lang.String)
@@ -48,7 +50,9 @@ public class SimpleRouter implements Router {
 			target = new RoutingTarget(area, baseName, suffix, task);
 		}
 		
-		return target;
+		if (pathResolver.knownTarget(target))
+			return target;
+		return null;
 	}
 
 	/* (non-Javadoc)
@@ -56,6 +60,13 @@ public class SimpleRouter implements Router {
 	 */
 	@Override
 	public void setConfig(WeberknechtConf conf, AreaPathResolver pathResolver) {
-		//
+		this.pathResolver = pathResolver;
+	}
+	
+	/**
+	 * set config and create new instance of {@link AreaPathResolver}.
+	 */
+	public void setConfig(WeberknechtConf conf) throws ConfigurationException {
+		setConfig(conf, new AreaPathResolver(conf));
 	}
 }

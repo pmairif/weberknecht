@@ -72,6 +72,22 @@ public class AreaPathResolver {
 	}
 	
 	/**
+	 * Is the target (path and action) known?
+	 * @param routingTarget
+	 * @return true, if the target can be resolved to a known action.
+	 */
+	public boolean knownTarget(RoutingTarget routingTarget) {
+		if (null == routingTarget)
+			return false;
+		
+		ActionFactory actionFactory = actionFactoryMap.get(routingTarget.getAreaPath());
+		if (null == actionFactory)
+			return false;
+		
+		return actionFactory.knowsAction(routingTarget.getActionName());
+	}
+	
+	/**
 	 * get the matching action declaration
 	 */
 	public ActionDeclaration getActionDeclaration(RoutingTarget routingTarget) {

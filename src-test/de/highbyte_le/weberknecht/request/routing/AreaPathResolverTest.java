@@ -9,8 +9,7 @@
 package de.highbyte_le.weberknecht.request.routing;
 
 import static de.highbyte_le.weberknecht.test.TestUtil.readConfig;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 
@@ -45,6 +44,20 @@ public class AreaPathResolverTest {
 		assertEquals("de.highbyte_le.weberknecht.test.DummyAction3", actual.getClass().getCanonicalName());
 	}
 
+	@Test
+	public void testKnownAction() throws IOException, ConfigurationException, ActionNotFoundException, ActionInstantiationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-8.xml");
+		AreaPathResolver resolver = new AreaPathResolver(conf);
+		
+		assertTrue(resolver.knownTarget(new RoutingTarget(new AreaPath(), "foo", "do", null)));
+		assertTrue(resolver.knownTarget(new RoutingTarget(new AreaPath(), "bar", "do", null)));
+		assertTrue(resolver.knownTarget(new RoutingTarget(new AreaPath("sub"), "foo1", "do", null)));
+
+		assertFalse(resolver.knownTarget(new RoutingTarget(new AreaPath(), "fuu", "do", null)));
+		assertFalse(resolver.knownTarget(new RoutingTarget(new AreaPath(), null, "do", null)));
+		assertFalse(resolver.knownTarget(null));
+	}
+	
 	@Test(expected=ActionNotFoundException.class)
 	public void testResolveActionNoRoutingTarget() throws IOException, ConfigurationException, ActionNotFoundException, ActionInstantiationException {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-8.xml");

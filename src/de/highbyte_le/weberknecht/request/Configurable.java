@@ -9,6 +9,7 @@
  */
 package de.highbyte_le.weberknecht.request;
 
+import javax.servlet.FilterConfig;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
@@ -18,5 +19,14 @@ import javax.servlet.ServletContext;
  * @author pmairif
  */
 public interface Configurable {
-	public void setContext(ServletConfig config, ServletContext context);
+	/**
+	 * passing servlet or filter config.
+	 * 
+	 * Either servlet or filter config is set depending on the controller that is used.
+	 * 
+	 * @param servletConfig
+	 * @param filterConfig
+	 * @param context
+	 */
+	public void setContext(ServletConfig servletConfig, FilterConfig filterConfig, ServletContext context);
 }

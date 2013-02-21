@@ -33,6 +33,7 @@ next (1.0):
 	- error handlers
 	- error pages, configured via web.xml are used
 	- default actions for areas
+	- interface Configurable changed
 
 0.12.2:
 	- bugfix: fixed null pointer exception, when routing didn't match.

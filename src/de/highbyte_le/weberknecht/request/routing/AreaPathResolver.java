@@ -17,6 +17,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import de.highbyte_le.weberknecht.conf.ActionDeclaration;
+import de.highbyte_le.weberknecht.conf.ConfigurationException;
 import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 import de.highbyte_le.weberknecht.request.actions.ActionFactory;
 import de.highbyte_le.weberknecht.request.actions.ActionInstantiationException;
@@ -43,7 +44,7 @@ public class AreaPathResolver {
 	
 	private final WeberknechtConf conf;
 	
-	public AreaPathResolver(WeberknechtConf conf) {
+	public AreaPathResolver(WeberknechtConf conf) throws ConfigurationException {
 		this.actionFactoryMap = createActionFactoryMap(conf);
 		this.conf = conf;
 	}
@@ -89,19 +90,24 @@ public class AreaPathResolver {
 		return actionClassMap.get(actionName);
 	}
 	
-	private Map<AreaPath, ActionFactory> createActionFactoryMap(WeberknechtConf conf) {
-		Map<AreaPath, ActionFactory> map = new HashMap<AreaPath, ActionFactory>();
-		
-		Set<AreaPath> areas = conf.getAreas();
-		for (AreaPath area: areas) {
-			ActionFactory factory = new DynamicActionFactory();
-			map.put(area, factory);
+	private Map<AreaPath, ActionFactory> createActionFactoryMap(WeberknechtConf conf) throws ConfigurationException {
+		try {
+			Map<AreaPath, ActionFactory> map = new HashMap<AreaPath, ActionFactory>();
 			
-			for (Entry<String, ActionDeclaration> e: conf.getActionClassMap(area).entrySet()) {
-				factory.registerAction(e.getKey(), e.getValue().getClazz());
+			Set<AreaPath> areas = conf.getAreas();
+			for (AreaPath area: areas) {
+				ActionFactory factory = new DynamicActionFactory();
+				map.put(area, factory);
+				
+				for (Entry<String, ActionDeclaration> e: conf.getActionClassMap(area).entrySet()) {
+					factory.registerAction(e.getKey(), e.getValue().getClazz());
+				}
 			}
+			
+			return map;
 		}
-		
-		return map;
+		catch (ActionInstantiationException e) {
+			throw new ConfigurationException(e.getMessage(), e);
+		}
 	}
 }

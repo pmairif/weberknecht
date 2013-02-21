@@ -3,17 +3,17 @@
 	<post-processors ref="post1" />
 
 	<area>
-		<action name="foo" class="de.highbyte_le.weberknecht.FooAction">
+		<action name="foo" class="de.highbyte_le.weberknecht.test.DummyAction1">
 			<pre-processors ref="pre1" />
 		</action>
-		<action name="bar" class="de.highbyte_le.weberknecht.BarAction" />
+		<action name="bar" class="de.highbyte_le.weberknecht.test.DummyAction2" />
 	</area>
 
 	<area name="a1">
 		<pre-processors ref="pre2" />
 		
-		<action name="foo1" class="de.highbyte_le.weberknecht.FooAction" />
-		<action name="bar1" class="de.highbyte_le.weberknecht.BarAction">
+		<action name="foo1" class="de.highbyte_le.weberknecht.test.DummyAction1" />
+		<action name="bar1" class="de.highbyte_le.weberknecht.test.DummyAction2">
 			<!-- overrides pre-processor defined for area -->
 			<pre-processors ref="pre1" />
 		</action>

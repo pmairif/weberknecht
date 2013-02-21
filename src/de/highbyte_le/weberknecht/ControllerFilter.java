@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import de.highbyte_le.weberknecht.conf.ConfigurationException;
 import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 import de.highbyte_le.weberknecht.db.DbConnectionHolder;
 import de.highbyte_le.weberknecht.db.DbConnectionProvider;
@@ -61,7 +62,7 @@ public class ControllerFilter implements Filter {
 		}
 	}
 	
-	protected void init(ServletContext servletContext, WeberknechtConf conf, DbConnectionProvider dbConnectionProvider, FilterConfig filterConfig) throws ClassNotFoundException {
+	protected void init(ServletContext servletContext, WeberknechtConf conf, DbConnectionProvider dbConnectionProvider, FilterConfig filterConfig) throws ClassNotFoundException, ConfigurationException {
 		core = new ControllerCore(servletContext, conf, dbConnectionProvider);
 		core.setFilterConfig(filterConfig);
 	}

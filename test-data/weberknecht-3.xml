@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <weberknecht>
 	<area>
-		<action name="foo" class="de.highbyte_le.weberknecht.FooAction">
+		<action name="foo" class="de.highbyte_le.weberknecht.test.DummyAction1">
 			<pre-processors ref="p1" />
 			<post-processors ref="p1" />
 		</action>
-		<action name="bar" class="de.highbyte_le.weberknecht.BarAction" />
+		<action name="bar" class="de.highbyte_le.weberknecht.test.DummyAction2" />
 	</area>
 
 	<area name="a1" pre="p2" post="p2">
 		<pre-processors ref="p2" />
 		<post-processors ref="p2" />
 
-		<action name="foo1" class="de.highbyte_le.weberknecht.FooAction" pre="p1">
+		<action name="foo1" class="de.highbyte_le.weberknecht.test.DummyAction1" pre="p1">
 			<pre-processors ref="p1" />
 		</action>
-		<action name="bar1" class="de.highbyte_le.weberknecht.BarAction" post="p3">
+		<action name="bar1" class="de.highbyte_le.weberknecht.test.DummyAction2" post="p3">
 			<post-processors ref="p3" />
 		</action>
-		<action name="bar2" class="de.highbyte_le.weberknecht.BarAction" />
+		<action name="bar2" class="de.highbyte_le.weberknecht.test.DummyAction2" />
 	</area>
 
 	<pre-processors-def id="p1">

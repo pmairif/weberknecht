@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <weberknecht>
 	<area>
-		<action name="foo" class="de.highbyte_le.weberknecht.FooAction" />
-		<action name="bar" class="de.highbyte_le.weberknecht.BarAction">
+		<action name="foo" class="de.highbyte_le.weberknecht.test.DummyAction1" />
+		<action name="bar" class="de.highbyte_le.weberknecht.test.DummyAction2">
 			<error-handler class="de.highbyte_le.weberknecht.ErrHandler3" />
 		</action>
 	</area>
 
 	<area name="a1">
-		<action name="foo1" class="de.highbyte_le.weberknecht.FooAction" />
-		<action name="bar1" class="de.highbyte_le.weberknecht.BarAction" />
+		<action name="foo1" class="de.highbyte_le.weberknecht.test.DummyAction1" />
+		<action name="bar1" class="de.highbyte_le.weberknecht.test.DummyAction2" />
 	
 		<error-handler class="de.highbyte_le.weberknecht.ErrHandler2" />
 	</area>

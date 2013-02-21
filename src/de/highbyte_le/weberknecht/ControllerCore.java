@@ -85,7 +85,7 @@ public class ControllerCore {
 		this(servletContext, WeberknechtConf.readConfig(servletContext), initDbConnectionProvider());
 	}
 	
-	public ControllerCore(ServletContext servletContext, WeberknechtConf conf, DbConnectionProvider dbConnectionProvider) throws ClassNotFoundException {
+	public ControllerCore(ServletContext servletContext, WeberknechtConf conf, DbConnectionProvider dbConnectionProvider) throws ClassNotFoundException, ConfigurationException {
 		this.servletContext = servletContext;
 		this.conf = conf;
 		

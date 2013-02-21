@@ -1,4 +1,5 @@
 next (1.0):
+	- errors in action declarations cause ServletExceptions. application won't start.
 	- Controller moved to de.highbyte_le.weberknecht.Controller
 	- additional action view processors configurable
 	- ActionViewProcessorFactory, ActionViewProcessor and other view processors moved to ...request.view

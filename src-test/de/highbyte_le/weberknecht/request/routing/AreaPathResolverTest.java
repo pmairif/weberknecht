@@ -157,27 +157,27 @@ public class AreaPathResolverTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-6a.xml");
 		AreaPathResolver resolver = new AreaPathResolver(conf);
 
-		ActionDeclaration expected = new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler1");
+		ActionDeclaration expected = new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "", "", "de.highbyte_le.weberknecht.ErrHandler1");
 		ActionDeclaration declaration = resolver.getActionDeclaration(new AreaPath(), "foo");
 		assertEquals(expected, declaration);
 		
-		expected = new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "", "de.highbyte_le.weberknecht.ErrHandler3");
+		expected = new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction2", "", "", "de.highbyte_le.weberknecht.ErrHandler3");
 		declaration = resolver.getActionDeclaration(new AreaPath(), "bar");
 		assertEquals(expected, declaration);
 		
-		expected = new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2");
+		expected = new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "", "", "de.highbyte_le.weberknecht.ErrHandler2");
 		declaration = resolver.getActionDeclaration(new AreaPath("a1"), "foo1");
 		assertEquals(expected, declaration);
 		
-		expected = new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2");
+		expected = new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction2", "", "", "de.highbyte_le.weberknecht.ErrHandler2");
 		declaration = resolver.getActionDeclaration(new AreaPath("a1"), "bar1");
 		assertEquals(expected, declaration);
 
-		expected = new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2");
+		expected = new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "", "", "de.highbyte_le.weberknecht.ErrHandler2");
 		declaration = resolver.getActionDeclaration(new AreaPath("a1", "a2"), "foo2");
 		assertEquals(expected, declaration);
 
-		expected = new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2");
+		expected = new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction2", "", "", "de.highbyte_le.weberknecht.ErrHandler2");
 		declaration = resolver.getActionDeclaration(new AreaPath("a1", "a2"), "bar2");
 		assertEquals(expected, declaration);
 	}
@@ -187,31 +187,31 @@ public class AreaPathResolverTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-6b.xml");
 		AreaPathResolver resolver = new AreaPathResolver(conf);
 
-		ActionDeclaration expected = new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler1");
+		ActionDeclaration expected = new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "", "", "de.highbyte_le.weberknecht.ErrHandler1");
 		ActionDeclaration declaration = resolver.getActionDeclaration(new AreaPath(), "foo");
 		assertEquals(expected, declaration);
 
-		expected = new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "", "de.highbyte_le.weberknecht.ErrHandler3");
+		expected = new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction2", "", "", "de.highbyte_le.weberknecht.ErrHandler3");
 		declaration = resolver.getActionDeclaration(new AreaPath(), "bar");
 		assertEquals(expected, declaration);
 		
-		expected = new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2");
+		expected = new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "", "", "de.highbyte_le.weberknecht.ErrHandler2");
 		declaration = resolver.getActionDeclaration(new AreaPath("a1"), "foo1");
 		assertEquals(expected, declaration);
 		
-		expected = new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2");
+		expected = new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction2", "", "", "de.highbyte_le.weberknecht.ErrHandler2");
 		declaration = resolver.getActionDeclaration(new AreaPath("a1"), "bar1");
 		assertEquals(expected, declaration);
 		
-		expected = new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2");
+		expected = new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "", "", "de.highbyte_le.weberknecht.ErrHandler2");
 		declaration = resolver.getActionDeclaration(new AreaPath("a1", "a2"), "foo2");
 		assertEquals(expected, declaration);
 		
-		expected = new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2");
+		expected = new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "", "", "de.highbyte_le.weberknecht.ErrHandler2");
 		declaration = resolver.getActionDeclaration(new AreaPath("a1", "a2", "a3"), "foo3");
 		assertEquals(expected, declaration);
 		
-		expected = new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2");
+		expected = new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction2", "", "", "de.highbyte_le.weberknecht.ErrHandler2");
 		declaration = resolver.getActionDeclaration(new AreaPath("a1", "a2"), "bar2");
 		assertEquals(expected, declaration);
 	}

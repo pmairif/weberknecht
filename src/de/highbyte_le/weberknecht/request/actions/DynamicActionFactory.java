@@ -1,10 +1,9 @@
 /*
  * DynamicActionFactory.java
  *
- * Copyright 2008-2011 Patrick Mairif.
+ * Copyright 2008-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
- * created: Jan 22, 2008
  * tabstop=4, charset=UTF-8
  */
 package de.highbyte_le.weberknecht.request.actions;
@@ -53,10 +52,18 @@ public class DynamicActionFactory implements ActionFactory {
 		
 		return null;
 	}
+	
+	/* (non-Javadoc)
+	 * @see de.highbyte_le.weberknecht.request.actions.ActionFactory#hasAction(java.lang.String)
+	 */
+	@Override
+	public boolean knowsAction(String actionName) {
+		return actionMap.containsKey(actionName);
+	}
 
 	@SuppressWarnings({ "unchecked" })
 	@Override
-	public void registerAction(String name, String className) {
+	public void registerAction(String name, String className) throws ActionInstantiationException {
 		try {
 			
 			Class<?> c = Class.forName(className);
@@ -66,18 +73,12 @@ public class DynamicActionFactory implements ActionFactory {
 				actionMap.put(name, (Class<ExecutableAction>)c);
 			}
 			else {
-				log.error(className+" is not an executable action");
+				throw new ActionInstantiationException(className+" is not a valid action.");
 			}
 
 		}
-		catch (ClassNotFoundException e) {
-			log.error("registerAction() - ClassNotFoundException: "+e.getMessage(), e);
-		}
-		catch (InstantiationException e) {
-			log.error("registerAction() - InstantiationException: "+e.getMessage(), e);
-		}
-		catch (IllegalAccessException e) {
-			log.error("registerAction() - IllegalAccessException: "+e.getMessage(), e);
+		catch (Exception e) {
+			throw new ActionInstantiationException("problems instantiating "+className+": "+e.getMessage(), e);
 		}
 	}
 }

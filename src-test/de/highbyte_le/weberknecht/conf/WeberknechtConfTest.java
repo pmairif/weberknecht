@@ -35,8 +35,8 @@ public class WeberknechtConfTest {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-1.xml");
 		
 		Map<String, ActionDeclaration> expectedActionClassMap = new HashMap<String, ActionDeclaration>();
-		expectedActionClassMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "pre1", "post1", null));
-		expectedActionClassMap.put("bar", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "pre1", "post1", null));
+		expectedActionClassMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "pre1", "post1", null));
+		expectedActionClassMap.put("bar", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction2", "pre1", "post1", null));
 		assertEquals(expectedActionClassMap, conf.getActionClassMap());
 	}
 	
@@ -74,15 +74,15 @@ public class WeberknechtConfTest {
 		
 		{	//default area
 			Map<String, ActionDeclaration> expectedActionClassMap = new HashMap<String, ActionDeclaration>();
-			expectedActionClassMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "pre1", "post1", null));
-			expectedActionClassMap.put("bar", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "post1", null));
+			expectedActionClassMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "pre1", "post1", null));
+			expectedActionClassMap.put("bar", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction2", "", "post1", null));
 			assertEquals(expectedActionClassMap, conf.getActionClassMap());
 		}
 		
 		{	//area a1
 			Map<String, ActionDeclaration> expectedActionClassMap = new HashMap<String, ActionDeclaration>();
-			expectedActionClassMap.put("foo1", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "pre2", "post1", null));
-			expectedActionClassMap.put("bar1", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "pre1", "post1", null));
+			expectedActionClassMap.put("foo1", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "pre2", "post1", null));
+			expectedActionClassMap.put("bar1", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction2", "pre1", "post1", null));
 			assertEquals(expectedActionClassMap, conf.getActionClassMap(new AreaPath("a1")));
 		}			
 	}
@@ -96,15 +96,15 @@ public class WeberknechtConfTest {
 		
 		{	//default area
 			Map<String, ActionDeclaration> expectedActionClassMap = new HashMap<String, ActionDeclaration>();
-			expectedActionClassMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "pre1", "post1", null));
-			expectedActionClassMap.put("bar", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "post1", null));
+			expectedActionClassMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "pre1", "post1", null));
+			expectedActionClassMap.put("bar", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction2", "", "post1", null));
 			assertEquals(expectedActionClassMap, conf.getActionClassMap());
 		}
 		
 		{	//area a1
 			Map<String, ActionDeclaration> expectedActionClassMap = new HashMap<String, ActionDeclaration>();
-			expectedActionClassMap.put("foo1", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "pre2", "post1", null));
-			expectedActionClassMap.put("bar1", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "pre1", "post1", null));
+			expectedActionClassMap.put("foo1", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "pre2", "post1", null));
+			expectedActionClassMap.put("bar1", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction2", "pre1", "post1", null));
 			assertEquals(expectedActionClassMap, conf.getActionClassMap(new AreaPath("a1")));
 		}			
 	}
@@ -207,18 +207,18 @@ public class WeberknechtConfTest {
 		Map<AreaPath, Map<String, ActionDeclaration>> expected = new HashMap<AreaPath, Map<String, ActionDeclaration>>();
 		
 		Map<String, ActionDeclaration> rootMap = new HashMap<String, ActionDeclaration>();
-		rootMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler1"));
-		rootMap.put("bar", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "", "de.highbyte_le.weberknecht.ErrHandler3"));
+		rootMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "", "", "de.highbyte_le.weberknecht.ErrHandler1"));
+		rootMap.put("bar", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction2", "", "", "de.highbyte_le.weberknecht.ErrHandler3"));
 		expected.put(new AreaPath(), rootMap);
 
 		Map<String, ActionDeclaration> a1Map = new HashMap<String, ActionDeclaration>();
-		a1Map.put("foo1", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
-		a1Map.put("bar1", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
+		a1Map.put("foo1", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
+		a1Map.put("bar1", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction2", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
 		expected.put(new AreaPath("a1"), a1Map);
 
 		Map<String, ActionDeclaration> a2Map = new HashMap<String, ActionDeclaration>();
-		a2Map.put("foo2", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
-		a2Map.put("bar2", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
+		a2Map.put("foo2", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
+		a2Map.put("bar2", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction2", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
 		expected.put(new AreaPath("a1", "a2"), a2Map);
 		
 		assertEquals(expected, conf.getAreaActionClassMap());
@@ -231,22 +231,22 @@ public class WeberknechtConfTest {
 		Map<AreaPath, Map<String, ActionDeclaration>> expected = new HashMap<AreaPath, Map<String, ActionDeclaration>>();
 		
 		Map<String, ActionDeclaration> rootMap = new HashMap<String, ActionDeclaration>();
-		rootMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler1"));
-		rootMap.put("bar", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "", "de.highbyte_le.weberknecht.ErrHandler3"));
+		rootMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "", "", "de.highbyte_le.weberknecht.ErrHandler1"));
+		rootMap.put("bar", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction2", "", "", "de.highbyte_le.weberknecht.ErrHandler3"));
 		expected.put(new AreaPath(), rootMap);
 
 		Map<String, ActionDeclaration> a1Map = new HashMap<String, ActionDeclaration>();
-		a1Map.put("foo1", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
-		a1Map.put("bar1", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
+		a1Map.put("foo1", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
+		a1Map.put("bar1", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction2", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
 		expected.put(new AreaPath("a1"), a1Map);
 
 		Map<String, ActionDeclaration> a2Map = new HashMap<String, ActionDeclaration>();
-		a2Map.put("foo2", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
-		a2Map.put("bar2", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
+		a2Map.put("foo2", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
+		a2Map.put("bar2", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction2", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
 		expected.put(new AreaPath("a1", "a2"), a2Map);
 		
 		Map<String, ActionDeclaration> a3Map = new HashMap<String, ActionDeclaration>();
-		a3Map.put("foo3", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
+		a3Map.put("foo3", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "", "", "de.highbyte_le.weberknecht.ErrHandler2"));
 		expected.put(new AreaPath("a1", "a2", "a3"), a3Map);
 		
 		assertEquals(expected, conf.getAreaActionClassMap());
@@ -258,8 +258,8 @@ public class WeberknechtConfTest {
 		
 		{	// root
 			Map<String, ActionDeclaration> expectedActionClassMap = new HashMap<String, ActionDeclaration>();
-			expectedActionClassMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.FooAction", "pre1", "post1", null));
-			expectedActionClassMap.put("bar", new ActionDeclaration("de.highbyte_le.weberknecht.BarAction", "pre1", "post1", null));
+			expectedActionClassMap.put("foo", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction1", "pre1", "post1", null));
+			expectedActionClassMap.put("bar", new ActionDeclaration("de.highbyte_le.weberknecht.test.DummyAction2", "pre1", "post1", null));
 			assertEquals(expectedActionClassMap, conf.getActionClassMap(new AreaPath()));
 		}
 		{	// /a1

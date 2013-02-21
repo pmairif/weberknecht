@@ -3,6 +3,6 @@
 	<router class="de.highbyte_le.weberknecht.request.routing.SimpleRouter" />
 
 	<area>
-		<action name="index" class="com.example.IndexAction" />
+		<action name="index" class="de.highbyte_le.weberknecht.test.DummyAction1" />
 	</area>
 </weberknecht>

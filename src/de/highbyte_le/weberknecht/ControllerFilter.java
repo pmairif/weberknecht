@@ -28,6 +28,7 @@ import de.highbyte_le.weberknecht.conf.ConfigurationException;
 import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 import de.highbyte_le.weberknecht.db.DbConnectionHolder;
 import de.highbyte_le.weberknecht.db.DbConnectionProvider;
+import de.highbyte_le.weberknecht.request.actions.ActionNotFoundException;
 import de.highbyte_le.weberknecht.request.routing.Router;
 import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
 
@@ -99,13 +100,17 @@ public class ControllerFilter implements Filter {
 				}
 			}
 		}
-//		catch (ActionNotFoundException e) {
-//			filterChain.doFilter(request, response);
-//		}
+		catch (ActionNotFoundException e) {
+			log.warn("doFilter() - the router matched, but we got an action not found exception. probably incorrect router implementation.");
+			filterChain.doFilter(request, response);
+		}
 		catch (Exception e1) {
 			try {
 				log.error("service() - exception while error handler instantiation: "+e1.getMessage(), e1);	//$NON-NLS-1$
-				httpResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//call error page 500, TODO wird das vielleicht eh gemacht?
+
+				//exceptions occurring here were not processed by weberknecht error handlers.
+				//so it is probably a good idea to go on with the error handling of the container. 
+				httpResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	//call error page 500
 			}
 			catch (IOException e) {
 				log.error("service() - IOException: "+e.getMessage(), e);	//$NON-NLS-1$

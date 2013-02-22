@@ -17,8 +17,6 @@ import java.util.Map.Entry;
 import java.util.Vector;
 
 import javax.naming.NamingException;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -72,10 +70,6 @@ public class ControllerCore {
 	
 	private ServletContext servletContext;
 	
-	private ServletConfig servletConfig = null;
-	
-	private FilterConfig filterConfig = null;
-	
 	/**
 	 * Logger for this class
 	 */
@@ -119,20 +113,6 @@ public class ControllerCore {
 	 */
 	public DbConnectionProvider getDbConnectionProvider() {
 		return dbConnectionProvider;
-	}
-	
-	/**
-	 * @param servletConfig the servletConfig to set
-	 */
-	public void setServletConfig(ServletConfig servletConfig) {
-		this.servletConfig = servletConfig;
-	}
-	
-	/**
-	 * @param filterConfig the filterConfig to set
-	 */
-	public void setFilterConfig(FilterConfig filterConfig) {
-		this.filterConfig = filterConfig;
 	}
 	
 	public Router createRouter(DbConnectionHolder conHolder) throws InstantiationException, IllegalAccessException,
@@ -264,7 +244,7 @@ public class ControllerCore {
 		}
 
 		if (action instanceof Configurable)
-			((Configurable)action).setContext(servletConfig, filterConfig, servletContext);
+			((Configurable)action).setContext(servletContext);
 	}
 
 	private void doRedirect(HttpServletRequest request, HttpServletResponse response, String redirectDestination)

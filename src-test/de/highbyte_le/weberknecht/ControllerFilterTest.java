@@ -9,13 +9,15 @@
 package de.highbyte_le.weberknecht;
 
 import static de.highbyte_le.weberknecht.test.TestUtil.readConfig;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +39,6 @@ public class ControllerFilterTest {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private ServletContext servletContext;
-	private FilterConfig filterConfig;
 	private FilterChain filterChain;
 	
 	@Before
@@ -45,10 +46,9 @@ public class ControllerFilterTest {
 		filter = new ControllerFilter();
 		
 		servletContext = mock(ServletContext.class);
-		filterConfig = mock(FilterConfig.class);
 
 		WeberknechtConf conf = readConfig("test-data/weberknecht-controller-test.xml");
-		filter.init(servletContext, conf, null, filterConfig);
+		filter.init(servletContext, conf, null);
 
 		request = mock(HttpServletRequest.class);
 		when(request.getServletPath()).thenReturn("");

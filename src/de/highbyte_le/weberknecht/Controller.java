@@ -50,7 +50,6 @@ public class Controller extends HttpServlet {
 	public void init() throws ServletException {
 		try {
 			core = new ControllerCore(getServletContext());
-			core.setServletConfig(getServletConfig());
 		}
 		catch (Exception e) {
 			log.error("init() - Exception: "+e.getMessage(), e);
@@ -60,7 +59,6 @@ public class Controller extends HttpServlet {
 
 	protected void init(ServletContext servletContext, WeberknechtConf conf, DbConnectionProvider dbConnectionProvider) throws ClassNotFoundException, ConfigurationException {
 		core = new ControllerCore(servletContext, conf, dbConnectionProvider);
-		core.setServletConfig(getServletConfig());
 	}
 
 	@Override

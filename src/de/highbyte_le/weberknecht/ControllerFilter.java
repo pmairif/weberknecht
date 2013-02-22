@@ -54,7 +54,6 @@ public class ControllerFilter implements Filter {
 	public void init(FilterConfig filterConfig) throws ServletException {
 		try {
 			core = new ControllerCore(filterConfig.getServletContext());
-			core.setFilterConfig(filterConfig);
 		}
 		catch (Exception e) {
 			log.error("init() - Exception: "+e.getMessage(), e);
@@ -62,9 +61,8 @@ public class ControllerFilter implements Filter {
 		}
 	}
 	
-	protected void init(ServletContext servletContext, WeberknechtConf conf, DbConnectionProvider dbConnectionProvider, FilterConfig filterConfig) throws ClassNotFoundException, ConfigurationException {
+	protected void init(ServletContext servletContext, WeberknechtConf conf, DbConnectionProvider dbConnectionProvider) throws ClassNotFoundException, ConfigurationException {
 		core = new ControllerCore(servletContext, conf, dbConnectionProvider);
-		core.setFilterConfig(filterConfig);
 	}
 
 	/* (non-Javadoc)

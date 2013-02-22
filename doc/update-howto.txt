@@ -28,8 +28,9 @@
 	- the router interface changed. If you implemented your own router, you
 	  have to implement the setConfig method.
 	
-	- the interface Configurable changed. If you implemented it, you have to
-	  update these classes.
+	- The interface Configurable changed: ServletConfig was dropped. The method
+	  getInitParameter() is also available in ServletContext. If you
+	  implemented it, you have to update these classes.
 	
 	- The generic beans were removed. If they were used, they have to be
 	  replaced or copied from a previous release.

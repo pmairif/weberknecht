@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weberknecht>
+	<actions default="foo.do">
+		<action name="foo" class="de.highbyte_le.weberknecht.test.DummyAction1" />
+		<action name="bar" class="de.highbyte_le.weberknecht.test.DummyAction2" />
+	</actions>
+
+	<!-- another area with same name, inheriting default -->
+	<actions>
+		<action name="foo1" class="de.highbyte_le.weberknecht.test.DummyAction1" />
+	</actions>
+	
+	<actions area="a1">
+		<action name="foo" class="de.highbyte_le.weberknecht.test.DummyAction1" />
+	</actions>
+	<actions area="a1" default="bar.do">
+		<action name="bar" class="de.highbyte_le.weberknecht.test.DummyAction1" />
+	</actions>
+</weberknecht>

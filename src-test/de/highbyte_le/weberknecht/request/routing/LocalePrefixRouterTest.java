@@ -441,7 +441,6 @@ public class LocalePrefixRouterTest {
 		assertNull(router.parseLocale(null));
 	}
 	
-	
 	@Test
 	public void testDefaultAction1() throws Exception {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-default-1.xml");
@@ -465,6 +464,35 @@ public class LocalePrefixRouterTest {
 		}
 	}
 
+	/**
+	 * second area with same name, inheriting default action
+	 */
+	@Test
+	public void testDefaultAction5a() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-default-5.xml");
+		router.setConfig(conf);
+		
+		{	//expect default action
+			RoutingTarget target = router.routeUri("/", null);
+			assertEquals("foo", target.getActionName());
+			assertEquals("do", target.getViewProcessorName());
+			assertNull(target.getTask());
+		}
+	}
+	
+	@Test
+	public void testDefaultAction5b() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-default-5.xml");
+		router.setConfig(conf);
+		
+		{	//expect default action
+			RoutingTarget target = router.routeUri("/a1", null);
+			assertEquals("bar", target.getActionName());
+			assertEquals("do", target.getViewProcessorName());
+			assertNull(target.getTask());
+		}
+	}
+	
 	@Test
 	public void testDefaultAction1WithLocale() throws Exception {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-default-1-locale.xml");

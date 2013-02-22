@@ -200,7 +200,8 @@ public class WeberknechtConf {
 				AreaPath subPath = path.fork(area);
 				
 				String defaultAction = actionsElement.getAttributeValue("default");
-				conf.defaultActions.put(subPath, defaultAction);
+				if (defaultAction != null)	//don't delete existing defaults for areas with same name
+					conf.defaultActions.put(subPath, defaultAction);
 				
 				readArea(conf, preId, postId, errHandler, actionsElement, subPath);
 

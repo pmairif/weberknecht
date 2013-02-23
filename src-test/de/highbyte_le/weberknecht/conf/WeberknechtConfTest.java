@@ -459,4 +459,15 @@ public class WeberknechtConfTest {
 		
 		assertEquals("bar1.do", conf.getDefaultAction(new AreaPath()));
 	}
+
+	@Test
+	public void testGetActionProcessorSuffixMap() throws IOException, ConfigurationException {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-view-processors.xml");
+
+		Map<String, String> expected = new HashMap<String, String>();
+		expected.put("", "de.highbyte_le.weberknecht.request.view.WebActionProcessor");
+		expected.put("xml", "de.highbyte_le.weberknecht.request.view.DataActionProcessor");
+		
+		assertEquals(expected, conf.getActionProcessorSuffixMap());
+	}
 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weberknecht>
+	<area>
+		<action name="foo" class="de.highbyte_le.weberknecht.test.DummyAction1" />
+	</area>
+
+	<action-view-processors>
+		<action-view-processor suffix="xml" class="de.highbyte_le.weberknecht.request.view.DataActionProcessor" />
+		<action-view-processor suffix="" class="de.highbyte_le.weberknecht.request.view.WebActionProcessor" />
+	</action-view-processors>
+	
+</weberknecht>

@@ -9,8 +9,7 @@
 package de.highbyte_le.weberknecht.request.routing;
 
 import static de.highbyte_le.weberknecht.test.TestUtil.readConfig;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -62,7 +61,17 @@ public class LocalePrefixRouterTest {
 		assertEquals(new AreaPath(), target.getAreaPath());
 		assertNull(target.getTask());
 	}
-	
+
+	@Test
+	public void simpleTestEmptySuffix() {
+		RoutingTarget target = router.routeUri("/foo", null);
+		assertNotNull(target);
+		assertEquals("foo", target.getActionName());
+		assertEquals("", target.getViewProcessorName());
+		assertEquals(new AreaPath(), target.getAreaPath());
+		assertNull(target.getTask());
+	}
+
 	@Test
 	public void simpleTest2() {
 		RoutingTarget target = router.routeUri("/bar.data", null);

@@ -10,6 +10,7 @@ package de.highbyte_le.weberknecht.request.routing;
 
 import static de.highbyte_le.weberknecht.test.TestUtil.readConfig;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
@@ -61,6 +62,16 @@ public class AreaCapableRouterTest {
 		assertNull(target.getTask());
 	}
 	
+	@Test
+	public void simpleTestEmptySuffix() {
+		RoutingTarget target = router.routeUri("/foo", null);
+		assertNotNull(target);
+		assertEquals("foo", target.getActionName());
+		assertEquals("", target.getViewProcessorName());
+		assertEquals(new AreaPath(), target.getAreaPath());
+		assertNull(target.getTask());
+	}
+
 	@Test
 	public void simpleTest2() {
 		RoutingTarget target = router.routeUri("/bar.data", null);

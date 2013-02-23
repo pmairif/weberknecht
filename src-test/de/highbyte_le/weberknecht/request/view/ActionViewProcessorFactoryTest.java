@@ -43,6 +43,16 @@ public class ActionViewProcessorFactoryTest {
 	}
 
 	/**
+	 * default suffix ""
+	 */
+	@Test
+	public void testCreateActionProcessorDefaultNoSuffix() {
+		ActionViewProcessor actual = factory.createActionProcessor("", servletContext);
+		assertNotNull(actual);
+		assertTrue(actual instanceof WebActionProcessor);
+	}
+	
+	/**
 	 * default suffix feed
 	 */
 	@Test

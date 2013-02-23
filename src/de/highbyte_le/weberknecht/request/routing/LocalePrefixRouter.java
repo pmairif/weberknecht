@@ -28,7 +28,7 @@ public class LocalePrefixRouter implements Router {
 	 * pattern for the whole URI
 	 */
 	private static final Pattern pattern = Pattern.compile(
-			"([/a-z0-9_-]+)?(/[a-z0-9_!-]+\\.[a-z]+)?",	//$NON-NLS-1$
+			"([/a-z0-9_-]+)?(/[a-z0-9_!.-]+)?",	//$NON-NLS-1$
 			Pattern.CASE_INSENSITIVE
 	); 
 
@@ -36,7 +36,7 @@ public class LocalePrefixRouter implements Router {
 	 * pattern for the action part
 	 */
 	private static final Pattern actionPattern = Pattern.compile(
-			"/?([a-z0-9_-]+)(![a-z0-9_-]*)?\\.([a-z]+)",	//$NON-NLS-1$
+			"/?([a-z0-9_-]+)(![a-z0-9_-]*)?(\\.[a-z]+)?",	//$NON-NLS-1$
 			Pattern.CASE_INSENSITIVE
 	);
 	
@@ -110,11 +110,15 @@ public class LocalePrefixRouter implements Router {
 		if (m.matches()) {
 			String baseName = m.group(1);
 			String t = m.group(2);
-			String suffix = m.group(3);
+			String s = m.group(3);
 
 			String task = null;
 			if (t != null && t.length() > 1)
 				task = t.substring(1);
+			
+			String suffix = "";
+			if (s != null && s.length() > 1)
+				suffix = s.substring(1);
 			
 			target = new RoutingTarget(areaPath, baseName, suffix, task, locale);
 		}

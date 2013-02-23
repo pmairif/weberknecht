@@ -31,6 +31,7 @@ public class ActionViewProcessorFactory {
 	public ActionViewProcessorFactory() {
 		//register default processors
 		registerProcessor("do", WebActionProcessor.class);
+		registerProcessor("", WebActionProcessor.class);
 		registerProcessor("feed", FeedActionProcessor.class);
 		registerProcessor("json", JsonActionProcessor.class);
 		registerProcessor("data", DataActionProcessor.class);

@@ -101,4 +101,64 @@ public class RoutingTarget {
 	public Locale getLocale() {
 		return locale;
 	}
+
+	@Override
+	public String toString() {
+		return "RoutingTarget [areaPath=" + areaPath + ", actionName=" + actionName + ", viewProcessorName="
+				+ viewProcessorName + ", task=" + task + ", locale=" + locale + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((actionName == null) ? 0 : actionName.hashCode());
+		result = prime * result + ((areaPath == null) ? 0 : areaPath.hashCode());
+		result = prime * result + ((locale == null) ? 0 : locale.hashCode());
+		result = prime * result + ((task == null) ? 0 : task.hashCode());
+		result = prime * result + ((viewProcessorName == null) ? 0 : viewProcessorName.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RoutingTarget other = (RoutingTarget) obj;
+		if (actionName == null) {
+			if (other.actionName != null)
+				return false;
+		}
+		else if (!actionName.equals(other.actionName))
+			return false;
+		if (areaPath == null) {
+			if (other.areaPath != null)
+				return false;
+		}
+		else if (!areaPath.equals(other.areaPath))
+			return false;
+		if (locale == null) {
+			if (other.locale != null)
+				return false;
+		}
+		else if (!locale.equals(other.locale))
+			return false;
+		if (task == null) {
+			if (other.task != null)
+				return false;
+		}
+		else if (!task.equals(other.task))
+			return false;
+		if (viewProcessorName == null) {
+			if (other.viewProcessorName != null)
+				return false;
+		}
+		else if (!viewProcessorName.equals(other.viewProcessorName))
+			return false;
+		return true;
+	}
 }

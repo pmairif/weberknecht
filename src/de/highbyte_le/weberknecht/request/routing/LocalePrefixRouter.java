@@ -59,9 +59,6 @@ public class LocalePrefixRouter implements Router {
 				String action = areaMatcher.group(2);
 				
 				LocalePath localePath = new LocalePathResolver(conf).createPath(path);
-				if (null == localePath.getLocale() && conf.hasRoutingLocalePrefix() && !conf.getRoutingLocalePrefix().isOptional())
-					throw new RoutingNotPossibleException();
-
 				if (action != null && action.length() > 0) {
 					target = createTarget(localePath, action);
 				}

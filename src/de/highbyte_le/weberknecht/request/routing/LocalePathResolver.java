@@ -35,7 +35,12 @@ public class LocalePathResolver {
 			
 		String[] pathSegments = path.split("/");
 		pathSegments = ltrim(pathSegments);
-		return extractLocale(pathSegments);
+		LocalePath localePath = extractLocale(pathSegments);
+		
+		if (null == localePath.getLocale() && conf.hasRoutingLocalePrefix() && !conf.getRoutingLocalePrefix().isOptional())
+			throw new RoutingNotPossibleException();
+
+		return localePath;
 	}
 	
 	/**
@@ -57,29 +62,21 @@ public class LocalePathResolver {
 		return ret;
 	}
 
-	protected LocalePath extractLocale(String[] pathSegments) throws RoutingNotPossibleException {
+	protected LocalePath extractLocale(String[] pathSegments) {
 		LocalePath ret = null;
 		
 		RoutingLocalePrefix prefix = conf.getRoutingLocalePrefix();
-		if (null != prefix)	{	//no prefix, no handling necessary
-			if (null == pathSegments || pathSegments.length == 0) {
-				if (!prefix.isOptional())
-					throw new RoutingNotPossibleException();
-			}
-			else {
-				String candidate = pathSegments[0];
-				if (prefix.getAllowedLocales().contains(candidate)) {
-					Locale locale = parseLocale(candidate);
-					
-					AreaPath path = new AreaPath();
-					for (int i=1; i<pathSegments.length; i++)
-						path.addPath(pathSegments[i]);
-					
-					ret = new LocalePath(path, locale);
-				}
-				else if (!prefix.isOptional()) {
-					throw new RoutingNotPossibleException();
-				}
+		//handling only necessary, if prefix set
+		if (null != prefix && null != pathSegments && pathSegments.length > 0) {
+			String candidate = pathSegments[0];
+			if (prefix.getAllowedLocales().contains(candidate)) {
+				Locale locale = parseLocale(candidate);
+				
+				AreaPath path = new AreaPath();
+				for (int i=1; i<pathSegments.length; i++)
+					path.addPath(pathSegments[i]);
+				
+				ret = new LocalePath(path, locale);
 			}
 		}
 		

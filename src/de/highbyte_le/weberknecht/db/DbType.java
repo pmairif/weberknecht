@@ -13,6 +13,7 @@ package de.highbyte_le.weberknecht.db;
  * database system type
  * @author pmairif
  */
+@Deprecated
 public enum DbType {
 	/**
 	 * MySQL

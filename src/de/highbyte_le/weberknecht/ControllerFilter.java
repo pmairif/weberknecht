@@ -85,7 +85,7 @@ public class ControllerFilter implements Filter {
 		DbConnectionHolder conHolder = new DbConnectionHolder(core.getDbConnectionProvider());
 		try {
 			Router router = core.createRouter(conHolder);	//choose router depending on config
-			RoutingTarget routingTarget = router.routeUri(httpRequest.getServletPath(), httpRequest.getPathInfo());
+			RoutingTarget routingTarget = router.routeUri(httpRequest);
 			if (null == routingTarget) {
 				filterChain.doFilter(request, response);
 			}

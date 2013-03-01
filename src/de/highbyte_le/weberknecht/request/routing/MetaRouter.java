@@ -11,6 +11,8 @@ package de.highbyte_le.weberknecht.request.routing;
 import java.util.List;
 import java.util.Vector;
 
+import javax.servlet.http.HttpServletRequest;
+
 import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 
 /**
@@ -30,15 +32,12 @@ public class MetaRouter implements Router {
 		this.routers = new Vector<Router>();
 	}
 	
-	/* (non-Javadoc)
-	 * @see de.highbyte_le.weberknecht.request.routing.Router#routeUri(java.lang.String)
-	 */
 	@Override
-	public RoutingTarget routeUri(String servletPath, String pathInfo) {
+	public RoutingTarget routeUri(HttpServletRequest request) {
 		RoutingTarget target = null;
 		
 		for (Router r: routers) {
-			target = r.routeUri(servletPath, pathInfo);
+			target = r.routeUri(request);
 			if (target != null)
 				break;
 		}

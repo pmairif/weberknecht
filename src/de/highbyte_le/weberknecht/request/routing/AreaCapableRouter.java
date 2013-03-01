@@ -11,6 +11,8 @@ package de.highbyte_le.weberknecht.request.routing;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletRequest;
+
 import de.highbyte_le.weberknecht.conf.ConfigurationException;
 import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 
@@ -46,10 +48,11 @@ public class AreaCapableRouter implements Router {
 	
 	private AreaPathResolver pathResolver = null;
 
-	/* (non-Javadoc)
-	 * @see de.highbyte_le.weberknecht.request.routing.Router#routeUri(java.lang.String)
-	 */
 	@Override
+	public RoutingTarget routeUri(HttpServletRequest request) {
+		return routeUri(request.getServletPath(), request.getPathInfo());
+	}
+	
 	public RoutingTarget routeUri(String servletPath, String pathInfo) {
 		StringBuilder b = new StringBuilder(servletPath);
 		if (pathInfo != null)

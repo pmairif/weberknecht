@@ -10,6 +10,8 @@ package de.highbyte_le.weberknecht.test;
 
 import java.sql.Connection;
 
+import javax.servlet.http.HttpServletRequest;
+
 import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 import de.highbyte_le.weberknecht.request.DatabaseCapable;
 import de.highbyte_le.weberknecht.request.routing.AreaPathResolver;
@@ -29,10 +31,11 @@ public class DbUsingRouter implements Router, DatabaseCapable {
 		//
 	}
 
-	/* (non-Javadoc)
-	 * @see de.highbyte_le.weberknecht.request.routing.Router#routeUri(java.lang.String)
-	 */
 	@Override
+	public RoutingTarget routeUri(HttpServletRequest request) {
+		return routeUri(request.getServletPath(), request.getPathInfo());
+	}
+	
 	public RoutingTarget routeUri(String servletPath, String pathInfo) {
 		return null;
 	}

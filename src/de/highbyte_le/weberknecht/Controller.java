@@ -71,7 +71,7 @@ public class Controller extends HttpServlet {
 		DbConnectionHolder conHolder = new DbConnectionHolder(core.getDbConnectionProvider());
 		try {
 			Router router = core.createRouter(conHolder);	//choose router depending on config
-			RoutingTarget routingTarget = router.routeUri(request.getServletPath(), request.getPathInfo());
+			RoutingTarget routingTarget = router.routeUri(request);
 
 			core.executeAction(request, response, conHolder, routingTarget);
 		}

@@ -24,6 +24,10 @@ public class AreaPath implements Cloneable {
 		this.areas = new Vector<String>();
 	}
 
+	public AreaPath(List<String> areas) {
+		this.areas = new Vector<String>(areas);
+	}
+	
 	public AreaPath(String...areas) {
 		this.areas = new Vector<String>(areas.length);
 		for (String area: areas) {

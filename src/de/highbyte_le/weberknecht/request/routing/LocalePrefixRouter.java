@@ -8,6 +8,8 @@
  */
 package de.highbyte_le.weberknecht.request.routing;
 
+import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,14 +26,6 @@ import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 public class LocalePrefixRouter implements Router {
 
 	/**
-	 * pattern for the whole URI
-	 */
-	private static final Pattern pattern = Pattern.compile(
-			"([/a-z0-9_-]+)?(/[a-z0-9_!.-]+)?",	//$NON-NLS-1$
-			Pattern.CASE_INSENSITIVE
-	); 
-
-	/**
 	 * pattern for the action part
 	 */
 	private static final Pattern actionPattern = Pattern.compile(
@@ -45,36 +39,42 @@ public class LocalePrefixRouter implements Router {
 
 	@Override
 	public RoutingTarget routeUri(HttpServletRequest request) {
-		return routeUri(request.getServletPath(), request.getPathInfo());
+		StringBuilder b = new StringBuilder(request.getServletPath());
+		
+		String pathInfo = request.getPathInfo();
+		if (pathInfo != null)
+			b.append(pathInfo);
+
+		return process(b.toString());
 	}
 	
-	public RoutingTarget routeUri(String servletPath, String pathInfo) {
+	public RoutingTarget process(String path) {
 		try {
 			RoutingTarget target = null;
 
-			StringBuilder b = new StringBuilder(servletPath);
-			if (pathInfo != null)
-				b.append(pathInfo);
+			LocalePath localePath = new LocalePathResolver(conf).createPath(path);
+			List<String> areas = localePath.getPath().getAreas();
+			int areaSize = areas.size();
 			
-			Matcher areaMatcher = pattern.matcher(b.toString());
-			if (areaMatcher.matches()) {
-				String path = areaMatcher.group(1);
-				String action = areaMatcher.group(2);
-				
-				LocalePath localePath = new LocalePathResolver(conf).createPath(path);
-				if (action != null && action.length() > 0) {
-					target = createTarget(localePath, action);
-				}
-				else {
-					String defaultAction = conf.getDefaultAction(localePath.getPath());
-					if (defaultAction != null)
-						target = createTarget(localePath, defaultAction);
-				}
+			//1.) last part interpreted as action
+			if (areaSize > 0) {
+				String action =  areas.get(areaSize-1);
+				List<String> subPath = areas.subList(0, areaSize-1);
+				target = createTarget(localePath.getLocale(), subPath, action);
 
+				if (pathResolver.knownTarget(target))
+					return target;
 			}
 
-			if (pathResolver.knownTarget(target))
-				return target;
+			//2.) path with default action
+			String defaultAction = conf.getDefaultAction(localePath.getPath());
+			if (defaultAction != null) {
+				target = createTarget(localePath.getLocale(), areas, defaultAction);
+
+				if (pathResolver.knownTarget(target))
+					return target;
+			}
+
 			return null;
 		}
 		catch (RoutingNotPossibleException e) {
@@ -83,7 +83,7 @@ public class LocalePrefixRouter implements Router {
 		}
 	}
 	
-	protected RoutingTarget createTarget(LocalePath localePath, String actionString) {
+	protected RoutingTarget createTarget(Locale locale, List<String> areas, String actionString) {
 		RoutingTarget target = null;
 
 		Matcher m = actionPattern.matcher(actionString);
@@ -100,7 +100,7 @@ public class LocalePrefixRouter implements Router {
 			if (s != null && s.length() > 1)
 				suffix = s.substring(1);
 			
-			target = new RoutingTarget(localePath.getPath(), baseName, suffix, task, localePath.getLocale());
+			target = new RoutingTarget(new AreaPath(areas), baseName, suffix, task, locale);
 		}
 		
 		return target;
@@ -121,5 +121,4 @@ public class LocalePrefixRouter implements Router {
 	public void setConfig(WeberknechtConf conf) throws ConfigurationException {
 		setConfig(conf, new AreaPathResolver(conf));
 	}
-	
 }

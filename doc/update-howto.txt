@@ -26,7 +26,8 @@
 	  methods.
 	  
 	- the router interface changed. If you implemented your own router, you
-	  have to implement the setConfig method.
+	  have to implement the setConfig method and adopt the change in
+	  routeUri().
 	
 	- The interface Configurable changed: ServletConfig was dropped. The method
 	  getInitParameter() is also available in ServletContext. If you
@@ -44,7 +45,8 @@
 	  <post-processors-def id="..."> and applied with <pre-processors ref="" />
 	  and <post-processors ref="..." />. Multiple sets are possible and it's
 	  possible to assign different sets to certain areas or even actions.
-	  Additionally and optionally <actions area="FOO"> changed to <area name="FOO">.
+	  Additionally and optionally <actions area="FOO"> changed to
+	  <area name="FOO">.
 	  
 	  If your old config looked like this:
 	  	<?xml version="1.0" encoding="UTF-8"?>

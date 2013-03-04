@@ -439,18 +439,6 @@ public class LocalePrefixRouterTest {
 	}
 	
 	@Test
-	public void testParseLocale() throws Exception {
-		assertEquals(new Locale("de"), router.parseLocale("de"));
-		assertEquals(new Locale("de"), router.parseLocale(" de "));
-		assertEquals(new Locale("en"), router.parseLocale("en"));
-		assertEquals(new Locale("en", "US"), router.parseLocale("en_US"));
-		
-		assertNull(router.parseLocale(""));
-		assertNull(router.parseLocale("  "));
-		assertNull(router.parseLocale(null));
-	}
-	
-	@Test
 	public void testDefaultAction1() throws Exception {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-default-1.xml");
 		router.setConfig(conf);

@@ -28,7 +28,6 @@ import de.highbyte_le.weberknecht.conf.ConfigurationException;
 import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 import de.highbyte_le.weberknecht.db.DbConnectionHolder;
 import de.highbyte_le.weberknecht.db.DbConnectionProvider;
-import de.highbyte_le.weberknecht.request.actions.ActionNotFoundException;
 import de.highbyte_le.weberknecht.request.routing.Router;
 import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
 
@@ -85,7 +84,7 @@ public class ControllerFilter implements Filter {
 		DbConnectionHolder conHolder = new DbConnectionHolder(core.getDbConnectionProvider());
 		try {
 			Router router = core.createRouter(conHolder);	//choose router depending on config
-			RoutingTarget routingTarget = router.routeUri(httpRequest.getServletPath(), httpRequest.getPathInfo());
+			RoutingTarget routingTarget = router.routeUri(httpRequest);
 			if (null == routingTarget) {
 				filterChain.doFilter(request, response);
 			}
@@ -97,10 +96,6 @@ public class ControllerFilter implements Filter {
 					log.info("service() - page delivery of '"+httpRequest.getRequestURI()+"' took "+(finish-start)+" ms");
 				}
 			}
-		}
-		catch (ActionNotFoundException e) {
-			log.warn("doFilter() - the router matched, but we got an action not found exception. probably incorrect router implementation.");
-			filterChain.doFilter(request, response);
 		}
 		catch (Exception e1) {
 			try {

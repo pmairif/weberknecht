@@ -35,7 +35,6 @@ import de.highbyte_le.weberknecht.db.DefaultWebDbConnectionProvider2;
 import de.highbyte_le.weberknecht.request.Configurable;
 import de.highbyte_le.weberknecht.request.DatabaseCapable;
 import de.highbyte_le.weberknecht.request.ModelHelper;
-import de.highbyte_le.weberknecht.request.actions.ActionNotFoundException;
 import de.highbyte_le.weberknecht.request.actions.ExecutableAction;
 import de.highbyte_le.weberknecht.request.error.DefaultErrorHandler;
 import de.highbyte_le.weberknecht.request.error.ErrorHandler;
@@ -164,10 +163,9 @@ public class ControllerCore {
 	}
 	
 	public void executeAction(HttpServletRequest httpRequest, HttpServletResponse httpResponse,
-			DbConnectionHolder conHolder, RoutingTarget routingTarget) throws ActionNotFoundException {
+			DbConnectionHolder conHolder, RoutingTarget routingTarget) {
 
 		try {
-
 			ModelHelper modelHelper = new ModelHelper(httpRequest, servletContext);
 			modelHelper.setSelf(httpRequest);
 			
@@ -196,9 +194,6 @@ public class ControllerCore {
 			catch (RedirectException e) {
 				doRedirect(httpRequest, httpResponse, e.getLocalRedirectDestination());
 			}
-		}
-		catch (ActionNotFoundException e) {
-			throw e;
 		}
 		catch (Exception e) {
 			handleException(httpRequest, httpResponse, routingTarget, e);

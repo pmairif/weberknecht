@@ -24,7 +24,6 @@ import de.highbyte_le.weberknecht.conf.ConfigurationException;
 import de.highbyte_le.weberknecht.conf.WeberknechtConf;
 import de.highbyte_le.weberknecht.db.DbConnectionHolder;
 import de.highbyte_le.weberknecht.db.DbConnectionProvider;
-import de.highbyte_le.weberknecht.request.actions.ActionNotFoundException;
 import de.highbyte_le.weberknecht.request.routing.Router;
 import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
 
@@ -71,19 +70,9 @@ public class Controller extends HttpServlet {
 		DbConnectionHolder conHolder = new DbConnectionHolder(core.getDbConnectionProvider());
 		try {
 			Router router = core.createRouter(conHolder);	//choose router depending on config
-			RoutingTarget routingTarget = router.routeUri(request.getServletPath(), request.getPathInfo());
+			RoutingTarget routingTarget = router.routeUri(request);
 
 			core.executeAction(request, response, conHolder, routingTarget);
-		}
-		catch (ActionNotFoundException e1) {
-			try {
-				log.error("service() - exception while error handler instantiation: "+e1.getMessage(), e1);	//$NON-NLS-1$
-				response.sendError(HttpServletResponse.SC_NOT_FOUND);	//call error page 404
-			}
-			catch (IOException e) {
-				log.error("service() - IOException: "+e.getMessage(), e);	//$NON-NLS-1$
-				response.setStatus(HttpServletResponse.SC_NOT_FOUND);	//just return 404
-			}
 		}
 		catch (Exception e1) {
 			try {

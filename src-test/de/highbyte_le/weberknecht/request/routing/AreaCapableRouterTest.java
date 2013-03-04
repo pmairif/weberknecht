@@ -63,16 +63,6 @@ public class AreaCapableRouterTest {
 	}
 	
 	@Test
-	public void simpleTestEmptySuffix() {
-		RoutingTarget target = router.routeUri("/foo", null);
-		assertNotNull(target);
-		assertEquals("foo", target.getActionName());
-		assertEquals("", target.getViewProcessorName());
-		assertEquals(new AreaPath(), target.getAreaPath());
-		assertNull(target.getTask());
-	}
-
-	@Test
 	public void simpleTest2() {
 		RoutingTarget target = router.routeUri("/bar.data", null);
 		assertEquals("bar", target.getActionName());
@@ -324,25 +314,5 @@ public class AreaCapableRouterTest {
 			assertEquals("do", target.getViewProcessorName());
 			assertNull(target.getTask());
 		}
-	}
-	
-	/**
-	 * make sure ambiguous paths are properly handled.
-	 */
-	@Test
-	public void testNoSuffix() throws Exception {
-		WeberknechtConf conf = readConfig("test-data/weberknecht-no-suffix.xml");
-		router.setConfig(conf);
-
-		{	//expect action named foo in root area
-			RoutingTarget expected = new RoutingTarget(new AreaPath(), "foo", "", null);
-			assertEquals(expected, router.routeUri("/foo", null));
-		}
-
-		{	//'foo' meant as area
-			RoutingTarget expected = new RoutingTarget(new AreaPath("foo"), "home", "", null);
-			assertEquals(expected, router.routeUri("/foo/home", null));
-		}
-		
 	}
 }

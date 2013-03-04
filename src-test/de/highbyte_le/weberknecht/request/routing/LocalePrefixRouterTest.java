@@ -579,4 +579,24 @@ public class LocalePrefixRouterTest {
 			assertNull(target.getTask());
 		}
 	}
+	
+	/**
+	 * make sure ambiguous paths are properly handled.
+	 */
+	@Test
+	public void testNoSuffix() throws Exception {
+		WeberknechtConf conf = readConfig("test-data/weberknecht-no-suffix.xml");
+		router.setConfig(conf);
+
+		{	//expect action named foo in root area
+			RoutingTarget expected = new RoutingTarget(new AreaPath(), "foo", "", null);
+			assertEquals(expected, router.routeUri("/foo", null));
+		}
+
+		{	//'foo' meant as area
+			RoutingTarget expected = new RoutingTarget(new AreaPath("foo"), "home", "", null);
+			assertEquals(expected, router.routeUri("/foo/home", null));
+		}
+		
+	}
 }

@@ -89,10 +89,12 @@ public abstract class RpxTaglibBase extends TagSupport {
 			tokenUrl.append("/");
 		
 		//response path
-		if (responsePath.charAt(0) == '/')
-			tokenUrl.append(responsePath.substring(1));
-		else
-			tokenUrl.append(responsePath);
+		if (responsePath.length() > 0) {
+			if (responsePath.charAt(0) == '/')
+				tokenUrl.append(responsePath.substring(1));
+			else
+				tokenUrl.append(responsePath);
+		}
 		
 		//parameter
 		if (tokenUrl.toString().contains("?"))

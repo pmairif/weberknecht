@@ -172,6 +172,7 @@ public class ControllerCore {
 			ExecutableAction action = pathResolver.resolveAction(routingTarget);
 			if (log.isDebugEnabled())
 				log.debug("executeAction() - processing action "+action.getClass().getSimpleName());
+			httpRequest.setAttribute(ModelHelper.ACTION_KEY, action);
 
 			List<Processor> processors = setupProcessors(routingTarget);
 			

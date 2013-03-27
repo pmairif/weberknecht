@@ -1,10 +1,9 @@
 /*
  * ModelHelper.java (weberknecht)
  *
- * Copyright 2009 Patrick Mairif.
+ * Copyright 2009-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
- * created: 09.12.2009
  * tabstop=4, charset=UTF-8
  */
 package de.highbyte_le.weberknecht.request;
@@ -14,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import de.highbyte_le.weberknecht.request.actions.ExecutableAction;
 
 /**
  * helps getting model instances from request attributes
@@ -33,6 +34,8 @@ public class ModelHelper {
 	public static final String DEFAULT_MODEL_PREFIX = "de.highbyte_le.weberknecht.model";
 	
 	public static final String SELF_KEY = "de.highbyte_le.weberknecht.self";
+
+	public static final String ACTION_KEY = "de.highbyte_le.weberknecht.action";
 	
 	public ModelHelper(HttpServletRequest request, ServletContext context) {
 		this.request = request;
@@ -52,14 +55,20 @@ public class ModelHelper {
 		request.setAttribute(getFullKey(name), obj);
 	}
 	
+	public ExecutableAction getAction() {
+		return (ExecutableAction) request.getAttribute(ACTION_KEY);
+	}
+	
 	/**
 	 * Contains the full path, since 0.12
 	 */
+	@Deprecated
 	public String getSelf() {
 		return (String) request.getAttribute(SELF_KEY);
 	}
 	
-	public void setSelf(HttpServletRequest request) {	//TODO build test
+	@Deprecated
+	public void setSelf(HttpServletRequest request) {
 		StringBuilder b = new StringBuilder();
 		
 		b.append(request.getContextPath());
@@ -68,6 +77,7 @@ public class ModelHelper {
 		setSelf(b.toString());
 	}
 	
+	@Deprecated
 	protected void setSelf(String self) {
 		request.setAttribute(SELF_KEY, self);
 	}

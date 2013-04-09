@@ -6,15 +6,14 @@
 	<property name="dir.src"		value="src" />
 	<property name="dir.classes"	value="bin" />
 	<property name="dir.lib"		value="lib" />
-	<property name="dir.rpx"		value="modules/rpx" />
 
 	<!-- ==============================
 		Default Target
 	=============================== -->
-	<target name="all" depends="compile, jar, module.rpx, dist"
+	<target name="all" depends="compile, jar, dist"
 		description="build all"/>
 
-	<target name="clean" depends="clean.java, clean.apidoc, module.rpx.clean, module.rpx.clean.apidoc"
+	<target name="clean" depends="clean.java, clean.apidoc"
 		description="removes all compiled stuff" />
 
 	<target name="mrproper" depends="clean">
@@ -39,26 +38,9 @@
 		</javac>
 	</target>
 	
-	<target name="module.rpx.compile" depends="compile"
-		description="compiles the rpx-module java sources">
-		
-		<javac srcdir="${dir.rpx}/src" destdir="${dir.rpx}/bin" encoding="UTF-8" includeantruntime="false" source="1.6" target="1.6">
-			<classpath>
-				<path refid="cp.webapp"/>
-				<pathelement path="bin"/>
-			</classpath>
-		</javac>
-	</target>
-	
 	<target name="clean.java">
 		<delete>
 			<fileset dir="${dir.classes}" includes="**/*.class" />
-		</delete>
-	</target>
-	
-	<target name="module.rpx.clean">
-		<delete>
-			<fileset dir="${dir.rpx}/bin" includes="**/*.class" />
 		</delete>
 	</target>
 	
@@ -75,20 +57,6 @@
 					<attribute name="Implementation-Title" value="Weberknecht"/>
 					<attribute name="Implementation-Version" value="${version.weberknecht}"/>
 				</section>
-			</manifest>
-		</jar>
-	</target>
-	
-	<target name="module.rpx" depends="module.rpx.jar, module.rpx.apidoc" description="creates rpx-module" />
-	
-	<target name="module.rpx.jar" depends="module.rpx.compile" description="creates jar for rpx-module">
-		<mkdir dir="jar"/>
-		
-		<jar destfile="jar/weberknecht-rpx.jar" basedir="${dir.rpx}/bin" includes="**/*.class **/*.properties">
-			<metainf dir="${dir.rpx}" includes="tlds/*.tld" />
-			
-			<manifest>
-    			<attribute name="Built-By" value="${user.name}"/>
 			</manifest>
 		</jar>
 	</target>
@@ -121,7 +89,7 @@
 	<!-- ==============================
 		dist
 	=============================== -->
-	<target name="dist" depends="version, jar, apidoc, json, module.rpx" description="create weberknecht distribution files">
+	<target name="dist" depends="version, jar, apidoc, json" description="create weberknecht distribution files">
 		<delete dir="dist" />
 		<mkdir dir="dist"/>
 		<dist-weberknecht dest="dist/weberknecht-${version.weberknecht}" jar-subdir="."/>
@@ -145,25 +113,15 @@
 			<copy tofile="@{dest}/@{jar-subdir}/weberknecht-${version.weberknecht}.jar" file="jar/weberknecht.jar" />
 			<copy tofile="@{dest}/@{jar-subdir}/weberknecht-${version.weberknecht}-api.zip" file="doc/api.zip" />
 			
-			<copy tofile="@{dest}/@{jar-subdir}/weberknecht-rpx-${version.weberknecht}.jar" file="jar/weberknecht-rpx.jar" />
-			<copy tofile="@{dest}/@{jar-subdir}/weberknecht-rpx-${version.weberknecht}-api.zip" file="doc/api-rpx.zip" />
-			
 			<mkdir dir="@{dest}/lib"/>
 			<copy todir="@{dest}/lib">
 				<fileset dir="${dir.lib}" includes="jdom-*.jar commons-logging-*.jar commons-lang-*.jar" />
 				<fileset dir="json/jar" includes="json.jar" />
 			</copy>
 			
-			<!--
-			<mkdir dir="@{dest}/tlds"/>
-			<copy todir="@{dest}/tlds">
-				<fileset dir="tlds" includes="*.tld" />
-			</copy>
-			-->
-			
 			<mkdir dir="@{dest}/doc"/>
 			<copy todir="@{dest}/doc">
-				<fileset dir="doc" includes="ChangeLog LICENSE NOTICE update-howto.txt rpx-howto.txt" />
+				<fileset dir="doc" includes="ChangeLog LICENSE NOTICE update-howto.txt" />
 			</copy>
 		</sequential>
 	</macrodef>
@@ -183,24 +141,6 @@
 	<target name="clean.apidoc">
 		<delete includeemptydirs="true">
 			<fileset dir="doc" includes="api/** api.zip" />
-		</delete>
-	</target>
-	
-    <target name="module.rpx.apidoc" description="create api documentation (javadoc)">
-    	<mkdir dir="doc/api-rpx"/>
-        <javadoc destdir="doc/api-rpx" sourcepath="${dir.rpx}/src" protected="true" private="false" >
-        	<classpath>
-        		<path refid="cp.webapp" />
-        		<pathelement location="${dir.classes}"/>
-        	</classpath>
-       	</javadoc>
-    	
-    	<zip destfile="doc/api-rpx.zip" basedir="doc/api-rpx" compress="true"/>
-    </target>
-
-	<target name="module.rpx.clean.apidoc">
-		<delete includeemptydirs="true">
-			<fileset dir="doc" includes="api-rpx/** api-rpx.zip" />
 		</delete>
 	</target>
 </project> 

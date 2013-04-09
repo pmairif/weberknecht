@@ -27,7 +27,7 @@ next (1.0):
 	- execute() in actions without HttpServletResponse
 	- Action renamed to WebAction
 	- optional ActionBase introduced
-	- rpx-stuff moved to module 
+	- rpx-stuff moved to separate project
 	- build number and Version.DEFAULT was dropped
 	- processors can implement Configurable
 	- pre-/post-processor sets must be reffered explicitly by ids and can be assigned to areas or single classes

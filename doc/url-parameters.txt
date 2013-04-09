@@ -1,2 +1,0 @@
-reserved URL parameters:
-	do		used by the RPX filter

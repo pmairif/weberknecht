@@ -1,7 +1,7 @@
 /*
  * ErrorHandler.java (weberknecht)
  *
- * Copyright 2012 Patrick Mairif.
+ * Copyright 2012-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  *
  * tabstop=4, charset=UTF-8
@@ -21,6 +21,8 @@ import de.highbyte_le.weberknecht.request.view.AutoView;
  * just let {@link #getViewProcessorName()} return null and {@link #getStatus()} the error code you want.
  * </p>
  *
+ * <p>Views are processed only, if {@link #handleException(Exception, HttpServletRequest, RoutingTarget)} returns true.</p>
+ *
  * @author pmairif
  */
 public interface ErrorHandler extends Executable, AutoView {
@@ -29,8 +31,9 @@ public interface ErrorHandler extends Executable, AutoView {
 	 * 
 	 * @param exception
 	 * 		The exception to process.
+	 * @return true, if exception was handled; false, if another error handler should be called (e.g. the default error handler)
 	 */
-	public void handleException(Exception exception, HttpServletRequest request, RoutingTarget routingTarget) throws ErrorHandlingException;
+	public boolean handleException(Exception exception, HttpServletRequest request, RoutingTarget routingTarget) throws ErrorHandlingException;
 	
 	/**
 	 * get the HTTP Status code to return

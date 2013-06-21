@@ -1,7 +1,7 @@
 /*
  * DefaultErrorHandler.java (weberknecht)
  *
- * Copyright 2012 Patrick Mairif.
+ * Copyright 2012-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  *
  * tabstop=4, charset=UTF-8
@@ -41,7 +41,7 @@ public class DefaultErrorHandler implements ErrorHandler {
 	 * @see de.highbyte_le.weberknecht.request.ErrorHandler#handleException(java.lang.Exception, javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
-	public void handleException(Exception exception, HttpServletRequest request, RoutingTarget routingTarget) {
+	public boolean handleException(Exception exception, HttpServletRequest request, RoutingTarget routingTarget) {
 		if (exception instanceof ActionNotFoundException) {
 			log.warn("action not found: "+exception.getMessage()+"; request URI was "+request.getRequestURI());
 			this.statusCode = HttpServletResponse.SC_NOT_FOUND;	//throw 404, if action doesn't exist
@@ -71,6 +71,8 @@ public class DefaultErrorHandler implements ErrorHandler {
 			log.error("doGet() - "+exception.getClass().getSimpleName()+": "+exception.getMessage(), exception);	//$NON-NLS-1$
 			this.statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;	//throw 500
 		}
+		
+		return true;
 	}
 
 	/* (non-Javadoc)

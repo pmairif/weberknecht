@@ -251,33 +251,45 @@ public class ControllerCore {
 		response.setStatus(303);	//303 - "see other" (http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)
 	}
 
-	@SuppressWarnings("unchecked")
 	protected void handleException(HttpServletRequest request, HttpServletResponse response,
 			RoutingTarget routingTarget, Exception exception) {
 		DbConnectionHolder dbConHolder = new DbConnectionHolder(dbConnectionProvider); 
 		try {
-			//get error handler
-			Class<? extends ErrorHandler> errHandlerClass = DefaultErrorHandler.class;
+			List<ErrorHandler> handlerChain = new Vector<ErrorHandler>(2);
+
+			//custom handler first, if available
 			ActionDeclaration actionDeclaration = pathResolver.getActionDeclaration(routingTarget);
-			if (actionDeclaration != null && actionDeclaration.hasErrorHandlerClass())
-				errHandlerClass = (Class<? extends ErrorHandler>) Class.forName(actionDeclaration.getErrorHandlerClass());
-			
-			ErrorHandler handler = errHandlerClass.newInstance();
-			
-			//initialize error handler
-			initializeObject(handler, dbConHolder);
+			if (actionDeclaration != null && actionDeclaration.hasErrorHandlerClass()) {
+				ErrorHandler customHandler = getCustomErrorHandler(actionDeclaration);
+				if (customHandler != null) {
+					initializeObject(customHandler, dbConHolder);		//initialize error handler
+					handlerChain.add(customHandler);
+				}
+			}
+
+			//default handler
+			ErrorHandler defaultHandler = getDefaultErrorHandler();
+			initializeObject(defaultHandler, dbConHolder);
+			handlerChain.add(defaultHandler);
 
 			//handle exception
-			handler.handleException(exception, request, routingTarget);
-			
-			//process view, respecting requested content type
-			AutoViewProcessor processor = new AutoViewProcessor();
-			processor.setServletContext(servletContext);
-			processor.setActionViewProcessorFactory(actionProcessorFactory);
-			boolean view = processor.processView(request, response, handler);
+			int status = 0;
+			boolean view = false;
+			for (ErrorHandler handler: handlerChain) {
+				boolean processed = handler.handleException(exception, request, routingTarget);
+				status = handler.getStatus();
+				
+				if (processed) {
+					//process view, respecting requested content type
+					AutoViewProcessor processor = new AutoViewProcessor();
+					processor.setServletContext(servletContext);
+					processor.setActionViewProcessorFactory(actionProcessorFactory);
+					view = processor.processView(request, response, handler);
+					break;
+				}
+			}
 
 			//status
-			int status = handler.getStatus();
 			if (status > 0)	{//Don't set status, eg. on redirects
 				if (view)
 					response.setStatus(status);
@@ -304,5 +316,16 @@ public class ControllerCore {
 				log.error("SQLException while closing db connection: "+e.getMessage());	//$NON-NLS-1$
 			}
 		}
+	}
+
+	protected ErrorHandler getCustomErrorHandler(ActionDeclaration actionDeclaration) throws ClassNotFoundException,
+			InstantiationException, IllegalAccessException {
+		@SuppressWarnings("unchecked")
+		Class<? extends ErrorHandler> errHandlerClass = (Class<? extends ErrorHandler>) Class.forName(actionDeclaration.getErrorHandlerClass());
+		return errHandlerClass.newInstance();
+	}
+
+	protected ErrorHandler getDefaultErrorHandler() throws InstantiationException, IllegalAccessException {
+		return DefaultErrorHandler.class.newInstance();
 	}
 }

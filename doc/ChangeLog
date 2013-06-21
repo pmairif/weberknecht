@@ -1,4 +1,4 @@
-next (1.0):
+next (0.13):
 	- ModelHelper: self deprecated; pass current action via request attribute 
 	- empty suffix registered for web actions
 	- errors in action declarations cause ServletExceptions. application won't start.

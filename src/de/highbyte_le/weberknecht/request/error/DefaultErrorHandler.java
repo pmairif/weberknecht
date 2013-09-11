@@ -47,7 +47,7 @@ public class DefaultErrorHandler implements ErrorHandler {
 			this.statusCode = HttpServletResponse.SC_NOT_FOUND;	//throw 404, if action doesn't exist
 		}
 		else if (exception instanceof ContentProcessingException) {
-			log.error("doGet() - ContentProcessingException: "+exception.getMessage());	//$NON-NLS-1$
+			log.error("doGet() - "+exception.getClass().getSimpleName()+": "+exception.getMessage(), exception);	//$NON-NLS-1$
 			this.statusCode =  ((ContentProcessingException) exception).getHttpStatusCode();
 			//TODO error page with error message or set request attribute to be able to write it on standard error pages 
 		}

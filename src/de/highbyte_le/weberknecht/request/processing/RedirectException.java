@@ -9,7 +9,7 @@
 package de.highbyte_le.weberknecht.request.processing;
 
 /**
- * The exception is thrown, if a processor wants to stop the chain processing an initiate a redirect.
+ * The exception is thrown, if a processor wants to stop the chain processing and initiate a redirect.
  *
  * @author pmairif
  */

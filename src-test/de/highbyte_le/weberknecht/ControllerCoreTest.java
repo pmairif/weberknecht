@@ -173,6 +173,7 @@ public class ControllerCoreTest {
 	/**
  	 * custom error handler is called; no fall back to default error handler
 	 */
+	@SuppressWarnings("boxing")
 	@Test
 	public void testHandleExceptionCustomHandler() throws Exception {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-custom-errhandler.xml");
@@ -199,6 +200,7 @@ public class ControllerCoreTest {
 	/**
 	 * custom error handler is called; falls back to default error handler
 	 */
+	@SuppressWarnings("boxing")
 	@Test
 	public void testHandleExceptionCustomHandlerFallback() throws Exception {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-custom-errhandler.xml");

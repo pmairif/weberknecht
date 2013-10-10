@@ -8,12 +8,14 @@
  */
 package de.highbyte_le.weberknecht.request.actions;
 
+import de.highbyte_le.weberknecht.request.ExecutionException;
+
 /**
  * problem while executing an {@link WebAction}
  * @author pmairif
  */
 @SuppressWarnings("serial")
-public class ActionExecutionException extends Exception {
+public class ActionExecutionException extends ExecutionException {
 
 	public ActionExecutionException() {
 		//

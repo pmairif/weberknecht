@@ -8,13 +8,15 @@
  */
 package de.highbyte_le.weberknecht.request.processing;
 
+import de.highbyte_le.weberknecht.request.ExecutionException;
+
 /**
  * problem while executing a {@link Processor}
  * 
  * @author pmairif
  */
 @SuppressWarnings("serial")
-public class ProcessingException extends Exception {
+public class ProcessingException extends ExecutionException {
 
 	public ProcessingException() {
 		//

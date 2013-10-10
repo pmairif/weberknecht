@@ -1,4 +1,7 @@
 next (0.13):
+	- ExecutionException: common base class for ActionExecutionException and ProcessingException, used in Processor
+	- ActionExecution throws ActionExecutionExeptions directly.
+	- CookieSetting: interface that allows actions to set cookies.
 	- ModelHelper: self deprecated; pass current action via request attribute 
 	- empty suffix registered for web actions
 	- errors in action declarations cause ServletExceptions. application won't start.
@@ -31,7 +34,7 @@ next (0.13):
 	- rpx-stuff moved to separate project
 	- build number and Version.DEFAULT was dropped
 	- processors can implement Configurable
-	- pre-/post-processor sets must be reffered explicitly by ids and can be assigned to areas or single classes
+	- pre-/post-processor sets must be referred explicitly by ids and can be assigned to areas or single classes
 	- syntax of weberknecht.xml changed
 	- error handlers
 	- error pages, configured via web.xml are used

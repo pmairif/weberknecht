@@ -47,8 +47,8 @@ import de.highbyte_le.weberknecht.request.routing.AreaPathResolver;
 import de.highbyte_le.weberknecht.request.routing.MetaRouter;
 import de.highbyte_le.weberknecht.request.routing.Router;
 import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
-import de.highbyte_le.weberknecht.request.view.ActionViewProcessor;
 import de.highbyte_le.weberknecht.request.view.ActionViewProcessorFactory;
+import de.highbyte_le.weberknecht.request.view.ActionViewProcessorProcessor;
 import de.highbyte_le.weberknecht.request.view.AutoViewProcessor;
 
 /**
@@ -186,11 +186,6 @@ public class ControllerCore {
 			try {
 				ProcessingChain chain = new ProcessingChain(processors, httpRequest, httpResponse, routingTarget, action);
 				chain.doContinue();
-				
-				//process view
-				//TODO implement as processor
-				ActionViewProcessor processor = actionProcessorFactory.createActionProcessor(routingTarget.getViewProcessorName(), servletContext); 
-				processor.processView(httpRequest, httpResponse, action);
 			}
 			catch (RedirectException e) {
 				doRedirect(httpRequest, httpResponse, e.getLocalRedirectDestination());
@@ -213,6 +208,7 @@ public class ControllerCore {
 				processors.addAll(instantiateProcessorList(processorList));
 		}
 		
+		//action execution
 		processors.add(new ActionExecution());
 		
 		//post processors
@@ -222,6 +218,9 @@ public class ControllerCore {
 				processors.addAll(instantiateProcessorList(processorList));
 		}
 
+		//view processing
+		processors.add(new ActionViewProcessorProcessor(actionProcessorFactory, servletContext));
+		
 		return processors;
 	}
 	

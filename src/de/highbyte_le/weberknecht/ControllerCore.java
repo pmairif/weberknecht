@@ -279,6 +279,10 @@ public class ControllerCore {
 				status = handler.getStatus();
 				
 				if (processed) {
+					//status has to be set before view is processed
+					if (status > 0)		//Don't set status, eg. on redirects
+						response.setStatus(status);
+
 					//process view, respecting requested content type
 					AutoViewProcessor processor = new AutoViewProcessor();
 					processor.setServletContext(servletContext);
@@ -287,13 +291,10 @@ public class ControllerCore {
 					break;
 				}
 			}
-
-			//status
-			if (status > 0)	{//Don't set status, eg. on redirects
-				if (view)
-					response.setStatus(status);
-				else
-					response.sendError(status);
+			
+			//send to error page, if no view was generated
+			if (!view && status > 0) {	//Don't set status, eg. on redirects
+				response.sendError(status);
 			}
 
 		}

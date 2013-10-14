@@ -1,4 +1,4 @@
-next (0.13):
+0.13.0:
 	- ExecutionException: common base class for ActionExecutionException and ProcessingException, used in Processor
 	- ActionExecution throws ActionExecutionExeptions directly.
 	- CookieSetting: interface that allows actions to set cookies.

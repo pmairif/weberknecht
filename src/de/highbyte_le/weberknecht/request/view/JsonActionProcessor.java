@@ -1,7 +1,7 @@
 /*
  * JsonActionProcessor.java (weberknecht)
  *
- * Copyright 2010-2012 Patrick Mairif.
+ * Copyright 2010-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
  * tabstop=4, charset=UTF-8
@@ -52,12 +52,17 @@ public class JsonActionProcessor implements ActionViewProcessor {
 		response.setContentType( "application/json" );
 		response.setCharacterEncoding("UTF-8");
 		
-		BufferedWriter writer = new BufferedWriter(response.getWriter());
-		JSONWriter jsonWriter = new JSONWriter(writer);
-		action.writeJson(jsonWriter);
-		writer.flush();
-		
-		//TODO close writer?
+		BufferedWriter writer = null;
+		try {
+			writer = new BufferedWriter(response.getWriter());
+			JSONWriter jsonWriter = new JSONWriter(writer);
+			action.writeJson(jsonWriter);
+			writer.flush();
+		}
+		finally {
+			if (writer != null)
+				writer.close();
+		}
 		
 		return true;
 	}

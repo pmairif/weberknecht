@@ -1,7 +1,7 @@
 /*
  * RequestWrapper.java
  * 
- * Copyright 2007 Patrick Mairif.
+ * Copyright 2007-2013 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
  * tabstop=4, charset=UTF-8
@@ -99,14 +99,7 @@ public class RequestWrapper {
     		logger.debug("content length is "+contentLength);
     	
         if (contentLength > 0) {
-        	BufferedReader reader = request.getReader();
-        	StringBuilder b = new StringBuilder();
-        	String line;
-        	while ((line=reader.readLine()) != null) {
-        		b.append(line);
-        		logger.debug(line);
-        	}
-        	String query = b.toString();
+        	String query = extractQuery(request);
         	
         	if (logger.isDebugEnabled())
         		logger.debug("query is '"+query+"'");
@@ -137,6 +130,24 @@ public class RequestWrapper {
         
         return wrapper;
     }
+
+	private static String extractQuery(HttpServletRequest request) throws IOException {
+		StringBuilder b = new StringBuilder();
+		
+		BufferedReader reader = request.getReader();
+		try {
+			String line;
+			while ((line=reader.readLine()) != null) {
+				b.append(line);
+				logger.debug(line);
+			}
+		}
+		finally {
+			reader.close();
+		}
+	
+		return b.toString();
+	}
 
     private void addParameter(String name, String value) {
     	if (this.parameters.containsKey(name)) {		//append value to list of existing values

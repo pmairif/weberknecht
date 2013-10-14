@@ -25,10 +25,10 @@ import org.apache.commons.logging.LogFactory;
  */
 public class LocaleMatcher {
 	
-	/**
-	 * Logger for this class
-	 */
-	private final Log log = LogFactory.getLog(LocaleMatcher.class);
+//	/**
+//	 * Logger for this class
+//	 */
+//	private final Log log = LogFactory.getLog(LocaleMatcher.class);
 
 	private ResourceBundle resourceBundle = null;
 
@@ -98,8 +98,17 @@ public class LocaleMatcher {
 	public Locale getDefaultLocale() {
 		return defaultLocale;
 	}
+	
+	/**
+	 * @return the locales
+	 */
+	protected List<Locale> getLocales() {
+		return locales;
+	}
 
 	class ResourceBundleControl extends ResourceBundle.Control {
+		private final Log log = LogFactory.getLog(ResourceBundleControl.class);
+
 		/* (non-Javadoc)
 		 * @see java.util.ResourceBundle.Control#getFallbackLocale(java.lang.String, java.util.Locale)
 		 */
@@ -107,6 +116,7 @@ public class LocaleMatcher {
 		public Locale getFallbackLocale(String baseName, Locale locale) {
 			Locale fallback = null;
 			
+			List<Locale> locales = getLocales();
 			if (locales != null) {
 				Iterator<Locale> it = locales.iterator();
 				while (it.hasNext()) {

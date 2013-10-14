@@ -47,10 +47,15 @@ public class Version {
     		try {
         		InputStream in = Version.class.getResourceAsStream("version.properties"); //$NON-NLS-1$
         		if (in != null) {
-	        		Properties p = new Properties();
-					p.load(in);
+        			try {
+		        		Properties p = new Properties();
+						p.load(in);
 
-					appVersion = parseProperties(p);
+						appVersion = parseProperties(p);
+        			}
+        			finally {
+        				in.close();
+        			}
         		}
         		else {
         			logger.error("getAppVersion() - version.properties not found");

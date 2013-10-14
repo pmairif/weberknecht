@@ -63,7 +63,13 @@ public class FeedActionProcessor implements ActionViewProcessor {
 
 		response.setContentType( feedCreator.getContentType() );
 		OutputStream out = response.getOutputStream();
-		xmlOutputter.output(doc, out);
+		try {
+			xmlOutputter.output(doc, out);
+		}
+		finally {
+			out.close();
+		}
+		
 		return true;
 	}
 	

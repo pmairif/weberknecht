@@ -1,3 +1,6 @@
+next:
+	- InvalidRequestException
+
 0.13.0:
 	- ExecutionException: common base class for ActionExecutionException and ProcessingException, used in Processor
 	- ActionExecution throws ActionExecutionExeptions directly.

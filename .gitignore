@@ -11,4 +11,4 @@ doc/api-rpx.zip
 .classpath
 .project
 .settings/
-weberknecht.iml
+*.iml

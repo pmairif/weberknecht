@@ -1,8 +1,10 @@
 apply plugin: 'java'
+apply plugin: 'java-library-distribution'
 
 sourceCompatibility = 1.7
 
 project.version = '0.14.0'
+
 
 repositories {
     mavenCentral()
@@ -36,6 +38,14 @@ jar {
     }
 }
 
+
+distributions {
+    main {
+        contents {
+            from { 'dist-files' }
+        }
+    }
+}
 
 dependencies {
     compile 'commons-lang:commons-lang:2.+'

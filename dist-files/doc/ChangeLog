@@ -1,4 +1,6 @@
 next:
+    - build with gradle
+    - unused class Version removed
 	- InvalidRequestException
 
 0.13.0:

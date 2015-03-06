@@ -12,3 +12,5 @@ doc/api-rpx.zip
 .project
 .settings/
 *.iml
+.gradle
+build

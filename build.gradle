@@ -1,0 +1,37 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.7
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+        resources {
+            srcDir 'src'
+        }
+    }
+    test {
+        java {
+            srcDir 'src-test'
+        }
+        resources {
+            srcDir 'src-test'
+        }
+    }
+}
+
+
+dependencies {
+    compile 'commons-lang:commons-lang:2.+'
+    compile 'commons-logging:commons-logging:1.+'
+    compile 'org.jdom:jdom:1.+'
+    compile 'org.json:json:+'
+    compile 'javax.servlet:jsp-api:2.+'
+    testCompile 'junit:junit:4.+'
+    testCompile 'org.mockito:mockito-all:1.+'
+}

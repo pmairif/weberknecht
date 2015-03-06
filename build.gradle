@@ -2,6 +2,8 @@ apply plugin: 'java'
 
 sourceCompatibility = 1.7
 
+project.version = '0.14.0'
+
 repositories {
     mavenCentral()
 }
@@ -26,11 +28,6 @@ sourceSets {
 }
 
 jar {
-    def propFile = new File("${project.rootDir}/src/de/highbyte_le/weberknecht/version.properties")
-    def prop = new Properties()
-    prop.load(propFile.newReader());
-    project.version = prop.get('version.weberknecht.major')+'.'+prop.get('version.weberknecht.minor')+'.'+prop.get('version.weberknecht.patch')
-
     manifest {
         attributes(
                 "Implementation-Title": "Weberknecht",

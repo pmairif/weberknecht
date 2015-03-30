@@ -1,5 +1,8 @@
 /*
- * ExecutionException.java
+ * ExecutionException.java (weberknecht)
+ *
+ * Copyright 2013 Patrick Mairif.
+ * The program is distributed under the terms of the Apache License (ALv2).
  *
  * tabstop=4, charset=utf8
  */

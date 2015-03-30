@@ -1,0 +1,84 @@
+apply plugin: 'java'
+apply plugin: 'java-library-distribution'
+
+sourceCompatibility = 1.7
+
+project.version = '0.14.0-SNAPSHOT'
+
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+        resources {
+            srcDir 'src'
+        }
+    }
+    test {
+        java {
+            srcDir 'src-test'
+        }
+        resources {
+            srcDir 'src-test'
+        }
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+                "Implementation-Title": "Weberknecht",
+                "Implementation-Version": project.version
+        )
+    }
+    metaInf {
+        from { 'tlds' }
+        into { 'tlds' }
+    }
+}
+
+afterEvaluate {
+    distZip.dependsOn javadocJar
+}
+
+distributions {
+    main {
+        contents {
+            from {
+                'dist-files'
+                'build/libs/weberknecht-'+project.version+'-javadoc.jar'
+            }
+        }
+    }
+}
+
+dependencies {
+    compile 'commons-lang:commons-lang:2.+'
+    compile 'commons-logging:commons-logging:1.+'
+    compile 'org.jdom:jdom:1.+'
+    compile 'org.json:json:+'
+    compile 'javax.servlet:jsp-api:2.+'
+    testCompile 'junit:junit:4.+'
+    testCompile 'org.mockito:mockito-all:1.+'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+

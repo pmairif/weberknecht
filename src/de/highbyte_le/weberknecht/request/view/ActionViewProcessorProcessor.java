@@ -47,7 +47,8 @@ public class ActionViewProcessorProcessor implements Processor {
 			
 			ActionViewProcessor processor = actionProcessorFactory.createActionProcessor(
 					routingTarget.getViewProcessorName(), servletContext
-			); 
+			);
+            //TODO handle null
 			processor.processView(request, response, action);
 			
 		}

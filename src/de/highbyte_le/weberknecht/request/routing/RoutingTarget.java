@@ -1,15 +1,16 @@
 /*
  * RoutingTarget.java (weberknecht)
  *
- * Copyright 2011-2013 Patrick Mairif.
+ * Copyright 2011-2015 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  *
  * tabstop=4, charset=UTF-8
  */
 package de.highbyte_le.weberknecht.request.routing;
 
-import java.util.Locale;
+import de.highbyte_le.weberknecht.request.routing.flex.Route;
 
+import java.util.Locale;
 
 /**
  * Routing target
@@ -19,14 +20,9 @@ import java.util.Locale;
 public class RoutingTarget {
 	
 	/**
-	 * path to the action
+	 * unique action identifier
 	 */
-	private final AreaPath areaPath;
-	
-	/**
-	 * name identifying the action - must be unique within path
-	 */
-	private final String actionName;
+	private final ActionPath actionPath;
 	
 	/**
 	 * unique name identifying the view processor (formerly called suffix)
@@ -44,12 +40,22 @@ public class RoutingTarget {
 	private final Locale locale;
 	
 	public RoutingTarget(AreaPath path, String actionName, String viewProcessorName, String task, Locale locale) {
-		this.areaPath = path;
-		this.actionName = actionName;
+        this.actionPath = new ActionPath(path, actionName);
 		this.viewProcessorName = viewProcessorName;
 		this.task = task;
 		this.locale = locale;
 	}
+
+	public RoutingTarget(ActionPath actionPath, String viewProcessorName, String task, Locale locale) {
+        this.actionPath = actionPath;
+		this.viewProcessorName = viewProcessorName;
+		this.task = task;
+		this.locale = locale;
+	}
+
+    public RoutingTarget(Route route, Locale locale) {
+        this(route.getActionPath(), route.getProcessor(), route.getTask(), locale);
+    }
 	
 	public RoutingTarget(AreaPath path, String actionName, String viewProcessorName, String task) {
 		this(path, actionName, viewProcessorName, task, null);
@@ -62,23 +68,23 @@ public class RoutingTarget {
 	public RoutingTarget(String actionName, String viewProcessorName, String task) {
 		this(new AreaPath(), actionName, viewProcessorName, task);
 	}
-	
-	public void addArea(String area) {
-		this.areaPath.addPath(area);
-	}
-	
-	/**
+
+    public ActionPath getActionPath() {
+        return actionPath;
+    }
+
+    /**
 	 * @return the area
 	 */
 	public AreaPath getAreaPath() {
-		return areaPath;
+		return actionPath.getAreaPath();
 	}
 	
 	/**
 	 * @return the actionName
 	 */
 	public String getActionName() {
-		return actionName;
+		return actionPath.getActionName();
 	}
 
 	/**
@@ -102,63 +108,38 @@ public class RoutingTarget {
 		return locale;
 	}
 
-	@Override
-	public String toString() {
-		return "RoutingTarget [areaPath=" + areaPath + ", actionName=" + actionName + ", viewProcessorName="
-				+ viewProcessorName + ", task=" + task + ", locale=" + locale + "]";
-	}
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("RoutingTarget{");
+        sb.append("actionPath=").append(actionPath);
+        sb.append(", viewProcessorName='").append(viewProcessorName).append('\'');
+        sb.append(", task='").append(task).append('\'');
+        sb.append(", locale=").append(locale);
+        sb.append('}');
+        return sb.toString();
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((actionName == null) ? 0 : actionName.hashCode());
-		result = prime * result + ((areaPath == null) ? 0 : areaPath.hashCode());
-		result = prime * result + ((locale == null) ? 0 : locale.hashCode());
-		result = prime * result + ((task == null) ? 0 : task.hashCode());
-		result = prime * result + ((viewProcessorName == null) ? 0 : viewProcessorName.hashCode());
-		return result;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RoutingTarget)) return false;
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		RoutingTarget other = (RoutingTarget) obj;
-		if (actionName == null) {
-			if (other.actionName != null)
-				return false;
-		}
-		else if (!actionName.equals(other.actionName))
-			return false;
-		if (areaPath == null) {
-			if (other.areaPath != null)
-				return false;
-		}
-		else if (!areaPath.equals(other.areaPath))
-			return false;
-		if (locale == null) {
-			if (other.locale != null)
-				return false;
-		}
-		else if (!locale.equals(other.locale))
-			return false;
-		if (task == null) {
-			if (other.task != null)
-				return false;
-		}
-		else if (!task.equals(other.task))
-			return false;
-		if (viewProcessorName == null) {
-			if (other.viewProcessorName != null)
-				return false;
-		}
-		else if (!viewProcessorName.equals(other.viewProcessorName))
-			return false;
-		return true;
-	}
+        RoutingTarget that = (RoutingTarget) o;
+
+        if (!actionPath.equals(that.actionPath)) return false;
+        if (viewProcessorName != null ? !viewProcessorName.equals(that.viewProcessorName) : that.viewProcessorName != null)
+            return false;
+        if (task != null ? !task.equals(that.task) : that.task != null) return false;
+        return !(locale != null ? !locale.equals(that.locale) : that.locale != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = actionPath.hashCode();
+        result = 31 * result + (viewProcessorName != null ? viewProcessorName.hashCode() : 0);
+        result = 31 * result + (task != null ? task.hashCode() : 0);
+        result = 31 * result + (locale != null ? locale.hashCode() : 0);
+        return result;
+    }
 }

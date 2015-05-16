@@ -38,7 +38,7 @@ public class AreaPathResolver {
 	private final Log log = LogFactory.getLog(AreaPathResolver.class);
 
 	/**
-	 * mapping of areas to action factories
+	 * mapping of paths to action factories
 	 */
 	private final Map<AreaPath, ActionFactory> actionFactoryMap;
 	

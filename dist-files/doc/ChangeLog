@@ -2,6 +2,7 @@ next:
     - build with gradle
     - unused class Version removed
 	- InvalidRequestException
+	- flex routing
 
 0.13.0:
 	- ExecutionException: common base class for ActionExecutionException and ProcessingException, used in Processor

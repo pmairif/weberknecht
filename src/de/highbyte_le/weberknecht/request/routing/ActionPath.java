@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  * qualified action name with full path
  */
 public class ActionPath {
-    private static final Pattern pathPattern = Pattern.compile("/[a-zA-Z0-9_/-]*[a-zA-Z0-9_-]");
+    private static final Pattern pathPattern = Pattern.compile("/[a-zA-Z0-9_\\./-]*[a-zA-Z0-9_\\.-]");
 
     private final String path;
 

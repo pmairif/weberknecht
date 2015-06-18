@@ -70,4 +70,11 @@ public class ActionPathTest {
         assertEquals(new AreaPath(), path.getAreaPath());
         assertEquals("foo", path.getActionName());
     }
+
+    @Test
+    public void testPathActionSplitting4() throws Exception {
+        ActionPath path = new ActionPath("/foo.short/bar");
+        assertEquals(new AreaPath("foo.short"), path.getAreaPath());
+        assertEquals("bar", path.getActionName());
+    }
 }

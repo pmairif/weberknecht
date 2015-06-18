@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.highbyte_le.weberknecht.request.ContentProcessingException;
 import de.highbyte_le.weberknecht.request.ExecutionException;
+import de.highbyte_le.weberknecht.request.NotFoundException;
 import de.highbyte_le.weberknecht.request.actions.ExecutableAction;
 import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
 
@@ -48,7 +49,7 @@ public class ProcessingChain {
 	/**
 	 * Continue processing. Returns after all processors are done. Which allows cleanup operations. 
 	 */
-	public void doContinue() throws ExecutionException, ContentProcessingException, RedirectException {
+	public void doContinue() throws ExecutionException, ContentProcessingException, RedirectException, NotFoundException {
 		if (it.hasNext()) {
 			it.next().execute(request, response, routingTarget, action, this);
 		}

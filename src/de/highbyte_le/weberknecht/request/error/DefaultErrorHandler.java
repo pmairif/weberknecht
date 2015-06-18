@@ -11,6 +11,7 @@ package de.highbyte_le.weberknecht.request.error;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.highbyte_le.weberknecht.request.NotFoundException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -42,8 +43,8 @@ public class DefaultErrorHandler implements ErrorHandler {
 	 */
 	@Override
 	public boolean handleException(Exception exception, HttpServletRequest request, RoutingTarget routingTarget) {
-		if (exception instanceof ActionNotFoundException) {
-			log.warn("action not found: "+exception.getMessage()+"; request URI was "+request.getRequestURI());
+		if (exception instanceof NotFoundException) {
+			log.warn("resource not found: "+exception.getMessage()+"; request URI was "+request.getRequestURI());
 			this.statusCode = HttpServletResponse.SC_NOT_FOUND;	//throw 404, if action doesn't exist
 		}
 		else if (exception instanceof ContentProcessingException) {

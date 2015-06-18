@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.highbyte_le.weberknecht.request.ContentProcessingException;
 import de.highbyte_le.weberknecht.request.ExecutionException;
+import de.highbyte_le.weberknecht.request.NotFoundException;
 import de.highbyte_le.weberknecht.request.actions.ExecutableAction;
 import de.highbyte_le.weberknecht.request.processing.ProcessingChain;
 import de.highbyte_le.weberknecht.request.processing.Processor;
@@ -41,14 +42,16 @@ public class ActionViewProcessorProcessor implements Processor {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response, RoutingTarget routingTarget,
 			ExecutableAction action, ProcessingChain chain) throws ExecutionException, ContentProcessingException,
-			RedirectException {
+            RedirectException, NotFoundException {
 
 		try {
 			
 			ActionViewProcessor processor = actionProcessorFactory.createActionProcessor(
 					routingTarget.getViewProcessorName(), servletContext
 			);
-            //TODO handle null
+            if (null == processor)
+                throw new NotFoundException("view "+routingTarget.getViewProcessorName()+" not available", request.getRequestURI());
+
 			processor.processView(request, response, action);
 			
 		}
@@ -58,5 +61,5 @@ public class ActionViewProcessorProcessor implements Processor {
 		catch (IOException e) {
 			throw new ExecutionException("i/o exception: "+e.getMessage(), e);
 		}
-	}
+    }
 }

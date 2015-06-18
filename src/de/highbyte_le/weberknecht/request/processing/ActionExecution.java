@@ -18,6 +18,7 @@ import de.highbyte_le.weberknecht.i18n.Localizable;
 import de.highbyte_le.weberknecht.request.ContentProcessingException;
 import de.highbyte_le.weberknecht.request.CookieSetting;
 import de.highbyte_le.weberknecht.request.ExecutionException;
+import de.highbyte_le.weberknecht.request.NotFoundException;
 import de.highbyte_le.weberknecht.request.actions.ExecutableAction;
 import de.highbyte_le.weberknecht.request.actions.TaskedExecutableAction;
 import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
@@ -35,7 +36,7 @@ public class ActionExecution implements Processor {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response, RoutingTarget routingTarget,
 			ExecutableAction action, ProcessingChain chain)
-	throws ExecutionException, ContentProcessingException, RedirectException {
+            throws ExecutionException, ContentProcessingException, RedirectException, NotFoundException {
 		
 		try {
 			//preparation

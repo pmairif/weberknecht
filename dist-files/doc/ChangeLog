@@ -1,4 +1,6 @@
 next:
+	- NotFoundException
+	- bugfix: avoid NPE with unknown view prefixes
     - build with gradle
     - unused class Version removed
 	- InvalidRequestException

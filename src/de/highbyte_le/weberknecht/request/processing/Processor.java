@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.highbyte_le.weberknecht.request.ContentProcessingException;
 import de.highbyte_le.weberknecht.request.ExecutionException;
+import de.highbyte_le.weberknecht.request.NotFoundException;
 import de.highbyte_le.weberknecht.request.actions.ExecutableAction;
 import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
 
@@ -31,5 +32,5 @@ public interface Processor {
 	 */
 	public void execute(HttpServletRequest request, HttpServletResponse response, RoutingTarget routingTarget,
 			ExecutableAction action, ProcessingChain chain)
-	throws ExecutionException, ContentProcessingException, RedirectException;
+            throws ExecutionException, ContentProcessingException, RedirectException, NotFoundException;
 }

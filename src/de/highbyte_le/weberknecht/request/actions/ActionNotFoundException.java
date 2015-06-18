@@ -9,15 +9,25 @@
  */
 package de.highbyte_le.weberknecht.request.actions;
 
+import de.highbyte_le.weberknecht.request.NotFoundException;
+
 /**
  * Action not found.
  * 
  * @author pmairif
  */
 @SuppressWarnings("serial")
-public class ActionNotFoundException extends Exception {
+public class ActionNotFoundException extends NotFoundException {
 
 	public ActionNotFoundException() {
-		//
+		super("action not found");
 	}
+
+    public ActionNotFoundException(String message) {
+        super(message);
+    }
+
+    public ActionNotFoundException(String message, String resource) {
+        super(message, resource);
+    }
 }

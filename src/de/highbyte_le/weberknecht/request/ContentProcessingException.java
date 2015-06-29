@@ -1,10 +1,9 @@
 /*
  * ContentProcessingException.java (weberknecht)
  *
- * Copyright 2009 Patrick Mairif.
+ * Copyright 2009-2015 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
- * created: 19.01.2010
  * tabstop=4, charset=UTF-8
  */
 package de.highbyte_le.weberknecht.request;
@@ -18,24 +17,24 @@ public class ContentProcessingException extends Exception {
 
 	private final int httpStatusCode;
 	
-	private final String errDesc;
-	
 	/**
 	 * @param httpStatusCode
 	 * 		HTTP status code to be sent back to the client
-	 * @param errDesc
-	 * 		Short error description sent back to the client
+	 * @param message
+	 * 		Short error message potentially viewable by the client
 	 */
-	public ContentProcessingException(int httpStatusCode, String errDesc) {
+	public ContentProcessingException(int httpStatusCode, String message) {
+        super(message);
 		this.httpStatusCode = httpStatusCode;
-		this.errDesc = errDesc;
 	}
 
 	/**
 	 * @return the errDesc
+     * @deprecated use getMessage()
 	 */
+    @Deprecated
 	public String getErrDesc() {
-		return this.errDesc;
+		return getMessage();
 	}
 	
 	/**

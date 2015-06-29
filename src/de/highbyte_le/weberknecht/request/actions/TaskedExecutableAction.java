@@ -13,6 +13,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 
 import de.highbyte_le.weberknecht.request.ContentProcessingException;
+import de.highbyte_le.weberknecht.request.NotFoundException;
 
 /**
  * executable webapp action supporting tasks
@@ -28,6 +29,6 @@ public interface TaskedExecutableAction extends ExecutableAction {
 	 * @throws ActionExecutionException
 	 * 		if problems during execution occur
 	 */
-	public void execute(HttpServletRequest request, String task)
-		throws IOException, ActionExecutionException, ContentProcessingException;
+	void execute(HttpServletRequest request, String task)
+            throws IOException, ActionExecutionException, ContentProcessingException, NotFoundException;
 }

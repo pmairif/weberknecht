@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import de.highbyte_le.weberknecht.request.ContentProcessingException;
 import de.highbyte_le.weberknecht.request.Executable;
+import de.highbyte_le.weberknecht.request.NotFoundException;
 
 /**
  * executable webapp action
@@ -27,6 +28,6 @@ public interface ExecutableAction extends Executable {
 	 * @throws ActionExecutionException
 	 * 		if problems during execution occur
 	 */
-	public void execute(HttpServletRequest request)
-		throws IOException, ActionExecutionException, ContentProcessingException;
+	void execute(HttpServletRequest request)
+            throws IOException, ActionExecutionException, ContentProcessingException, NotFoundException;
 }

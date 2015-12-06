@@ -166,20 +166,13 @@ public class ControllerCore {
 			DbConnectionHolder conHolder, RoutingTarget routingTarget) {
 
 		try {
-			ModelHelper modelHelper = new ModelHelper(httpRequest, servletContext);
-			modelHelper.setSelf(httpRequest);
-			
-			ExecutableAction action = pathResolver.resolveAction(routingTarget);
-			if (log.isDebugEnabled())
-				log.debug("executeAction() - processing action "+action.getClass().getSimpleName());
-			httpRequest.setAttribute(ModelHelper.ACTION_KEY, action);
-
 			List<Processor> processors = setupProcessors(routingTarget);
-			
+
 			//initialization
 			for (Processor p: processors)
 				initializeObject(p, conHolder);
-			
+
+			ExecutableAction action = pathResolver.resolveAction(routingTarget);
 			initializeObject(action, conHolder);
 
 			//processing

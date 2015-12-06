@@ -1,7 +1,7 @@
 /*
  * ProcessingChain.java (weberknecht)
  *
- * Copyright 2010-2013 Patrick Mairif.
+ * Copyright 2010-2015 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
  * tabstop=4, charset=UTF-8
@@ -30,7 +30,7 @@ public class ProcessingChain {
 	
 	private final HttpServletResponse response;
 	
-	private final ExecutableAction action;
+	private ExecutableAction action;
 	
 	private final RoutingTarget routingTarget;
 	
@@ -53,5 +53,13 @@ public class ProcessingChain {
 		if (it.hasNext()) {
 			it.next().execute(request, response, routingTarget, action, this);
 		}
+	}
+
+	public void setAction(ExecutableAction action) {
+		this.action = action;
+	}
+
+	public ExecutableAction getAction() {
+		return action;
 	}
 }

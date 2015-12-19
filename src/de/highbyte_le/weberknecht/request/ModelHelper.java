@@ -1,7 +1,7 @@
 /*
  * ModelHelper.java (weberknecht)
  *
- * Copyright 2009-2013 Patrick Mairif.
+ * Copyright 2009-2015 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
  * tabstop=4, charset=UTF-8
@@ -33,8 +33,6 @@ public class ModelHelper {
 	
 	public static final String DEFAULT_MODEL_PREFIX = "de.highbyte_le.weberknecht.model";
 	
-	public static final String SELF_KEY = "de.highbyte_le.weberknecht.self";
-
 	public static final String ACTION_KEY = "de.highbyte_le.weberknecht.action";
 	
 	public ModelHelper(HttpServletRequest request, ServletContext context) {
@@ -57,29 +55,6 @@ public class ModelHelper {
 	
 	public ExecutableAction getAction() {
 		return (ExecutableAction) request.getAttribute(ACTION_KEY);
-	}
-	
-	/**
-	 * Contains the full path, since 0.12
-	 */
-	@Deprecated
-	public String getSelf() {
-		return (String) request.getAttribute(SELF_KEY);
-	}
-	
-	@Deprecated
-	public void setSelf(HttpServletRequest request) {
-		StringBuilder b = new StringBuilder();
-		
-		b.append(request.getContextPath());
-		b.append(request.getServletPath());
-		
-		setSelf(b.toString());
-	}
-	
-	@Deprecated
-	protected void setSelf(String self) {
-		request.setAttribute(SELF_KEY, self);
 	}
 	
 	String getFullKey(String name) {

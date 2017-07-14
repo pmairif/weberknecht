@@ -131,7 +131,10 @@ public class AuthenticationFilter implements Filter {
 
 		// If user id and password are present, authenticate
 		if (reqUser != null && reqPwd != null && reqDoParam != null && reqDoParam.equalsIgnoreCase("auth")) {
-			session.removeAttribute("user_auth");	//first remove the previous login from session
+			//new session on login to prevent session fixation attacks
+			logger.info("login attempt - create new session");
+			session.invalidate();
+			session = request.getSession(true);
 
 			if (authentication != null) {
 				Integer userId = authentication.authenticate(reqUser, reqPwd);

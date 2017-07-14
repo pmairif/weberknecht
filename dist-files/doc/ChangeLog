@@ -5,6 +5,7 @@ next:
     - unused class Version removed
 	- InvalidRequestException
 	- flex routing
+	- AuthenticationFilter creates new session on login attempt
 
 0.13.0:
 	- ExecutionException: common base class for ActionExecutionException and ProcessingException, used in Processor

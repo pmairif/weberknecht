@@ -53,15 +53,17 @@ public class ActionViewProcessorProcessor implements Processor {
             RedirectException, NotFoundException {
 
 		try {
-			if (log.isDebugEnabled())
-				log.debug("execute() - processing view vor action "+action.getClass().getSimpleName());
+			if (log.isDebugEnabled()) {
+				log.debug("execute() - processing view vor action " + action.getClass().getSimpleName());
+			}
 			request.setAttribute(ModelHelper.ACTION_KEY, action);
 
 			ActionViewProcessor processor = actionProcessorFactory.createActionProcessor(
 					routingTarget.getViewProcessorName(), servletContext
 			);
-            if (null == processor)
-                throw new NotFoundException("view "+routingTarget.getViewProcessorName()+" not available", request.getRequestURI());
+            if (null == processor) {
+				throw new NotFoundException("view " + routingTarget.getViewProcessorName() + " not available", request.getRequestURI());
+			}
 
 			processor.processView(request, response, action);
 			

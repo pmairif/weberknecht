@@ -29,10 +29,10 @@ public interface ActionViewProcessor {
 	 * process action view
 	 * @return true, if there was a view to process. false, if not.
 	 */
-	public boolean processView(HttpServletRequest request, HttpServletResponse response, Executable action)
+	boolean processView(HttpServletRequest request, HttpServletResponse response, Executable action)
 			throws ServletException, IOException, ContentProcessingException, ActionExecutionException;
 
-	public void setServletContext(ServletContext servletContext);
+	void setServletContext(ServletContext servletContext);
 	
-	public void setActionViewProcessorFactory(ActionViewProcessorFactory factory);
+	void setActionViewProcessorFactory(ActionViewProcessorFactory factory);
 }

@@ -40,19 +40,23 @@ public class ActionExecution implements Processor {
 		
 		try {
 			//preparation
-			if (action instanceof Localizable)
+			if (action instanceof Localizable) {
 				((Localizable) action).setRequestedLocale(routingTarget.getLocale());
+			}
 
 			//execution
-			if (action instanceof TaskedExecutableAction)
-				((TaskedExecutableAction)action).execute(request, routingTarget.getTask());
-			else
+			if (action instanceof TaskedExecutableAction) {
+				((TaskedExecutableAction) action).execute(request, routingTarget.getTask());
+			}
+			else {
 				action.execute(request);
+			}
 
 			//cookies
 			if (action instanceof CookieSetting) {
-				for (Cookie cookie: ((CookieSetting) action).getCookies())
+				for (Cookie cookie: ((CookieSetting) action).getCookies()) {
 					response.addCookie(cookie);
+				}
 			}
 
 			chain.doContinue();

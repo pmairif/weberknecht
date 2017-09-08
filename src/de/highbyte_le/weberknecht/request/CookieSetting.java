@@ -17,5 +17,5 @@ public interface CookieSetting {
 	/**
 	 * collection of cookies, that are send with the response.
 	 */
-	public Collection<Cookie> getCookies();
+	Collection<Cookie> getCookies();
 }

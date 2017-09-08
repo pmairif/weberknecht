@@ -169,8 +169,9 @@ public class ControllerCore {
 			List<Processor> processors = setupProcessors(routingTarget);
 
 			//initialization
-			for (Processor p: processors)
+			for (Processor p: processors) {
 				initializeObject(p, conHolder);
+			}
 
 			ExecutableAction action = pathResolver.resolveAction(routingTarget);
 			initializeObject(action, conHolder);
@@ -189,16 +190,17 @@ public class ControllerCore {
 		}
 	}
 	
-	protected List<Processor> setupProcessors(RoutingTarget routingTarget) throws InstantiationException, IllegalAccessException {
-		List<Processor> processors = new Vector<Processor>();
+	List<Processor> setupProcessors(RoutingTarget routingTarget) throws InstantiationException, IllegalAccessException {
+		List<Processor> processors = new Vector<>();
 
 		ActionDeclaration actionDeclaration = pathResolver.getActionDeclaration(routingTarget);
 		
 		//pre processors
 		if (actionDeclaration != null) {
 			ProcessorList processorList = conf.getPreProcessorListMap().get(actionDeclaration.getPreProcessorSet());
-			if (processorList != null)
+			if (processorList != null) {
 				processors.addAll(instantiateProcessorList(processorList));
+			}
 		}
 		
 		//action execution
@@ -207,8 +209,9 @@ public class ControllerCore {
 		//post processors
 		if (actionDeclaration != null) {
 			ProcessorList processorList = conf.getPostProcessorListMap().get(actionDeclaration.getPostProcessorSet());
-			if (processorList != null)
+			if (processorList != null) {
 				processors.addAll(instantiateProcessorList(processorList));
+			}
 		}
 
 		//view processing

@@ -19,17 +19,18 @@ import javax.servlet.http.HttpSession;
  */
 @SuppressWarnings("serial")
 public class UserAuthentication implements Serializable {
-	private boolean authenticated = false;
+	private boolean authenticated;
 
 	/**
 	 * local user ID
 	 */
-	private Integer userId = null;
+	private Integer userId;
 	
 	public static UserAuthentication getAuth(HttpSession session) {
 		UserAuthentication auth = (UserAuthentication) session.getAttribute("user_auth"); //$NON-NLS-1$
-		if (null == auth)
+		if (null == auth) {
 			auth = new UserAuthentication(null, false);
+		}
 		
 		return auth;
 	}
@@ -50,9 +51,11 @@ public class UserAuthentication implements Serializable {
 	public void setAuthenticated(boolean authenticated, int userId) {
 		this.authenticated = authenticated;
 		
-		if (authenticated)
-			this.userId = new Integer(userId);
-		else
+		if (authenticated) {
+			this.userId = userId;
+		}
+		else {
 			this.userId = null;
+		}
 	}
 }

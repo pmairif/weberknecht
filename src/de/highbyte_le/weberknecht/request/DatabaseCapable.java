@@ -24,5 +24,5 @@ public interface DatabaseCapable {
 	/**
 	 * set database connection
 	 */
-	public void setDatabase(Connection con);
+	void setDatabase(Connection con);
 }

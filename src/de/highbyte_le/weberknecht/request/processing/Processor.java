@@ -27,10 +27,12 @@ public interface Processor {
 	 * <p>The processor has to call {@link ProcessingChain#doContinue()} to continue the work of the chain.
 	 * After all following processors in the chain are done, the doContinue method will return.</p>  
 	 * 
-	 * @throws ProcessingException
+	 * @throws ExecutionException
 	 * 		if problems occurs during execution
+	 * @throws ContentProcessingException
+	 * @throws RedirectException
 	 */
-	public void execute(HttpServletRequest request, HttpServletResponse response, RoutingTarget routingTarget,
+	void execute(HttpServletRequest request, HttpServletResponse response, RoutingTarget routingTarget,
 			ExecutableAction action, ProcessingChain chain)
             throws ExecutionException, ContentProcessingException, RedirectException, NotFoundException;
 }

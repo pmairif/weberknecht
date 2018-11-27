@@ -63,7 +63,7 @@ dependencies {
     compile 'org.jdom:jdom:1.+'
     compile 'org.json:json:+'
     compile 'javax.servlet:jsp-api:2.+'
-    testCompile 'junit:junit:4.+'
+    testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-all:1.+'
 }
 

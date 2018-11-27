@@ -1,10 +1,15 @@
-apply plugin: 'java'
-apply plugin: 'java-library-distribution'
+plugins {
+    id 'java'
+    id 'java-library-distribution'
+    id 'maven'
+    id 'de.highbyte_le.semver' version '1.0'
+}
 
-sourceCompatibility = 1.7
+sourceCompatibility = 1.8
 
-project.version = '0.14.0-SNAPSHOT'
+project.group='de.highbyte_le'
 
+jar.dependsOn readSemVer
 
 repositories {
     mavenCentral()

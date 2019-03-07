@@ -10,6 +10,7 @@ package de.highbyte_le.weberknecht.request.view;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.Writer;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -46,27 +47,20 @@ public class JsonActionProcessor implements ActionViewProcessor {
 		}
 	}
 
-	public boolean processView(HttpServletRequest request, HttpServletResponse response, JsonView action)
+	boolean processView(HttpServletRequest request, HttpServletResponse response, JsonView action)
 			throws IOException, JSONException {
 		
 		response.setContentType( "application/json" );
 		response.setCharacterEncoding("UTF-8");
 		
-		BufferedWriter writer = null;
-		try {
-			writer = new BufferedWriter(response.getWriter());
-			JSONWriter jsonWriter = new JSONWriter(writer);
-			action.writeJson(jsonWriter);
+		try (BufferedWriter writer = new BufferedWriter(response.getWriter())) {
+			action.writeJson(new JSONWriter(writer));
 			writer.flush();
 		}
-		finally {
-			if (writer != null)
-				writer.close();
-		}
-		
+
 		return true;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see de.highbyte_le.weberknecht.request.ActionViewProcessor#setServletContext(javax.servlet.ServletContext)
 	 */

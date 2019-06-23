@@ -1,4 +1,4 @@
-next:
+0.14.0:
 	- NotFoundException
 	- bugfix: avoid NPE with unknown view prefixes
     - build with gradle

@@ -52,9 +52,12 @@ public class LocalePathResolver {
 		
 		int j=0;
 		int length = pathSegments.length;
-		while (length > j && pathSegments[j].length() == 0)
+		while (j < length && pathSegments[j].length() == 0)
 			j++;
-		
+
+        if (j == 0) //nothing to trim
+            return pathSegments;
+
 		String[] ret = new String[length-j];
 		for (int i=j; i<length; i++)
 			ret[i-1] = pathSegments[i];

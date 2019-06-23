@@ -56,4 +56,32 @@ public class LocalePath {
 	public Locale getLocale() {
 		return locale;
 	}
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("LocalePath{");
+        sb.append("path=").append(path);
+        sb.append(", locale=").append(locale);
+        sb.append('}');
+        return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof LocalePath)) return false;
+
+        LocalePath that = (LocalePath) o;
+
+        if (!path.equals(that.path)) return false;
+        return !(locale != null ? !locale.equals(that.locale) : that.locale != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = path.hashCode();
+        result = 31 * result + (locale != null ? locale.hashCode() : 0);
+        return result;
+    }
 }

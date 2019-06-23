@@ -59,7 +59,7 @@ public class LocaleMatcher {
 		this.bundleName = bundleName;
 		
 		this.locales = new Vector<Locale>();
-		while (locales.hasMoreElements())
+		while (locales != null && locales.hasMoreElements())
 			this.locales.add(locales.nextElement());
 	}
 

@@ -44,15 +44,17 @@ public class WebActionProcessor implements ActionViewProcessor {
 	public boolean processView(HttpServletRequest request, HttpServletResponse response, Executable action) throws ServletException,
 			IOException, ContentProcessingException {
 		
-		if (action instanceof WebView)
-			return processView(request, response, (WebView)action);
+		if (action instanceof WebView) {
+			return processView(request, response, (WebView) action);
+		}
 		
 		throw new IllegalArgumentException("Action not applicable here.");
 	}
 	
 	public boolean processView(HttpServletRequest request, HttpServletResponse response, WebView action) throws ServletException, IOException, ContentProcessingException {
-		if (log.isDebugEnabled())
-			log.debug("processView() - processing action "+action.getClass().getSimpleName());
+		if (log.isDebugEnabled()) {
+			log.debug("processView() - processing action " + action.getClass().getSimpleName());
+		}
 
 		boolean processed = false;
 		View view = action.getView();
@@ -74,8 +76,9 @@ public class WebActionProcessor implements ActionViewProcessor {
 	
 	protected void processJsp(HttpServletRequest request, HttpServletResponse response, View view, Map<String, Object> modelMap, Object action)
 			throws ServletException, IOException {
-		if (log.isDebugEnabled())
-			log.debug("processJsp() - forward the request to the given view: "+view.getJspFileName());
+		if (log.isDebugEnabled()) {
+			log.debug("processJsp() - forward the request to the given view: " + view.getJspFileName());
+		}
 		
 		//add models to request
 		if (modelMap != null) {
@@ -91,8 +94,9 @@ public class WebActionProcessor implements ActionViewProcessor {
 	}
 
 	protected void processRedirect(HttpServletResponse response, View view) {
-		if (log.isDebugEnabled())
-			log.debug("processRedirect() - initiate redirection to: "+view.getRedirection());
+		if (log.isDebugEnabled()) {
+			log.debug("processRedirect() - initiate redirection to: " + view.getRedirection());
+		}
 		
 		response.setHeader("Location", view.getRedirection().toExternalForm());
 		response.setStatus(303);	//303 - "see other" (http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)

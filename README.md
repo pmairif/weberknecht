@@ -1,3 +1,3 @@
-Yet another java web framework that want's to make web developers life a bit easier.
+Yet another java web framework that wants to make web developers life a bit easier.
 
-Eclipse settins are available in the eclipse-settings.tgz. Just extract it before creating the eclipse project.
+Get started with https://github.com/pmairif/weberknecht-example-simple

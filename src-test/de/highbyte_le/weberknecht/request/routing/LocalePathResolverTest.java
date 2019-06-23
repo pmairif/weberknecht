@@ -27,7 +27,7 @@ public class LocalePathResolverTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		WeberknechtConf conf = readConfig("test-data/weberknecht-lang.xml");
+		WeberknechtConf conf = readConfig("test-data/weberknecht-lang-optional.xml");
 		resolver = new LocalePathResolver(conf);
 	}
 
@@ -42,4 +42,27 @@ public class LocalePathResolverTest {
 		assertNull(resolver.parseLocale("  "));
 		assertNull(resolver.parseLocale(null));
 	}
+
+    @Test
+    public void testCreatePathWithoutLocale() throws Exception {
+        LocalePath expected = new LocalePath(new String[]{"foo", "bar"}, null);
+        assertEquals(expected, resolver.createPath("/foo/bar"));
+        assertEquals(expected, resolver.createPath("foo/bar"));
+        assertEquals(expected, resolver.createPath("foo/bar/"));
+        assertEquals(expected, resolver.createPath("/foo/bar/"));
+    }
+
+    @Test
+    public void testCreatePathWithLocale() throws Exception {
+        LocalePath expected = new LocalePath(new String[]{"foo", "bar"}, new Locale("de"));
+        assertEquals(expected, resolver.createPath("/de/foo/bar"));
+        assertEquals(expected, resolver.createPath("de/foo/bar"));
+    }
+
+    @Test(expected = RoutingNotPossibleException.class)
+    public void testObligatoryLanguage() throws Exception {
+        WeberknechtConf conf = readConfig("test-data/weberknecht-lang.xml");
+        LocalePathResolver resolver = new LocalePathResolver(conf);
+        resolver.createPath("/foo/bar");
+    }
 }

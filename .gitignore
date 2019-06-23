@@ -11,3 +11,8 @@ doc/api-rpx.zip
 .classpath
 .project
 .settings/
+*.iml
+.gradle
+build
+.idea
+/out

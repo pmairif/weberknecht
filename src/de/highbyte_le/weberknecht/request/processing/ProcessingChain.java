@@ -1,7 +1,7 @@
 /*
  * ProcessingChain.java (weberknecht)
  *
- * Copyright 2010-2013 Patrick Mairif.
+ * Copyright 2010-2015 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  * 
  * tabstop=4, charset=UTF-8
@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.highbyte_le.weberknecht.request.ContentProcessingException;
 import de.highbyte_le.weberknecht.request.ExecutionException;
+import de.highbyte_le.weberknecht.request.NotFoundException;
 import de.highbyte_le.weberknecht.request.actions.ExecutableAction;
 import de.highbyte_le.weberknecht.request.routing.RoutingTarget;
 
@@ -29,7 +30,7 @@ public class ProcessingChain {
 	
 	private final HttpServletResponse response;
 	
-	private final ExecutableAction action;
+	private ExecutableAction action;
 	
 	private final RoutingTarget routingTarget;
 	
@@ -48,9 +49,17 @@ public class ProcessingChain {
 	/**
 	 * Continue processing. Returns after all processors are done. Which allows cleanup operations. 
 	 */
-	public void doContinue() throws ExecutionException, ContentProcessingException, RedirectException {
+	public void doContinue() throws ExecutionException, ContentProcessingException, RedirectException, NotFoundException {
 		if (it.hasNext()) {
 			it.next().execute(request, response, routingTarget, action, this);
 		}
+	}
+
+	public void setAction(ExecutableAction action) {
+		this.action = action;
+	}
+
+	public ExecutableAction getAction() {
+		return action;
 	}
 }

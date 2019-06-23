@@ -134,18 +134,20 @@ public class RequestWrapper {
 	private static String extractQuery(HttpServletRequest request) throws IOException {
 		StringBuilder b = new StringBuilder();
 		
-		BufferedReader reader = request.getReader();
-		try {
+		try (BufferedReader reader = request.getReader()) {
 			String line;
+			boolean gotContent = false;
 			while ((line=reader.readLine()) != null) {
+				gotContent = true;
 				b.append(line);
 				logger.debug(line);
 			}
+
+			if (!gotContent) {
+				logger.debug("extractQuery() - got no content from reader.readLine()");
+			}
 		}
-		finally {
-			reader.close();
-		}
-	
+
 		return b.toString();
 	}
 

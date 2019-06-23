@@ -1,43 +1,44 @@
 /*
  * AreaPath.java (weberknecht)
  *
- * Copyright 2013 Patrick Mairif.
+ * Copyright 2013-2015 Patrick Mairif.
  * The program is distributed under the terms of the Apache License (ALv2).
  *
  * tabstop=4, charset=UTF-8
  */
 package de.highbyte_le.weberknecht.request.routing;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
 /**
- * path of areas to access the action
+ * parsed URL path
  *
  * @author pmairif
  */
 public class AreaPath implements Cloneable {
 
-	private final List<String> areas;
+	private final List<String> elements;
 	
 	public AreaPath() {
-		this.areas = new Vector<String>();
+		this.elements = new Vector<>();
 	}
 
-	public AreaPath(List<String> areas) {
-		this.areas = new Vector<String>(areas);
+	public AreaPath(List<String> elements) {
+		this.elements = new Vector<>(elements);
 	}
 	
-	public AreaPath(String...areas) {
-		this.areas = new Vector<String>(areas.length);
-		for (String area: areas) {
+	public AreaPath(String... elements) {
+		this.elements = new Vector<>(elements.length);
+		for (String area: elements) {
 			addPath(area);
 		}
 	}
 	
 	public AreaPath addPath(String area) {
 		if (area != null && area.length() > 0)
-			this.areas.add(area);
+			this.elements.add(area);
 		
 		return this;
 	}
@@ -50,17 +51,25 @@ public class AreaPath implements Cloneable {
 	}
 	
 	/**
-	 * @return the areas
+	 * @return the elements
 	 */
 	public List<String> getAreas() {
-		return areas;
+		return elements;
 	}
 
-	@Override
+    public int size() {
+        return elements.size();
+    }
+
+    public Iterator<String> iterator() {
+        return elements.iterator();
+    }
+
+    @Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((areas == null) ? 0 : areas.hashCode());
+		result = prime * result + elements.hashCode();
 		return result;
 	}
 
@@ -73,18 +82,12 @@ public class AreaPath implements Cloneable {
 		if (getClass() != obj.getClass())
 			return false;
 		AreaPath other = (AreaPath) obj;
-		if (areas == null) {
-			if (other.areas != null)
-				return false;
-		}
-		else if (!areas.equals(other.areas))
-			return false;
-		return true;
-	}
+        return elements.equals(other.elements);
+    }
 
 	@Override
 	public String toString() {
-		return "AreaPath [areas=" + areas + "]";
+		return "AreaPath [elements=" + elements + "]";
 	}
 	
 	/* (non-Javadoc)
@@ -94,8 +97,8 @@ public class AreaPath implements Cloneable {
 	public AreaPath clone() {
 		AreaPath newPath = new AreaPath();
 		
-		for (String s: areas)
-			newPath.areas.add(s);
+		for (String s: elements)
+			newPath.elements.add(s);
 		
 		return newPath;
 	}

@@ -42,14 +42,25 @@ distributions {
     }
 }
 
+ext {
+    versionJunit5 = "5.5.2"
+    versionMockito = "3.0.0"
+}
+
 dependencies {
-    compile 'commons-lang:commons-lang:2.+'
-    compile 'commons-logging:commons-logging:1.+'
-    compile 'org.jdom:jdom:1.+'
-    compile 'org.json:json:+'
-    compile 'javax.servlet:jsp-api:2.+'
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-all:1.+'
+    implementation 'commons-lang:commons-lang:2.+'
+    implementation 'commons-logging:commons-logging:1.+'
+    implementation 'org.jdom:jdom:1.+'
+    implementation 'org.json:json:+'
+    implementation 'javax.servlet:jsp-api:2.+'
+
+    testImplementation "org.junit.jupiter:junit-jupiter:${versionJunit5}"
+    testImplementation "org.junit.vintage:junit-vintage-engine:${versionJunit5}"
+    testImplementation "org.mockito:mockito-junit-jupiter:${versionMockito}"
+}
+
+test {
+    useJUnitPlatform()
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {

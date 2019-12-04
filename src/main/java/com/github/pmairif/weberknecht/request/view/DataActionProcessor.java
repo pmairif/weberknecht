@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.github.pmairif.weberknecht.request.actions.ActionExecutionException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.pmairif.weberknecht.request.Executable;
 
@@ -26,7 +26,7 @@ import com.github.pmairif.weberknecht.request.Executable;
  */
 public class DataActionProcessor implements ActionViewProcessor {
 	
-	private final Log log = LogFactory.getLog(DataActionProcessor.class);
+	private final Logger log = LoggerFactory.getLogger(DataActionProcessor.class);
 	
 	/* (non-Javadoc)
 	 * @see de.highbyte_le.weberknecht.request.ActionProcessor#processAction(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, de.highbyte_le.weberknecht.request.ExecutableAction)

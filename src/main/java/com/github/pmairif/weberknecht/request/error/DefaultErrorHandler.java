@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.github.pmairif.weberknecht.Controller;
 import com.github.pmairif.weberknecht.request.routing.RoutingTarget;
 import com.github.pmairif.weberknecht.request.NotFoundException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.pmairif.weberknecht.db.DBConnectionException;
 import com.github.pmairif.weberknecht.request.ContentProcessingException;
@@ -35,7 +35,7 @@ public class DefaultErrorHandler implements ErrorHandler {
 	/**
 	 * Logger for this class
 	 */
-	private final Log log = LogFactory.getLog(Controller.class);
+	private final Logger log = LoggerFactory.getLogger(Controller.class);
 
 	/* (non-Javadoc)
 	 * @see de.highbyte_le.weberknecht.request.ErrorHandler#handleException(java.lang.Exception, javax.servlet.http.HttpServletRequest)

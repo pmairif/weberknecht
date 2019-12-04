@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.pmairif.weberknecht.conf.ContextConfig;
 
@@ -31,7 +31,7 @@ public class SiteBaseLinkTag extends TagSupport {
 	/**
 	 * Logger for this class
 	 */
-	private final Log logger = LogFactory.getLog(SiteBaseLinkTag.class);
+	private final Logger logger = LoggerFactory.getLogger(SiteBaseLinkTag.class);
 
 	/* (non-Javadoc)
 	 * @see javax.servlet.jsp.tagext.TagSupport#doStartTag()

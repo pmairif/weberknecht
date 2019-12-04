@@ -13,8 +13,8 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * create action processors
@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
  * @author pmairif
  */
 public class ActionViewProcessorFactory {
-	private static final Log log = LogFactory.getLog(ActionViewProcessor.class);
+	private static final Logger log = LoggerFactory.getLogger(ActionViewProcessor.class);
 	
 	private final Map<String, Class<? extends ActionViewProcessor>> suffixProcessorMap = new HashMap<String, Class<? extends ActionViewProcessor>>();
 	

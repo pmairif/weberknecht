@@ -24,8 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.github.pmairif.weberknecht.conf.WeberknechtConf;
 import com.github.pmairif.weberknecht.request.routing.Router;
 import com.github.pmairif.weberknecht.request.routing.RoutingTarget;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.pmairif.weberknecht.conf.ConfigurationException;
 import com.github.pmairif.weberknecht.db.DbConnectionHolder;
@@ -44,7 +44,7 @@ public class ControllerFilter implements Filter {
 	/**
 	 * Logger for this class
 	 */
-	private final Log log = LogFactory.getLog(ControllerFilter.class);
+	private final Logger log = LoggerFactory.getLogger(ControllerFilter.class);
 
 	/**
 	 * filter initialization

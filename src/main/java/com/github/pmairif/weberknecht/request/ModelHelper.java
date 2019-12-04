@@ -12,8 +12,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import com.github.pmairif.weberknecht.request.actions.ExecutableAction;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * helps getting model instances from request attributes
@@ -28,7 +28,7 @@ public class ModelHelper {
 	/**
 	 * Logger for this class
 	 */
-	private final Log log = LogFactory.getLog(ModelHelper.class);
+	private final Logger log = LoggerFactory.getLogger(ModelHelper.class);
 	
 	public static final String DEFAULT_MODEL_PREFIX = "de.highbyte_le.weberknecht.model";
 	

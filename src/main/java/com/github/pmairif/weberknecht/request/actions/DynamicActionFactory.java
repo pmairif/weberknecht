@@ -11,8 +11,8 @@ package com.github.pmairif.weberknecht.request.actions;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * create actions by name
@@ -26,7 +26,7 @@ public class DynamicActionFactory implements ActionFactory {
 	/**
 	 * Logger for this class
 	 */
-	private final Log log = LogFactory.getLog(DynamicActionFactory.class);
+	private final Logger log = LoggerFactory.getLogger(DynamicActionFactory.class);
 
 	/**
 	 * creates new instance for requested action 

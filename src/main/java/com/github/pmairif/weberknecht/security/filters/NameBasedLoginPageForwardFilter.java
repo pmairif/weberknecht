@@ -23,8 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.pmairif.weberknecht.security.UserAuthentication;
 
@@ -91,5 +91,5 @@ public class NameBasedLoginPageForwardFilter implements Filter {
 	/**
 	 * Logger for this class
 	 */
-	private final Log logger = LogFactory.getLog(NameBasedLoginPageForwardFilter.class);
+	private final Logger logger = LoggerFactory.getLogger(NameBasedLoginPageForwardFilter.class);
 }

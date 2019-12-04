@@ -18,8 +18,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * provide DB connection from within web container.
@@ -39,7 +39,7 @@ public class DefaultWebDbConnectionProvider2 implements DbConnectionProvider {
 	/**
 	 * Logger for this class
 	 */
-	private static final Log log = LogFactory.getLog(DefaultWebDbConnectionProvider2.class);
+	private static final Logger log = LoggerFactory.getLogger(DefaultWebDbConnectionProvider2.class);
 
 	public DefaultWebDbConnectionProvider2(String jdbcContextName) throws NamingException {
     	//JNDI-Context

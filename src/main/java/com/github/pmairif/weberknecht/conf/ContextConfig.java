@@ -13,8 +13,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * helper for accessing JNDI config
@@ -27,7 +27,7 @@ public class ContextConfig {
 	/**
 	 * Logger for this class
 	 */
-	private final Log logger = LogFactory.getLog(ContextConfig.class);
+	private final Logger logger = LoggerFactory.getLogger(ContextConfig.class);
 
 	public ContextConfig() throws NamingException {
 		Context ctx = new InitialContext();

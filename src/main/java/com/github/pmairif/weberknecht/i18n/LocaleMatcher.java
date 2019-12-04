@@ -15,8 +15,8 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * locale matching
@@ -28,7 +28,7 @@ public class LocaleMatcher {
 //	/**
 //	 * Logger for this class
 //	 */
-//	private final Log log = LogFactory.getLog(LocaleMatcher.class);
+//	private final Logger log = LoggerFactory.getLogger(LocaleMatcher.class);
 
 	private ResourceBundle resourceBundle = null;
 
@@ -107,7 +107,7 @@ public class LocaleMatcher {
 	}
 
 	class ResourceBundleControl extends ResourceBundle.Control {
-		private final Log log = LogFactory.getLog(ResourceBundleControl.class);
+		private final Logger log = LoggerFactory.getLogger(ResourceBundleControl.class);
 
 		/* (non-Javadoc)
 		 * @see java.util.ResourceBundle.Control#getFallbackLocale(java.lang.String, java.util.Locale)

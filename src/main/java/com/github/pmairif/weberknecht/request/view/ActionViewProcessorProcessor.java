@@ -21,8 +21,8 @@ import com.github.pmairif.weberknecht.request.processing.ProcessingChain;
 import com.github.pmairif.weberknecht.request.processing.Processor;
 import com.github.pmairif.weberknecht.request.processing.RedirectException;
 import com.github.pmairif.weberknecht.request.routing.RoutingTarget;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * processor calling {@link ActionViewProcessor}s
@@ -33,7 +33,7 @@ public class ActionViewProcessorProcessor implements Processor {
 	/**
 	 * Logger for this class
 	 */
-	private final static Log log = LogFactory.getLog(ActionViewProcessorProcessor.class);
+	private final static Logger log = LoggerFactory.getLogger(ActionViewProcessorProcessor.class);
 
 	private final ActionViewProcessorFactory actionProcessorFactory;
 	

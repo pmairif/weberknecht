@@ -18,8 +18,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.pmairif.weberknecht.request.ContentProcessingException;
 import com.github.pmairif.weberknecht.request.Executable;
@@ -33,7 +33,7 @@ import com.github.pmairif.weberknecht.request.View;
  */
 public class WebActionProcessor implements ActionViewProcessor {
 	
-	private final Log log = LogFactory.getLog(WebActionProcessor.class);
+	private final Logger log = LoggerFactory.getLogger(WebActionProcessor.class);
 	
 	private ServletContext servletContext = null;
 	

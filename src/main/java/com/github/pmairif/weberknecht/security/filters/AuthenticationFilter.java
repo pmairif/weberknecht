@@ -19,8 +19,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.pmairif.weberknecht.security.UserAuthentication;
 import com.github.pmairif.weberknecht.security.UsernamePasswordAuthenticator;
@@ -49,7 +49,7 @@ public class AuthenticationFilter implements Filter {
 	/**
 	 * Logger for this class
 	 */
-	private final Log logger = LogFactory.getLog(AuthenticationFilter.class);
+	private final Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
 
 	/**
 	 * Called when Filter is put into service.
@@ -58,7 +58,7 @@ public class AuthenticationFilter implements Filter {
 	public void init(FilterConfig config) {
 		String authenticationClass = config.getInitParameter("authentication_class");
 		if (authenticationClass == null)
-			logger.fatal("init() - authentication_class is not set!");
+			logger.error("init() - authentication_class is not set!");
 		else {
 			try {
 				Object o = Class.forName(authenticationClass).newInstance();
@@ -66,11 +66,11 @@ public class AuthenticationFilter implements Filter {
 					authentication = (UsernamePasswordAuthenticator) o;
 				}
 				else {
-					logger.fatal("init() - Authenticator class is not an instance of UsernamePasswordAuthenticator");
+					logger.error("init() - Authenticator class is not an instance of UsernamePasswordAuthenticator");
 				}
 			}
 			catch (Exception e) {
-				logger.fatal("init() - authentication class couldn't be initialized");
+				logger.error("init() - authentication class couldn't be initialized");
 			}
 		}
 		
@@ -144,7 +144,7 @@ public class AuthenticationFilter implements Filter {
 				}
 			}
 			else {
-				logger.fatal("handleAuthentication() - no Authenticator object set!");
+				logger.error("handleAuthentication() - no Authenticator object set!");
 			}
 		}
 		else if (reqDoParam != null && reqDoParam.equalsIgnoreCase("signout")) {

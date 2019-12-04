@@ -16,8 +16,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * provide db connections that are configured via JNDI
@@ -31,7 +31,7 @@ public class DefaultWebDbConnectionProvider implements DbConnectionProvider  {
 	/**
 	 * Logger for this class
 	 */
-	private final Log logger = LogFactory.getLog(DefaultWebDbConnectionProvider.class);
+	private final Logger logger = LoggerFactory.getLogger(DefaultWebDbConnectionProvider.class);
 
 	public DefaultWebDbConnectionProvider() {
         this.type = DbType.MYSQL;	//FIXME implement some property handling for db type

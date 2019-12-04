@@ -46,8 +46,8 @@ import com.github.pmairif.weberknecht.request.routing.RoutingTarget;
 import com.github.pmairif.weberknecht.request.view.ActionViewProcessorFactory;
 import com.github.pmairif.weberknecht.request.view.ActionViewProcessorProcessor;
 import com.github.pmairif.weberknecht.request.view.AutoViewProcessor;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * webapp controller to be used in servlet ({@link Controller}) or filter ( {@link ControllerFilter} )
@@ -70,7 +70,7 @@ public class ControllerCore {
 	/**
 	 * Logger for this class
 	 */
-	private final static Log log = LogFactory.getLog(ControllerCore.class);
+	private final static Logger log = LoggerFactory.getLogger(ControllerCore.class);
 
 	public ControllerCore(ServletContext servletContext) throws ClassNotFoundException, ConfigurationException {
 		this(servletContext, WeberknechtConf.readConfig(servletContext), initDbConnectionProvider());

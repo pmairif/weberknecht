@@ -45,15 +45,17 @@ distributions {
 ext {
     versionJunit5 = "5.5.2"
     versionMockito = "3.0.0"
+    versionSlf4j = "1.7.+"
 }
 
 dependencies {
     implementation 'commons-lang:commons-lang:2.+'
-    implementation 'commons-logging:commons-logging:1.+'
     implementation 'org.jdom:jdom:1.+'
     implementation 'org.json:json:+'
+    implementation "org.slf4j:slf4j-api:$versionSlf4j"
     implementation 'javax.servlet:jsp-api:2.+'
 
+    testImplementation "org.slf4j:slf4j-simple:$versionSlf4j"
     testImplementation "org.junit.jupiter:junit-jupiter:${versionJunit5}"
     testImplementation "org.junit.vintage:junit-vintage-engine:${versionJunit5}"
     testImplementation "org.mockito:mockito-junit-jupiter:${versionMockito}"

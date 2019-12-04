@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.github.pmairif.weberknecht.request.actions.ActionExecutionException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.pmairif.weberknecht.request.ContentProcessingException;
 import com.github.pmairif.weberknecht.request.Executable;
@@ -29,7 +29,7 @@ import com.github.pmairif.weberknecht.request.Executable;
  */
 public class AutoViewProcessor implements ActionViewProcessor {
 	
-	private final Log log = LogFactory.getLog(AutoViewProcessor.class);
+	private final Logger log = LoggerFactory.getLogger(AutoViewProcessor.class);
 	
 	private ServletContext servletContext = null;
 	

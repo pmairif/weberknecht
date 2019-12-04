@@ -21,8 +21,8 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Wraps the HttpServletRequest and handles charset encoding of URL encoded strings correctly. 
@@ -33,7 +33,7 @@ import org.apache.commons.logging.LogFactory;
 public class RequestWrapper {
     private Map<String, String[]> parameters = new HashMap<String, String[]>();
 
-	private static final Log logger = LogFactory.getLog(RequestWrapper.class);
+	private static final Logger logger = LoggerFactory.getLogger(RequestWrapper.class);
 
 	private RequestWrapper() {
     	//

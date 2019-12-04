@@ -20,8 +20,8 @@ import java.util.Vector;
 import javax.servlet.ServletContext;
 
 import com.github.pmairif.weberknecht.request.routing.AreaPath;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -62,7 +62,7 @@ public class WeberknechtConf {
 	/**
 	 * Logger for this class
 	 */
-	private final static Log log = LogFactory.getLog(WeberknechtConf.class);
+	private final static Logger log = LoggerFactory.getLogger(WeberknechtConf.class);
 
 	private WeberknechtConf() {
 		//

@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.pmairif.weberknecht.conf.ConfigurationException;
 import com.github.pmairif.weberknecht.conf.WeberknechtConf;
@@ -40,7 +40,7 @@ public class Controller extends HttpServlet {
 	/**
 	 * Logger for this class
 	 */
-	private final Log log = LogFactory.getLog(Controller.class);
+	private final Logger log = LoggerFactory.getLogger(Controller.class);
 
 	/**
 	 * initialization of the controller

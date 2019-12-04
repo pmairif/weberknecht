@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.pmairif.weberknecht.conf.ActionDeclaration;
 import com.github.pmairif.weberknecht.conf.ConfigurationException;
@@ -35,7 +35,7 @@ public class AreaPathResolver {
 	/**
 	 * Logger for this class
 	 */
-	private final Log log = LogFactory.getLog(AreaPathResolver.class);
+	private final Logger log = LoggerFactory.getLogger(AreaPathResolver.class);
 
 	/**
 	 * mapping of paths to action factories

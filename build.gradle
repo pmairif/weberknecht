@@ -14,25 +14,6 @@ repositories {
     mavenCentral()
 }
 
-sourceSets {
-    main {
-        java {
-            srcDir 'src'
-        }
-        resources {
-            srcDir 'src'
-        }
-    }
-    test {
-        java {
-            srcDir 'src-test'
-        }
-        resources {
-            srcDir 'src-test'
-        }
-    }
-}
-
 jar {
     manifest {
         attributes(

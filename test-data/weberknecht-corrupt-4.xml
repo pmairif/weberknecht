@@ -3,12 +3,12 @@
 	<area>
 		<pre-processors ref="pre1" />
 		
-		<action name="foo" class="de.highbyte_le.weberknecht.FooAction"/>
-		<action name="bar" class="de.highbyte_le.weberknecht.BarAction" />
+		<action name="foo" class="com.github.pmairif.weberknecht.FooAction"/>
+		<action name="bar" class="com.github.pmairif.weberknecht.BarAction" />
 	</area>
 
 	<pre-processors-def id="pre1">
 		<!-- non existing class -->
-		<pre-processor class="de.highbyte_le.weberknecht.test.NonExistingProcessor"/>
+		<pre-processor class="com.github.pmairif.weberknecht.test.NonExistingProcessor"/>
 	</pre-processors-def>
 </weberknecht>

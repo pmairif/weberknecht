@@ -7,7 +7,7 @@ plugins {
 
 sourceCompatibility = 1.8
 
-project.group='de.highbyte_le'
+project.group='com.github.pmairif'
 version = new de.highbyte_le.semver.ReadSemVer(project).read()
 
 repositories {

@@ -3,32 +3,32 @@
 	<post-processors ref="post1" />
 
 	<actions>
-		<action name="foo" class="de.highbyte_le.weberknecht.test.DummyAction1">
+		<action name="foo" class="com.github.pmairif.weberknecht.test.DummyAction1">
 			<pre-processors ref="pre1"/>
 		</action>
-		<action name="bar" class="de.highbyte_le.weberknecht.test.DummyAction2" />
+		<action name="bar" class="com.github.pmairif.weberknecht.test.DummyAction2" />
 	</actions>
 
 	<actions area="a1">
 		<pre-processors ref="pre2"/>
-		<action name="foo1" class="de.highbyte_le.weberknecht.test.DummyAction1" />
-		<action name="bar1" class="de.highbyte_le.weberknecht.test.DummyAction2">
+		<action name="foo1" class="com.github.pmairif.weberknecht.test.DummyAction1" />
+		<action name="bar1" class="com.github.pmairif.weberknecht.test.DummyAction2">
 			<!-- overrides pre-processor defined for area -->
 			<pre-processors ref="pre1"/>
 		</action>
 	</actions>
 
 	<pre-processors-def id="pre1">
-		<pre-processor class="de.highbyte_le.weberknecht.test.DummyProcessor2"/>
+		<pre-processor class="com.github.pmairif.weberknecht.test.DummyProcessor2"/>
 	</pre-processors-def>
 	
 	<pre-processors-def id="pre2">
-		<pre-processor class="de.highbyte_le.weberknecht.test.DummyProcessor1"/>
-		<pre-processor class="de.highbyte_le.weberknecht.test.DummyProcessor2"/>
+		<pre-processor class="com.github.pmairif.weberknecht.test.DummyProcessor1"/>
+		<pre-processor class="com.github.pmairif.weberknecht.test.DummyProcessor2"/>
 	</pre-processors-def>
 	
 	<post-processors-def id="post1">
-		<post-processor class="de.highbyte_le.weberknecht.test.DummyProcessor3"/>
-		<post-processor class="de.highbyte_le.weberknecht.test.DummyProcessor4"/>
+		<post-processor class="com.github.pmairif.weberknecht.test.DummyProcessor3"/>
+		<post-processor class="com.github.pmairif.weberknecht.test.DummyProcessor4"/>
 	</post-processors-def>
 </weberknecht>

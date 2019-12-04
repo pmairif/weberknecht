@@ -1,5 +1,5 @@
-next:
-    - ...
+next (1.0):
+    - changed package to com.github.pmairif.weberknecht
 
 0.14.0:
 	- NotFoundException

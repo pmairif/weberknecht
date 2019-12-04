@@ -4,17 +4,17 @@
 		<pre-processors ref="pre1" />
 		<post-processors ref="post1" />
 		
-		<action name="foo" class="de.highbyte_le.weberknecht.test.DummyAction1" />
-		<action name="bar" class="de.highbyte_le.weberknecht.test.DummyAction2" />
+		<action name="foo" class="com.github.pmairif.weberknecht.test.DummyAction1" />
+		<action name="bar" class="com.github.pmairif.weberknecht.test.DummyAction2" />
 	</area>
 
 	<pre-processors-def id="pre1">
-		<pre-processor class="de.highbyte_le.weberknecht.test.DummyProcessor1"/>
-		<pre-processor class="de.highbyte_le.weberknecht.test.DummyProcessor2"/>
+		<pre-processor class="com.github.pmairif.weberknecht.test.DummyProcessor1"/>
+		<pre-processor class="com.github.pmairif.weberknecht.test.DummyProcessor2"/>
 	</pre-processors-def>
 	
 	<post-processors-def id="post1">
-		<post-processor class="de.highbyte_le.weberknecht.test.DummyProcessor3"/>
-		<post-processor class="de.highbyte_le.weberknecht.test.DummyProcessor4"/>
+		<post-processor class="com.github.pmairif.weberknecht.test.DummyProcessor3"/>
+		<post-processor class="com.github.pmairif.weberknecht.test.DummyProcessor4"/>
 	</post-processors-def>
 </weberknecht>

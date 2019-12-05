@@ -1,5 +1,6 @@
 next (1.0):
     - changed package to com.github.pmairif.weberknecht
+    - changed tld URIs to weberknecht.pmairif.github.com
     - switched logging to SLF4J
 
 0.14.0:

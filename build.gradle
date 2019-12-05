@@ -80,7 +80,7 @@ artifacts {
     archives javadocJar
 }
 
-ext.mavenUrl = version.endsWith('-SNAPSHOT') ? "https://oss.sonatype.org/content/repositories/snapshots" : " https://oss.sonatype.org/service/local/staging/deploy/maven2"
+ext.mavenUrl = version.endsWith('-SNAPSHOT') ? "https://oss.sonatype.org/content/repositories/snapshots" : "https://oss.sonatype.org/service/local/staging/deploy/maven2"
 
 publishing {
     repositories {

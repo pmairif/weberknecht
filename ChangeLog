@@ -1,3 +1,8 @@
+1.0.2:
+    - Dependencies added to maven artifact.
+
+1.0.1: omitted due to issues publishing to maven central.
+
 1.0.0:
     - changed package to com.github.pmairif.weberknecht
     - changed tld URIs to weberknecht.pmairif.github.com

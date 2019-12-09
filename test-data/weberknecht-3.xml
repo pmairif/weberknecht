@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <weberknecht>
 	<area>
-		<action name="foo" class="de.highbyte_le.weberknecht.test.DummyAction1">
+		<action name="foo" class="com.github.pmairif.weberknecht.test.DummyAction1">
 			<pre-processors ref="p1" />
 			<post-processors ref="p1" />
 		</action>
-		<action name="bar" class="de.highbyte_le.weberknecht.test.DummyAction2" />
+		<action name="bar" class="com.github.pmairif.weberknecht.test.DummyAction2" />
 	</area>
 
 	<area name="a1" pre="p2" post="p2">
 		<pre-processors ref="p2" />
 		<post-processors ref="p2" />
 
-		<action name="foo1" class="de.highbyte_le.weberknecht.test.DummyAction1" pre="p1">
+		<action name="foo1" class="com.github.pmairif.weberknecht.test.DummyAction1" pre="p1">
 			<pre-processors ref="p1" />
 		</action>
-		<action name="bar1" class="de.highbyte_le.weberknecht.test.DummyAction2" post="p3">
+		<action name="bar1" class="com.github.pmairif.weberknecht.test.DummyAction2" post="p3">
 			<post-processors ref="p3" />
 		</action>
-		<action name="bar2" class="de.highbyte_le.weberknecht.test.DummyAction2" />
+		<action name="bar2" class="com.github.pmairif.weberknecht.test.DummyAction2" />
 	</area>
 
 	<pre-processors-def id="p1">
-		<pre-processor class="de.highbyte_le.weberknecht.test.DummyProcessor1"/>
+		<pre-processor class="com.github.pmairif.weberknecht.test.DummyProcessor1"/>
 	</pre-processors-def>
 	
 	<pre-processors-def id="p2">
-		<pre-processor class="de.highbyte_le.weberknecht.test.DummyProcessor2"/>
-		<pre-processor class="de.highbyte_le.weberknecht.test.DummyProcessor3"/>
+		<pre-processor class="com.github.pmairif.weberknecht.test.DummyProcessor2"/>
+		<pre-processor class="com.github.pmairif.weberknecht.test.DummyProcessor3"/>
 	</pre-processors-def>
 	
 	<post-processors-def id="p1">
-		<post-processor class="de.highbyte_le.weberknecht.test.DummyProcessor1"/>
-		<post-processor class="de.highbyte_le.weberknecht.test.DummyProcessor2"/>
+		<post-processor class="com.github.pmairif.weberknecht.test.DummyProcessor1"/>
+		<post-processor class="com.github.pmairif.weberknecht.test.DummyProcessor2"/>
 	</post-processors-def>
 
 	<post-processors-def id="p2">
-		<post-processor class="de.highbyte_le.weberknecht.test.DummyProcessor3"/>
+		<post-processor class="com.github.pmairif.weberknecht.test.DummyProcessor3"/>
 	</post-processors-def>
 
 	<post-processors-def id="p3">
-		<post-processor class="de.highbyte_le.weberknecht.test.DummyProcessor4"/>
+		<post-processor class="com.github.pmairif.weberknecht.test.DummyProcessor4"/>
 	</post-processors-def>
 </weberknecht>

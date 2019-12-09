@@ -4,11 +4,11 @@
 		<!-- no post processor with that name exists -->
 		<post-processors ref="pre1" />
 		
-		<action name="foo" class="de.highbyte_le.weberknecht.FooAction"/>
-		<action name="bar" class="de.highbyte_le.weberknecht.BarAction" />
+		<action name="foo" class="com.github.pmairif.weberknecht.FooAction"/>
+		<action name="bar" class="com.github.pmairif.weberknecht.BarAction" />
 	</area>
 
 	<pre-processors-def id="pre1">
-		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor2"/>
+		<pre-processor class="com.github.pmairif.weberknecht.PreProcessor2"/>
 	</pre-processors-def>
 </weberknecht>

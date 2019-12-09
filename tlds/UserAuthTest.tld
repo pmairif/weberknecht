@@ -6,17 +6,17 @@
 	<tlib-version>1.0</tlib-version>
 	<jsp-version>1.2</jsp-version>
 	<short-name>UserAuthTest</short-name>
-	<uri>http://weberknecht.highbyte-le.de/tld/UserAuthTest</uri>
+	<uri>http://weberknecht.pmairif.github.com/tld/UserAuthTest</uri>
 	
 	<tag>
 		<name>user-loggedin</name>
-		<tag-class>de.highbyte_le.weberknecht.security.taglibs.UserLoggedInTestTag</tag-class>
+		<tag-class>com.github.pmairif.weberknecht.security.taglibs.UserLoggedInTestTag</tag-class>
 		<body-content>JSP</body-content>
 	</tag>
 	
 	<tag>
 		<name>user-not-loggedin</name>
-		<tag-class>de.highbyte_le.weberknecht.security.taglibs.UserNotLoggedInTestTag</tag-class>
+		<tag-class>com.github.pmairif.weberknecht.security.taglibs.UserNotLoggedInTestTag</tag-class>
 		<body-content>JSP</body-content>
 	</tag>
 </taglib>

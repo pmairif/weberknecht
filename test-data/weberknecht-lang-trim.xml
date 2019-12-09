@@ -5,10 +5,10 @@
 	</routing-locale-prefix>
 
 	<area>
-		<action name="index" class="de.highbyte_le.weberknecht.test.DummyAction1" />
+		<action name="index" class="com.github.pmairif.weberknecht.test.DummyAction1" />
 		
 		<area name="bar">
-			<action name="foo" class="de.highbyte_le.weberknecht.test.DummyAction2" />
+			<action name="foo" class="com.github.pmairif.weberknecht.test.DummyAction2" />
 		</area>
 	</area>
 </weberknecht>

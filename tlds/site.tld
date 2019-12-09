@@ -6,10 +6,10 @@
 	<tlibversion>1.0</tlibversion>
 	<jspversion>1.2</jspversion>
 	<shortname>site</shortname>
-   	<uri>http://weberknecht.highbyte-le.de/tld/site</uri>
+   	<uri>http://weberknecht.pmairif.github.com/tld/site</uri>
   
 	<tag>
 	    <name>base-link</name>
-	    <tagclass>de.highbyte_le.weberknecht.request.taglibs.SiteBaseLinkTag</tagclass>
+	    <tagclass>com.github.pmairif.weberknecht.request.taglibs.SiteBaseLinkTag</tagclass>
 	</tag>
 </taglib>

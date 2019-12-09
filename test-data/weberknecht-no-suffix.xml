@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <weberknecht>
 	<area>
-		<action name="foo" class="de.highbyte_le.weberknecht.test.DummyAction1" />
+		<action name="foo" class="com.github.pmairif.weberknecht.test.DummyAction1" />
 		
 		<area name="foo" default="home">
-			<action name="home" class="de.highbyte_le.weberknecht.test.DummyAction2" />
+			<action name="home" class="com.github.pmairif.weberknecht.test.DummyAction2" />
 		</area>
 	</area>
 </weberknecht>

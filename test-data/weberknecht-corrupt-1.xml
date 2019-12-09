@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <weberknecht>
 	<area>
-		<action name="foo" class="de.highbyte_le.weberknecht.FooAction">
+		<action name="foo" class="com.github.pmairif.weberknecht.FooAction">
 			<!-- does not exist -->
 			<pre-processors ref="pre3" />
 		</action>
-		<action name="bar" class="de.highbyte_le.weberknecht.BarAction" />
+		<action name="bar" class="com.github.pmairif.weberknecht.BarAction" />
 	</area>
 
 	<pre-processors-def id="pre1">
-		<pre-processor class="de.highbyte_le.weberknecht.PreProcessor2"/>
+		<pre-processor class="com.github.pmairif.weberknecht.PreProcessor2"/>
 	</pre-processors-def>
 </weberknecht>

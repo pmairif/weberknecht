@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <weberknecht>
 	<area>
-		<action name="foo" class="de.highbyte_le.weberknecht.test.MockAction" />
+		<action name="foo" class="com.github.pmairif.weberknecht.test.MockAction" />
 	</area>
 </weberknecht>

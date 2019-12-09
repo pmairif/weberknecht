@@ -80,7 +80,7 @@ publishing {
     }
     publications {
         mavenJava(MavenPublication) {
-            artifact jar
+            from components.java
             artifact sourcesJar
             artifact javadocJar
 
@@ -124,5 +124,7 @@ publishing {
 }
 
 signing {
-    sign publishing.publications.mavenJava
+    if (!version.endsWith('-SNAPSHOT')) {
+        sign publishing.publications.mavenJava
+    }
 }

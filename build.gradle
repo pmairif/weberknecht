@@ -1,8 +1,8 @@
 plugins {
     id 'java'
-    id 'java-library-distribution'
     id 'maven-publish'
     id 'de.highbyte_le.semver' version '1.3.1'
+    id 'signing'
 }
 
 sourceCompatibility = 1.8
@@ -27,20 +27,6 @@ jar {
     }
 }
 
-afterEvaluate {
-    distZip.dependsOn javadocJar
-}
-
-distributions {
-    main {
-        contents {
-            from {
-                'dist-files'
-                'build/libs/weberknecht-'+project.version+'-javadoc.jar'
-            }
-        }
-    }
-}
 
 ext {
     versionJunit5 = "5.5.2"
@@ -80,7 +66,7 @@ artifacts {
     archives javadocJar
 }
 
-ext.mavenUrl = version.endsWith('-SNAPSHOT') ? "https://oss.sonatype.org/content/repositories/snapshots" : " https://oss.sonatype.org/service/local/staging/deploy/maven2"
+ext.mavenUrl = version.endsWith('-SNAPSHOT') ? "https://oss.sonatype.org/content/repositories/snapshots" : "https://oss.sonatype.org/service/local/staging/deploy/maven2"
 
 publishing {
     repositories {
@@ -98,6 +84,33 @@ publishing {
             artifact sourcesJar
             artifact javadocJar
 
+            pom {
+                name = 'Weberknecht'
+                description = 'Yet another java web framework that wants to make web developers life a bit easier.'
+                url = 'https://github.com/pmairif/weberknecht'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'pmairif'
+                        name = 'Patrick Mairif'
+                        email = 'pm@mairif.biz'
+                    }
+                }
+                scm {
+                    connection = 'git@github.com:pmairif/weberknecht.git'
+                    developerConnection = 'git@github.com:pmairif/weberknecht.git'
+                    url = 'https://github.com/pmairif/weberknecht'
+                }
+                issueManagement {
+                    url = 'https://github.com/pmairif/weberknecht/issues'
+                }
+            }
+
             versionMapping {
                 usage('java-api') {
                     fromResolutionOf('runtimeClasspath')
@@ -108,4 +121,8 @@ publishing {
             }
         }
     }
+}
+
+signing {
+    sign publishing.publications.mavenJava
 }

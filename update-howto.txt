@@ -1,3 +1,8 @@
+0.x to 1.0:
+    - change all references in weberknecht.xml and web.xml from de.highbyte_le.weberknecht.* to com.github.pmairif.weberknecht.*
+    - change all tld-references from http://weberknecht.highbyte_le.de to http://weberknecht.pmairif.github.com
+    - change all class path references in your code from de.highbyte_le.weberknecht.* to com.github.pmairif.weberknecht.*
+
 0.12 to 0.13:
 	- Controller moved to de.highbyte_le.weberknecht.Controller. web.xml has to
 	  be changed.

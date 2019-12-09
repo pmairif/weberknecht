@@ -83,6 +83,33 @@ publishing {
             artifact sourcesJar
             artifact javadocJar
 
+            pom {
+                name = 'Weberknecht'
+                description = 'Yet another java web framework that wants to make web developers life a bit easier.'
+                url = 'https://github.com/pmairif/weberknecht'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'pmairif'
+                        name = 'Patrick Mairif'
+                        email = 'pm@mairif.biz'
+                    }
+                }
+                scm {
+                    connection = 'git@github.com:pmairif/weberknecht.git'
+                    developerConnection = 'git@github.com:pmairif/weberknecht.git'
+                    url = 'https://github.com/pmairif/weberknecht'
+                }
+                issueManagement {
+                    url = 'https://github.com/pmairif/weberknecht/issues'
+                }
+            }
+
             versionMapping {
                 usage('java-api') {
                     fromResolutionOf('runtimeClasspath')

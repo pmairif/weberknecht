@@ -1,3 +1,6 @@
+1.0.3:
+    - Bugfix: set action attribute in error handling making views compatible with usual actions.
+
 1.0.2:
     - Dependencies added to maven artifact.
 

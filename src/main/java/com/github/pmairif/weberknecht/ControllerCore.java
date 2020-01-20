@@ -18,6 +18,7 @@ import com.github.pmairif.weberknecht.db.DbConnectionProvider;
 import com.github.pmairif.weberknecht.db.DefaultWebDbConnectionProvider2;
 import com.github.pmairif.weberknecht.request.Configurable;
 import com.github.pmairif.weberknecht.request.DatabaseCapable;
+import com.github.pmairif.weberknecht.request.ModelHelper;
 import com.github.pmairif.weberknecht.request.actions.ExecutableAction;
 import com.github.pmairif.weberknecht.request.error.DefaultErrorHandler;
 import com.github.pmairif.weberknecht.request.error.ErrorHandler;
@@ -277,6 +278,7 @@ public class ControllerCore {
 						response.setStatus(status);
 
 					//process view, respecting requested content type
+					request.setAttribute(ModelHelper.ACTION_KEY, handler);
 					AutoViewProcessor processor = new AutoViewProcessor();
 					processor.setServletContext(servletContext);
 					processor.setActionViewProcessorFactory(actionProcessorFactory);

@@ -11,6 +11,7 @@ package com.github.pmairif.weberknecht;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -59,7 +60,7 @@ public class ControllerCoreTest {
 	}
 
 	@Test
-	public void testSetupProcessorsDefaultFoo() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void testSetupProcessorsDefaultFoo() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		List<Processor> processors = controller.setupProcessors(new RoutingTarget(new AreaPath(), "foo", null, null));
 		
 		//pre1 and post1 expected
@@ -71,7 +72,7 @@ public class ControllerCoreTest {
 	}
 	
 	@Test
-	public void testSetupProcessorsDefaultBar() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void testSetupProcessorsDefaultBar() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		List<Processor> processors = controller.setupProcessors(new RoutingTarget(new AreaPath(), "bar", null, null));
 		
 		//post1 expected
@@ -82,7 +83,7 @@ public class ControllerCoreTest {
 	}
 
 	@Test
-	public void testSetupProcessorsA1Foo1() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void testSetupProcessorsA1Foo1() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		List<Processor> processors = controller.setupProcessors(new RoutingTarget(new AreaPath("a1"), "foo1", null, null));
 		
 		//pre2 and post1 expected
@@ -94,7 +95,7 @@ public class ControllerCoreTest {
 	}
 	
 	@Test
-	public void testSetupProcessorsA1Bar1() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void testSetupProcessorsA1Bar1() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		List<Processor> processors = controller.setupProcessors(new RoutingTarget(new AreaPath("a1"), "bar1", null, null));
 		
 		//pre1 and post1 expected

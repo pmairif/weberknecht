@@ -5,13 +5,6 @@
  */
 package com.github.pmairif.weberknecht.request.view;
 
-import java.io.IOException;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.github.pmairif.weberknecht.request.ContentProcessingException;
 import com.github.pmairif.weberknecht.request.ExecutionException;
 import com.github.pmairif.weberknecht.request.ModelHelper;
@@ -19,10 +12,15 @@ import com.github.pmairif.weberknecht.request.NotFoundException;
 import com.github.pmairif.weberknecht.request.actions.ExecutableAction;
 import com.github.pmairif.weberknecht.request.processing.ProcessingChain;
 import com.github.pmairif.weberknecht.request.processing.Processor;
-import com.github.pmairif.weberknecht.request.processing.RedirectException;
 import com.github.pmairif.weberknecht.request.routing.RoutingTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * processor calling {@link ActionViewProcessor}s
@@ -33,7 +31,7 @@ public class ActionViewProcessorProcessor implements Processor {
 	/**
 	 * Logger for this class
 	 */
-	private final static Logger log = LoggerFactory.getLogger(ActionViewProcessorProcessor.class);
+	private static final Logger log = LoggerFactory.getLogger(ActionViewProcessorProcessor.class);
 
 	private final ActionViewProcessorFactory actionProcessorFactory;
 	
@@ -50,11 +48,11 @@ public class ActionViewProcessorProcessor implements Processor {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response, RoutingTarget routingTarget,
 			ExecutableAction action, ProcessingChain chain) throws ExecutionException, ContentProcessingException,
-            RedirectException, NotFoundException {
+            NotFoundException {
 
 		try {
 			if (log.isDebugEnabled()) {
-				log.debug("execute() - processing view vor action " + action.getClass().getSimpleName());
+				log.debug("execute() - processing view vor action {}", action.getClass().getSimpleName());
 			}
 			request.setAttribute(ModelHelper.ACTION_KEY, action);
 

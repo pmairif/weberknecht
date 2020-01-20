@@ -8,19 +8,6 @@
  */
 package com.github.pmairif.weberknecht;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Vector;
-
-import javax.naming.NamingException;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.github.pmairif.weberknecht.conf.ActionDeclaration;
 import com.github.pmairif.weberknecht.conf.ConfigurationException;
 import com.github.pmairif.weberknecht.conf.ProcessorList;
@@ -31,6 +18,7 @@ import com.github.pmairif.weberknecht.db.DbConnectionProvider;
 import com.github.pmairif.weberknecht.db.DefaultWebDbConnectionProvider2;
 import com.github.pmairif.weberknecht.request.Configurable;
 import com.github.pmairif.weberknecht.request.DatabaseCapable;
+import com.github.pmairif.weberknecht.request.ModelHelper;
 import com.github.pmairif.weberknecht.request.actions.ExecutableAction;
 import com.github.pmairif.weberknecht.request.error.DefaultErrorHandler;
 import com.github.pmairif.weberknecht.request.error.ErrorHandler;
@@ -49,6 +37,19 @@ import com.github.pmairif.weberknecht.request.view.AutoViewProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.naming.NamingException;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
+
 /**
  * webapp controller to be used in servlet ({@link Controller}) or filter ( {@link ControllerFilter} )
  * 
@@ -57,11 +58,11 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings({ "nls" })
 public class ControllerCore {
 	
-	private DbConnectionProvider dbConnectionProvider = null;
+	private DbConnectionProvider dbConnectionProvider;
 	
 	private AreaPathResolver pathResolver;
 	
-	private ActionViewProcessorFactory actionProcessorFactory = null;
+	private ActionViewProcessorFactory actionProcessorFactory;
 	
 	private WeberknechtConf conf;
 	
@@ -70,7 +71,7 @@ public class ControllerCore {
 	/**
 	 * Logger for this class
 	 */
-	private final static Logger log = LoggerFactory.getLogger(ControllerCore.class);
+	private static final Logger log = LoggerFactory.getLogger(ControllerCore.class);
 
 	public ControllerCore(ServletContext servletContext) throws ClassNotFoundException, ConfigurationException {
 		this(servletContext, WeberknechtConf.readConfig(servletContext), initDbConnectionProvider());
@@ -100,7 +101,7 @@ public class ControllerCore {
 		}
 		catch (NamingException e) {
 			if (log.isInfoEnabled())
-				log.info("jdbc/mydb not configured ("+e.getMessage()+")");	//$NON-NLS-1$
+				log.info("jdbc/mydb not configured ({})", e.getMessage());	//$NON-NLS-1$
 		}
 		return dbConnectionProvider;
 	}
@@ -113,12 +114,12 @@ public class ControllerCore {
 	}
 	
 	public Router createRouter(DbConnectionHolder conHolder) throws InstantiationException, IllegalAccessException,
-			ClassNotFoundException, DBConnectionException, ConfigurationException {
+			ClassNotFoundException, DBConnectionException, ConfigurationException, NoSuchMethodException, InvocationTargetException {
 		
 		List<String> routerClasses = conf.getRouterClasses();
-		List<Router> routers = new Vector<Router>(routerClasses.size());
+		List<Router> routers = new ArrayList<>(routerClasses.size());
 		for (String routerClass: routerClasses) {
-			Object o = Class.forName(routerClass).newInstance();
+			Object o = Class.forName(routerClass).getDeclaredConstructor().newInstance();
 			if (!(o instanceof Router))
 				throw new ConfigurationException(routerClass + " is not an instance of Router");
 				
@@ -127,7 +128,7 @@ public class ControllerCore {
 			routers.add(router);
 		}
 		
-		Router ret = null;
+		Router ret;
 		int size = routers.size();
 		if (size == 0)
 			ret = new AreaCapableRouter();
@@ -144,17 +145,16 @@ public class ControllerCore {
 	/**
 	 * create instances of processor list
 	 * 
-	 * @param processorList
 	 * @return list of instantiated processors
 	 */
 	private List<Processor> instantiateProcessorList(ProcessorList processorList)
-			throws InstantiationException, IllegalAccessException {
+			throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		
 		List<Class<? extends Processor>> processorClasses = processorList.getProcessorClasses();
-		List<Processor> processors = new Vector<Processor>(processorClasses.size());
+		List<Processor> processors = new ArrayList<>(processorClasses.size());
 		
 		for (Class<? extends Processor> pp: processorClasses) {
-			processors.add(pp.newInstance());
+			processors.add(pp.getDeclaredConstructor().newInstance());
 		}
 		
 		return processors;
@@ -188,8 +188,8 @@ public class ControllerCore {
 		}
 	}
 	
-	List<Processor> setupProcessors(RoutingTarget routingTarget) throws InstantiationException, IllegalAccessException {
-		List<Processor> processors = new Vector<>();
+	List<Processor> setupProcessors(RoutingTarget routingTarget) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+		List<Processor> processors = new ArrayList<>();
 
 		ActionDeclaration actionDeclaration = pathResolver.getActionDeclaration(routingTarget);
 		
@@ -248,7 +248,7 @@ public class ControllerCore {
 			RoutingTarget routingTarget, Exception exception) {
 		DbConnectionHolder dbConHolder = new DbConnectionHolder(dbConnectionProvider); 
 		try {
-			List<ErrorHandler> handlerChain = new Vector<ErrorHandler>(2);
+			List<ErrorHandler> handlerChain = new ArrayList<>(2);
 
 			//custom handler first, if available
 			ActionDeclaration actionDeclaration = pathResolver.getActionDeclaration(routingTarget);
@@ -278,6 +278,7 @@ public class ControllerCore {
 						response.setStatus(status);
 
 					//process view, respecting requested content type
+					request.setAttribute(ModelHelper.ACTION_KEY, handler);
 					AutoViewProcessor processor = new AutoViewProcessor();
 					processor.setServletContext(servletContext);
 					processor.setActionViewProcessorFactory(actionProcessorFactory);
@@ -307,19 +308,19 @@ public class ControllerCore {
 				dbConHolder.close();
 			}
 			catch (SQLException e) {
-				log.error("SQLException while closing db connection: "+e.getMessage());	//$NON-NLS-1$
+				log.error("SQLException while closing db connection: {}", e.getMessage());	//$NON-NLS-1$
 			}
 		}
 	}
 
 	protected ErrorHandler getCustomErrorHandler(ActionDeclaration actionDeclaration) throws ClassNotFoundException,
-			InstantiationException, IllegalAccessException {
+			InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		@SuppressWarnings("unchecked")
 		Class<? extends ErrorHandler> errHandlerClass = (Class<? extends ErrorHandler>) Class.forName(actionDeclaration.getErrorHandlerClass());
-		return errHandlerClass.newInstance();
+		return errHandlerClass.getDeclaredConstructor().newInstance();
 	}
 
-	protected ErrorHandler getDefaultErrorHandler() throws InstantiationException, IllegalAccessException {
-		return DefaultErrorHandler.class.newInstance();
+	protected ErrorHandler getDefaultErrorHandler() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+		return DefaultErrorHandler.class.getDeclaredConstructor().newInstance();
 	}
 }

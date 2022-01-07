@@ -9,7 +9,7 @@
  */
 package com.github.pmairif.weberknecht.feeds;
 
-import org.jdom.Document;
+import org.jdom2.Document;
 
 /**
  * create feeds

@@ -33,11 +33,12 @@ ext {
     versionJunit5 = "5.5.2"
     versionMockito = "3.0.0"
     versionSlf4j = "1.7.+"
+    versionJdom = "2.0.6.1"
 }
 
 dependencies {
     implementation 'commons-lang:commons-lang:2.+'
-    implementation 'org.jdom:jdom:1.+'
+    implementation "org.jdom:jdom2:$versionJdom"
     implementation 'org.json:json:+'
     implementation "org.slf4j:slf4j-api:$versionSlf4j"
     implementation 'javax.servlet:jsp-api:2.+'

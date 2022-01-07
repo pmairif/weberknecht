@@ -8,26 +8,25 @@
  */
 package com.github.pmairif.weberknecht.request.routing;
 
-import static com.github.pmairif.weberknecht.test.TestUtil.readConfig;
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-
-import org.junit.Test;
-
 import com.github.pmairif.weberknecht.conf.ActionDeclaration;
 import com.github.pmairif.weberknecht.conf.ConfigurationException;
 import com.github.pmairif.weberknecht.conf.WeberknechtConf;
 import com.github.pmairif.weberknecht.request.actions.ActionInstantiationException;
 import com.github.pmairif.weberknecht.request.actions.ActionNotFoundException;
 import com.github.pmairif.weberknecht.request.actions.ExecutableAction;
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+
+import static com.github.pmairif.weberknecht.test.TestUtil.readConfig;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testing {@link AreaPathResolver}
  *
  * @author pmairif
  */
-public class AreaPathResolverTest {
+class AreaPathResolverTest {
 
 	@Test
 	public void testResolveAction() throws IOException, ConfigurationException, ActionNotFoundException, ActionInstantiationException {
@@ -58,36 +57,39 @@ public class AreaPathResolverTest {
 		assertFalse(resolver.knownTarget(null));
 	}
 	
-	@Test(expected=ActionNotFoundException.class)
-	public void testResolveActionNoRoutingTarget() throws IOException, ConfigurationException, ActionNotFoundException, ActionInstantiationException {
+	@Test
+	public void testResolveActionNoRoutingTarget() throws IOException, ConfigurationException {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-8.xml");
 		AreaPathResolver resolver = new AreaPathResolver(conf);
 
-		resolver.resolveAction(null);
+		assertThrows(ActionNotFoundException.class, () -> resolver.resolveAction(null));
 	}
 	
-	@Test(expected=ActionNotFoundException.class)
-	public void testResolveActionNoActionName() throws IOException, ConfigurationException, ActionNotFoundException, ActionInstantiationException {
+	@Test
+	public void testResolveActionNoActionName() throws IOException, ConfigurationException {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-8.xml");
 		AreaPathResolver resolver = new AreaPathResolver(conf);
-		
-		resolver.resolveAction(new RoutingTarget(null, "do", null));
+
+		final RoutingTarget routingTarget = new RoutingTarget(null, "do", null);
+		assertThrows(ActionNotFoundException.class, () -> resolver.resolveAction(routingTarget));
 	}
 	
-	@Test(expected=ActionNotFoundException.class)
-	public void testResolveActionInvalidActionName() throws IOException, ConfigurationException, ActionNotFoundException, ActionInstantiationException {
+	@Test
+	public void testResolveActionInvalidActionName() throws IOException, ConfigurationException {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-8.xml");
 		AreaPathResolver resolver = new AreaPathResolver(conf);
-		
-		resolver.resolveAction(new RoutingTarget(new AreaPath(), "xyz", "do", null));
+
+		final RoutingTarget routingTarget = new RoutingTarget(new AreaPath(), "xyz", "do", null);
+		assertThrows(ActionNotFoundException.class, () -> resolver.resolveAction(routingTarget));
 	}
 	
-	@Test(expected=ActionNotFoundException.class)
-	public void testResolveActionInvalidPath() throws IOException, ConfigurationException, ActionNotFoundException, ActionInstantiationException {
+	@Test
+	public void testResolveActionInvalidPath() throws IOException, ConfigurationException {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-8.xml");
 		AreaPathResolver resolver = new AreaPathResolver(conf);
-		
-		resolver.resolveAction(new RoutingTarget(new AreaPath("x"), "foo", "do", null));
+
+		final RoutingTarget routingTarget = new RoutingTarget(new AreaPath("x"), "foo", "do", null);
+		assertThrows(ActionNotFoundException.class, () -> resolver.resolveAction(routingTarget));
 	}
 	
 	@Test

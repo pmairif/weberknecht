@@ -8,17 +8,16 @@
  */
 package com.github.pmairif.weberknecht.request.routing;
 
-import static com.github.pmairif.weberknecht.test.TestUtil.readConfig;
-import static org.junit.Assert.*;
+import com.github.pmairif.weberknecht.conf.ConfigurationException;
+import com.github.pmairif.weberknecht.conf.WeberknechtConf;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Locale;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import com.github.pmairif.weberknecht.conf.ConfigurationException;
-import com.github.pmairif.weberknecht.conf.WeberknechtConf;
+import static com.github.pmairif.weberknecht.test.TestUtil.readConfig;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * testing the {@link LocalePrefixRouter}
@@ -29,7 +28,7 @@ public class LocalePrefixRouterTest {
 
 	private LocalePrefixRouter router;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		router = new LocalePrefixRouter();
 		

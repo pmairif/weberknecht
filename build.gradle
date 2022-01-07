@@ -45,7 +45,6 @@ dependencies {
 
     testImplementation "org.slf4j:slf4j-simple:$versionSlf4j"
     testImplementation "org.junit.jupiter:junit-jupiter:${versionJunit5}"
-    testImplementation "org.junit.vintage:junit-vintage-engine:${versionJunit5}"
     testImplementation "org.mockito:mockito-junit-jupiter:${versionMockito}"
 }
 

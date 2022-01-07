@@ -10,32 +10,34 @@ package com.github.pmairif.weberknecht.request.routing.flex;
 
 import com.github.pmairif.weberknecht.request.routing.ActionPath;
 import com.github.pmairif.weberknecht.request.routing.AreaPath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * testing DynamicTaskGenericRoute
  */
-public class DynamicTaskGenericRouteTest {
+class DynamicTaskGenericRouteTest {
 
     @Test
-    public void testSimpleMatch() throws Exception {
+    void testSimpleMatch() {
         DynamicTaskGenericRoute route = new DynamicTaskGenericRoute("foo", new ActionPath("/foo"));
         assertTrue(route.match(new AreaPath("foo")));
         assertFalse(route.match(new AreaPath("bar")));
         assertFalse(route.match(new AreaPath("foo", "bar")));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testMatchWithUnknownParameter() throws Exception {
+    @Test
+    void testMatchWithUnknownParameter() {
         DynamicTaskGenericRoute route = new DynamicTaskGenericRoute("foo/{di}", new ActionPath("/foo"));
         route.addParameterParser("id", new StringParameterParser());
-        route.match(new AreaPath("foo", "7627)"));
+
+        final AreaPath areaPath = new AreaPath("foo", "7627)");
+        assertThrows(IllegalArgumentException.class, () -> route.match(areaPath));
     }
 
     @Test
-    public void testMatchWithParameterString() throws Exception {
+    void testMatchWithParameterString() {
         DynamicTaskGenericRoute route = new DynamicTaskGenericRoute("foo/{id}", new ActionPath("/foo"));
         route.addParameterParser("id", new StringParameterParser());
         assertTrue(route.match(new AreaPath("foo", "7627")));
@@ -46,7 +48,7 @@ public class DynamicTaskGenericRouteTest {
     }
 
     @Test
-    public void testMatchWithMultipleParameters() throws Exception {
+    void testMatchWithMultipleParameters() {
         DynamicTaskGenericRoute route = new DynamicTaskGenericRoute("foo/{id}/{bar}", new ActionPath("/foo"));
         route.addParameterParser("id", new IntParameterParser());
         route.addParameterParser("bar", new StringParameterParser());
@@ -58,7 +60,7 @@ public class DynamicTaskGenericRouteTest {
     }
 
     @Test
-    public void testMatchWithTask() throws Exception {
+    void testMatchWithTask() {
         DynamicTaskGenericRoute route = new DynamicTaskGenericRoute("foo/{id}/[task]", new ActionPath("/foo"));
         route.addParameterParser("id", new IntParameterParser());
         assertTrue(route.match(new AreaPath("foo", "7628", "store")));

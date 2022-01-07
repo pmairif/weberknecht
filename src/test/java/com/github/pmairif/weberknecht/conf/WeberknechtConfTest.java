@@ -8,27 +8,24 @@
  */
 package com.github.pmairif.weberknecht.conf;
 
-import static com.github.pmairif.weberknecht.test.TestUtil.readConfig;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
 import com.github.pmairif.weberknecht.request.processing.Processor;
 import com.github.pmairif.weberknecht.request.routing.AreaPath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import java.io.IOException;
+import java.util.*;
+
+import static com.github.pmairif.weberknecht.test.TestUtil.readConfig;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testing {@link WeberknechtConf}
  * 
  * @author pmairif
  */
-public class WeberknechtConfTest {
+class WeberknechtConfTest {
 	
 	@Test
 	public void testGetActionClassMap1() throws IOException, ConfigurationException {
@@ -337,46 +334,18 @@ public class WeberknechtConfTest {
 		assertEquals(expectedActionClassMap, conf.getActionClassMap(new AreaPath()));
 	}
 	
-	/**
-	 * Exception on old configuration
-	 */
-	@Test(expected=ConfigurationException.class)
-	public void testReadConfigOld() throws IOException, ConfigurationException {
-		readConfig("test-data/weberknecht-old.xml");
+	@ParameterizedTest
+	@ValueSource(strings = {
+			"test-data/weberknecht-old.xml",		//Exception on old configuration
+			"test-data/weberknecht-corrupt-1.xml",	//Exception on corrupt configuration
+			"test-data/weberknecht-corrupt-2.xml",	//Exception on corrupt configuration
+			"test-data/weberknecht-corrupt-3.xml",	//pre processor does not implement the processor interface
+			"test-data/weberknecht-corrupt-4.xml",	//pre processor class does not exist
+	})
+	void testReadConfigOld(String file) {
+		assertThrows(ConfigurationException.class, () -> readConfig(file));
 	}
 
-	/**
-	 * Exception on corrupt configuration
-	 */
-	@Test(expected=ConfigurationException.class)
-	public void testReadConfigCorrupt1() throws IOException, ConfigurationException {
-		readConfig("test-data/weberknecht-corrupt-1.xml");
-	}
-	
-	/**
-	 * Exception on corrupt configuration
-	 */
-	@Test(expected=ConfigurationException.class)
-	public void testReadConfigCorrupt2() throws IOException, ConfigurationException {
-		readConfig("test-data/weberknecht-corrupt-2.xml");
-	}
-	
-	/**
-	 * pre processor does not implement the processor interface
-	 */
-	@Test(expected=ConfigurationException.class)
-	public void testReadConfigCorrupt3() throws IOException, ConfigurationException {
-		readConfig("test-data/weberknecht-corrupt-3.xml");
-	}
-	
-	/**
-	 * pre processor class does not exist
-	 */
-	@Test(expected=ConfigurationException.class)
-	public void testReadConfigCorrupt4() throws IOException, ConfigurationException {
-		readConfig("test-data/weberknecht-corrupt-4.xml");
-	}
-	
 	@Test
 	public void testRouter() throws IOException, ConfigurationException {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-router.xml");

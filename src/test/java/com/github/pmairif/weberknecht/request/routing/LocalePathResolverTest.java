@@ -8,15 +8,15 @@
  */
 package com.github.pmairif.weberknecht.request.routing;
 
-import static com.github.pmairif.weberknecht.test.TestUtil.readConfig;
-import static org.junit.Assert.*;
+import com.github.pmairif.weberknecht.conf.WeberknechtConf;
+import com.github.pmairif.weberknecht.request.actions.ActionNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import com.github.pmairif.weberknecht.conf.WeberknechtConf;
+import static com.github.pmairif.weberknecht.test.TestUtil.readConfig;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author pmairif
@@ -25,7 +25,7 @@ public class LocalePathResolverTest {
 
 	private LocalePathResolver resolver;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		WeberknechtConf conf = readConfig("test-data/weberknecht-lang-optional.xml");
 		resolver = new LocalePathResolver(conf);
@@ -59,10 +59,11 @@ public class LocalePathResolverTest {
         assertEquals(expected, resolver.createPath("de/foo/bar"));
     }
 
-    @Test(expected = RoutingNotPossibleException.class)
+    @Test
     public void testObligatoryLanguage() throws Exception {
         WeberknechtConf conf = readConfig("test-data/weberknecht-lang.xml");
         LocalePathResolver resolver = new LocalePathResolver(conf);
-        resolver.createPath("/foo/bar");
+
+		assertThrows(RoutingNotPossibleException.class, () -> resolver.createPath("/foo/bar"));
     }
 }

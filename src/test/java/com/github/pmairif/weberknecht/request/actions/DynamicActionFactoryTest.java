@@ -8,22 +8,21 @@
  */
 package com.github.pmairif.weberknecht.request.actions;
 
-import static org.junit.Assert.*;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import com.github.pmairif.weberknecht.test.DummyAction1;
 import com.github.pmairif.weberknecht.test.DummyAction2;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author pmairif
  */
-public class DynamicActionFactoryTest {
+class DynamicActionFactoryTest {
 
 	private DynamicActionFactory factory;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws ActionInstantiationException {
 		factory = new DynamicActionFactory();
 		factory.registerAction("foo", "com.github.pmairif.weberknecht.test.DummyAction1");
@@ -74,8 +73,8 @@ public class DynamicActionFactoryTest {
 		assertFalse(factory.knowsAction("foo-bar"));
 	}
 
-	@Test(expected=ActionInstantiationException.class)
-	public void testRegisterInvalidAction() throws ActionInstantiationException {
-		factory.registerAction("abc", "com.example.Abc");
+	@Test
+	void testRegisterInvalidAction() {
+		assertThrows(ActionInstantiationException.class, () -> factory.registerAction("abc", "com.example.Abc"));
 	}
 }

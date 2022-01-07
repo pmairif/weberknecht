@@ -10,10 +10,10 @@ package com.github.pmairif.weberknecht.request.routing.flex;
 
 import com.github.pmairif.weberknecht.request.routing.ActionPath;
 import com.github.pmairif.weberknecht.request.routing.AreaPath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * testing RouteCollection

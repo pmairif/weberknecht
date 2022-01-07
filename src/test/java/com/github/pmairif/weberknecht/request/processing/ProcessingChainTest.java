@@ -1,9 +1,9 @@
 package com.github.pmairif.weberknecht.request.processing;
 
-import com.github.pmairif.weberknecht.request.routing.RoutingTarget;
 import com.github.pmairif.weberknecht.request.actions.ExecutableAction;
-import org.junit.Before;
-import org.junit.Test;
+import com.github.pmairif.weberknecht.request.routing.RoutingTarget;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,14 +15,14 @@ import static org.mockito.Mockito.*;
 /**
  * Created by rick on 2015-12-06.
  */
-public class ProcessingChainTest {
+class ProcessingChainTest {
 
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 
 	private List<Processor> processors;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		request = mock(HttpServletRequest.class);
 		response = mock(HttpServletResponse.class);

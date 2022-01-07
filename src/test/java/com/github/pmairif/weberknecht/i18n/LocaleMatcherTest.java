@@ -8,14 +8,15 @@
  */
 package com.github.pmairif.weberknecht.i18n;
 
-import static org.junit.Assert.*;
+
+import com.github.pmairif.weberknecht.request.actions.ActionExecutionException;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
-import com.github.pmairif.weberknecht.request.actions.ActionExecutionException;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * testing {@link LocaleMatcher}

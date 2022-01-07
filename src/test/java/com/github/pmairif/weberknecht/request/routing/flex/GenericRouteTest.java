@@ -10,16 +10,14 @@ package com.github.pmairif.weberknecht.request.routing.flex;
 
 import com.github.pmairif.weberknecht.request.routing.ActionPath;
 import com.github.pmairif.weberknecht.request.routing.AreaPath;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * testing GenericRoute
  */
-public class GenericRouteTest {
+class GenericRouteTest {
 
     @Test
     public void testSimpleMatch() throws Exception {
@@ -29,11 +27,13 @@ public class GenericRouteTest {
         assertFalse(route.match(new AreaPath("foo", "bar")));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testMatchWithUnknownParameter() throws Exception {
+    @Test
+    public void testMatchWithUnknownParameter() {
         GenericRoute route = new GenericRoute("foo/{di}", new ActionPath("/foo"));
         route.addParameterParser("id", new StringParameterParser());
-        route.match(new AreaPath("foo", "7627)"));
+
+        final AreaPath areaPath = new AreaPath("foo", "7627)");
+        assertThrows(IllegalArgumentException.class, () -> route.match(areaPath));
     }
 
     @Test

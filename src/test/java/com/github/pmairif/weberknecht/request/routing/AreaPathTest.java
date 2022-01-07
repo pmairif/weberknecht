@@ -9,12 +9,12 @@
  */
 package com.github.pmairif.weberknecht.request.routing;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Vector;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * testing AreaPath

@@ -8,25 +8,21 @@
  */
 package com.github.pmairif.weberknecht;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
+import com.github.pmairif.weberknecht.conf.WeberknechtConf;
+import com.github.pmairif.weberknecht.test.MockAction;
+import com.github.pmairif.weberknecht.test.TestUtil;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
-import com.github.pmairif.weberknecht.conf.WeberknechtConf;
-import com.github.pmairif.weberknecht.test.MockAction;
-import com.github.pmairif.weberknecht.test.TestUtil;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 /**
  * @author pmairif
@@ -40,7 +36,7 @@ public class ControllerFilterTest {
 	private ServletContext servletContext;
 	private FilterChain filterChain;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		filter = new ControllerFilter();
 		

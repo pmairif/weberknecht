@@ -8,30 +8,29 @@
  */
 package com.github.pmairif.weberknecht;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
+import com.github.pmairif.weberknecht.conf.ConfigurationException;
+import com.github.pmairif.weberknecht.conf.WeberknechtConf;
+import com.github.pmairif.weberknecht.test.MockAction;
+import com.github.pmairif.weberknecht.test.TestUtil;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
-import com.github.pmairif.weberknecht.conf.ConfigurationException;
-import com.github.pmairif.weberknecht.conf.WeberknechtConf;
-import com.github.pmairif.weberknecht.test.MockAction;
-import com.github.pmairif.weberknecht.test.TestUtil;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing Controller
  *
  * @author pmairif
  */
-public class ControllerTest {
+class ControllerTest {
 	
 	private Controller controller;
 	
@@ -39,7 +38,7 @@ public class ControllerTest {
 	private HttpServletResponse response;
 	private ServletContext servletContext;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		servletContext = mock(ServletContext.class);
 		

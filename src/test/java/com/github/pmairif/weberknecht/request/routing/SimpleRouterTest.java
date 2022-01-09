@@ -8,28 +8,27 @@
  */
 package com.github.pmairif.weberknecht.request.routing;
 
-import static com.github.pmairif.weberknecht.test.TestUtil.readConfig;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import com.github.pmairif.weberknecht.conf.ConfigurationException;
+import com.github.pmairif.weberknecht.conf.WeberknechtConf;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import com.github.pmairif.weberknecht.conf.ConfigurationException;
-import com.github.pmairif.weberknecht.conf.WeberknechtConf;
+import static com.github.pmairif.weberknecht.test.TestUtil.readConfig;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * testing the {@link SimpleRouter}
  *
  * @author pmairif
  */
-public class SimpleRouterTest {
+class SimpleRouterTest {
 
 	private SimpleRouter router;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		router = new SimpleRouter();
 		

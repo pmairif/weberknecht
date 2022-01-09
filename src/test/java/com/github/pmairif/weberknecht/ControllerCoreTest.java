@@ -8,40 +8,34 @@
  */
 package com.github.pmairif.weberknecht;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.github.pmairif.weberknecht.conf.WeberknechtConf;
 import com.github.pmairif.weberknecht.db.DbConnectionHolder;
 import com.github.pmairif.weberknecht.request.error.ErrorHandler;
 import com.github.pmairif.weberknecht.request.processing.ActionExecution;
 import com.github.pmairif.weberknecht.request.processing.Processor;
-import com.github.pmairif.weberknecht.request.routing.AreaCapableRouter;
-import com.github.pmairif.weberknecht.request.routing.AreaPath;
-import com.github.pmairif.weberknecht.request.routing.MetaRouter;
-import com.github.pmairif.weberknecht.request.routing.Router;
-import com.github.pmairif.weberknecht.request.routing.RoutingTarget;
-import com.github.pmairif.weberknecht.request.routing.SimpleRouter;
+import com.github.pmairif.weberknecht.request.routing.*;
 import com.github.pmairif.weberknecht.test.DbUsingRouter;
 import com.github.pmairif.weberknecht.test.DummyProcessor1;
 import com.github.pmairif.weberknecht.test.DummyProcessor2;
 import com.github.pmairif.weberknecht.test.TestUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 /**
  * Testing Controller
  *
  * @author pmairif
  */
-public class ControllerCoreTest {
+class ControllerCoreTest {
 	
 	private ControllerCore controller;
 	
@@ -49,7 +43,7 @@ public class ControllerCoreTest {
 	
 	private ServletContext servletContext;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		conHolder = mock(DbConnectionHolder.class);
 		
@@ -60,7 +54,7 @@ public class ControllerCoreTest {
 	}
 
 	@Test
-	public void testSetupProcessorsDefaultFoo() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+	void testSetupProcessorsDefaultFoo() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		List<Processor> processors = controller.setupProcessors(new RoutingTarget(new AreaPath(), "foo", null, null));
 		
 		//pre1 and post1 expected

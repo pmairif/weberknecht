@@ -8,26 +8,27 @@
  */
 package com.github.pmairif.weberknecht.request.routing;
 
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.*;
 
 /**
  * testing {@link MetaRouter}
  *
  * @author pmairif
  */
-public class MetaRouterTest {
+class MetaRouterTest {
 
 	private MetaRouter router;
 	
 	private Router r1, r2;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		r1 = mock(Router.class);
 		r2 = mock(Router.class);

@@ -8,24 +8,24 @@
  */
 package com.github.pmairif.weberknecht.request.view;
 
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.ServletContext;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 /**
  * @author pmairif
  */
-public class ActionViewProcessorFactoryTest {
+class ActionViewProcessorFactoryTest {
 
 	private ActionViewProcessorFactory factory;
 	
 	private ServletContext servletContext;
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		factory = new ActionViewProcessorFactory();
 		servletContext = mock(ServletContext.class);

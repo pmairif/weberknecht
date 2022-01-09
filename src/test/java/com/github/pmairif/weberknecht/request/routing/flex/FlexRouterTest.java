@@ -8,33 +8,33 @@
  */
 package com.github.pmairif.weberknecht.request.routing.flex;
 
+import com.github.pmairif.weberknecht.conf.WeberknechtConf;
 import com.github.pmairif.weberknecht.request.routing.ActionPath;
 import com.github.pmairif.weberknecht.request.routing.RoutingTarget;
-import com.github.pmairif.weberknecht.conf.WeberknechtConf;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.http.HttpServletRequest;
 
 import static com.github.pmairif.weberknecht.test.TestUtil.readConfig;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**
  * testing FlexRouter
  */
-@RunWith(MockitoJUnitRunner.class)
-public class FlexRouterTest {
+@ExtendWith({MockitoExtension.class})
+class FlexRouterTest {
 
     @Mock
     private HttpServletRequest request;
 
     private FlexRouter router;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         GenericRoute route = new GenericRoute("foo/{id}", new ActionPath("/foo"));
         route.addParameterParser("id", new IntParameterParser());
@@ -46,7 +46,7 @@ public class FlexRouterTest {
     }
 
     @Test
-    public void testRouteUri() throws Exception {
+    void testRouteUri() {
         when(request.getServletPath()).thenReturn("foo/61");
 
         RoutingTarget actualTarget = router.routeUri(request);

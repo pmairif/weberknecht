@@ -1,7 +1,7 @@
 package com.github.pmairif.weberknecht.request.view;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,11 +9,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class JsonActionProcessorTest {
+class JsonActionProcessorTest {
 
     private JsonActionProcessor processor;
 
@@ -22,7 +22,7 @@ public class JsonActionProcessorTest {
     private HttpServletRequest request;
     private HttpServletResponse response;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         processor = new JsonActionProcessor();
 

@@ -8,22 +8,20 @@
  */
 package com.github.pmairif.weberknecht.db;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import com.github.pmairif.weberknecht.conf.ConfigurationException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import com.github.pmairif.weberknecht.conf.ConfigurationException;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 /**
  * @author pmairif
  */
-public class DbConnectionHolderTest {
+class DbConnectionHolderTest {
 
 	private DbConnectionHolder holder;
 	
@@ -31,7 +29,7 @@ public class DbConnectionHolderTest {
 	
 	private Connection con;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.provider = mock(DbConnectionProvider.class);
 		this.holder = new DbConnectionHolder(provider);
@@ -77,8 +75,9 @@ public class DbConnectionHolderTest {
 		verify(con, times(1)).close();
 	}
 
-	@Test(expected=ConfigurationException.class)
-	public void testGetConnectionWithoutConnectionProvider() throws DBConnectionException, ConfigurationException {
-		new DbConnectionHolder(null).getConnection();
+	@Test
+	void testGetConnectionWithoutConnectionProvider() {
+		final DbConnectionHolder dbConnectionHolder = new DbConnectionHolder(null);
+		assertThrows(ConfigurationException.class, dbConnectionHolder::getConnection);
 	}
 }

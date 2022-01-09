@@ -9,13 +9,13 @@
  */
 package com.github.pmairif.weberknecht.feeds;
 
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.Namespace;
 
 /**
  * create RSS 2.0 feeds

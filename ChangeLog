@@ -1,3 +1,7 @@
+1.0.4:
+    - Updated jdom to jdom2 v2.0.6.1
+    - dropped junit vintage
+
 1.0.3:
     - Bugfix: set action attribute in error handling making views compatible with usual actions.
 

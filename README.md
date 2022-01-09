@@ -4,7 +4,7 @@ Get started with https://github.com/pmairif/weberknecht-example-simple
 
 To use in your gradle project:
 ```
-implementation 'com.github.pmairif:weberknecht:1.0.2'
+implementation 'com.github.pmairif:weberknecht:1.0.4'
 ```
 
 or maven:
@@ -12,6 +12,6 @@ or maven:
 <dependency>
   <groupId>com.github.pmairif</groupId>
   <artifactId>weberknecht</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.4</version>
 </dependency>
 ```
